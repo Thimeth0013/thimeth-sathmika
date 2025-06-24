@@ -5,6 +5,7 @@ import GlareHover from '../GlareHover/GlareHover';
 
 // Featured projects images
 import vehicleService from '../../assets/projects/vehicleService.png';
+import portfolio from '../../assets/projects/portfolio.png'
 
 import {
   ArrowDown,
@@ -29,6 +30,17 @@ export const Home = () => {
       designLink: 'https://www.behance.net/gallery/225208747/FixMate-Vehicle-Service-Center-Website',
       githubLink: 'https://github.com/Thimeth0013/IT-Project-2025',
       liveLink: '#',
+    },
+    {
+      id: 2,
+      title: 'My Website',
+      description:
+        'A fast and responsive developer portfolio built with React, Tailwind CSS, and Vite — designed to showcase projects, technical skills, and design philosophy with smooth animations and clean UI.',
+      image: portfolio,
+      tags: ['React', 'TailwindCSS', 'Vite'],
+      designLink: '#',
+      githubLink: 'https://github.com/Thimeth0013/thimeth-sathmika',
+      liveLink: 'https://thimeth0013.github.io/thimeth-sathmika/',
     },
   ];
 
@@ -77,20 +89,20 @@ export const Home = () => {
 
         <div className="container mx-auto mt-22 px-6 z-20 mb-20 group relative">
           <div className="max-w-6xl mx-auto space-y-8 mb-20">
-            <h1 className="text-xl text-white mt-30 font-medium">
+            <h1 className="text-md md:text-xl text-white mt-30 font-medium">
               <div className="flex">
                 <Hand className="text-blue-800 animate-wave mr-4" />
                 Hello I'm Thimeth Sathmika.
               </div>
             </h1>
-            <h1 className="text-7xl md:text-7xl font-bold">
+            <h1 className="text-2xl md:text-7xl font-bold">
               <span className="block mb-20">
                 Creating tech with{' '}
                 <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
                   *intention
-                  <div className="hidden hover-display absolute bottom-[-220px] right-[-180px] w-64 p-4 bg-white/40 dark:bg-black/40 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
+                  <div className="hidden hover-display absolute bottom-[-180px] sm:bottom-[-220px] right-[40px] sm:right-[-180px] w-64 p-4 bg-white/40 dark:bg-black/40 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
                     <p>
-                      <span className="font-semibold text-white/80">Intention:</span> a thing intended; an aim or plan.
+                      <span className="font-semibold text-white/80 text-sm sm:text-md">Intention:</span> a thing intended; an aim or plan.
                     </p>
                   </div>
                 </span>{' '}
@@ -101,7 +113,7 @@ export const Home = () => {
             <div className="flex justify-center md:justify-end">
               <a
                 href="#about"
-                className="px-6 py-2 pt-3 text-white font-medium bg-black backdrop-blur-md rounded-4xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-blue-800 hover:shadow-[0_0_25px_rgba(59,130,246,0.2)] transition-all"
+                className="text-sm md:text-lg px-6 py-2 pt-3 text-white font-medium bg-black backdrop-blur-md rounded-4xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-blue-800 hover:shadow-[0_0_25px_rgba(59,130,246,0.2)] transition-all"
               >
                 Know Me Better
               </a>
