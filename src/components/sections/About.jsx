@@ -140,11 +140,11 @@ export const About = () => {
               <h1 className="text-xl sm:text-2xl font-medium text-left text-blue-800">About Me</h1>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl font-bold mb-4 mt-6 leading-snug">
+            <h1 className="text-2xl sm:text-5xl font-bold mb-4 mt-6 leading-snug">
               I'm a{" "}
               <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
                 *creative
-                <div className="hidden hover-display absolute bottom-[-20px] left-[500px] w-64 p-4 bg-white/40 dark:bg-black/80 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
+                <div className="hidden hover-display absolute text-sm bottom-[-470px] sm:bottom-[-20px] left-[-20px] sm:left-[500px] w-64 p-4 bg-white/40 dark:bg-black/80 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
                   <p>
                     <span className="font-semibold text-white/80">Creative:</span> using imagination or original ideas to create something meaningful.
                   </p>
@@ -153,7 +153,7 @@ export const About = () => {
               soul with a developer's toolkit —{" "}
               <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
                 *passionate
-                <div className="hidden hover-display absolute bottom-[110px] left-[630px] w-64 p-4 bg-white/40 dark:bg-black/80 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
+                <div className="hidden hover-display absolute text-sm bottom-[-400px] sm:bottom-[110px] left-[40px] sm:left-[630px] w-64 p-4 bg-white/40 dark:bg-black/80 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
                   <p>
                     <span className="font-semibold text-white/80">Passionate:</span> showing or caused by strong feelings or a strong belief.
                   </p>
@@ -166,7 +166,7 @@ export const About = () => {
           {/* Right Image with Button */}
           <motion.div
             ref={ref}
-            className="w-full sm:w-1/2 flex justify-center sm:justify-end mr-10 mt-5 relative"
+            className="w-full sm:w-1/2 flex justify-center sm:justify-end mr-10 mt-5 relative pl-4 sm:pl-0 pr-4 sm:pr-0"
             variants={imageVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}

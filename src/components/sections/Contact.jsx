@@ -53,7 +53,7 @@ export const Contact = () => {
 
   return (
     <section id="contact" className="min-h-screen bg-black overflow-hidden pt-30 pb-10">
-      <div className="container mx-auto px-4 sm:px-6 z-10">
+      <div className="container mx-auto px-14 sm:px-6 z-10">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
             {/* Contact Information */}
@@ -61,9 +61,9 @@ export const Contact = () => {
               <div className="space-y-6">
                 <div className="flex mt-10">
                   <Sparkle className="text-blue-800 mr-2 w-6 h-6" />
-                  <h2 className="text-xl sm:text-2xl font-medium text-blue-800">Get in Touch</h2>
+                  <h2 className="text-md sm:text-2xl font-medium text-blue-800">Get in Touch</h2>
                 </div>
-                <h1 className="text-5xl font-bold text-left mt-4 mb-6 max-w-4xl leading-tight text-white">
+                <h1 className="text-2xl sm:text-5xl font-bold text-left mt-4 mb-6 max-w-4xl leading-tight text-white">
                   Have a project in mind or want to collaborate? I'd love to hear from you.
                 </h1>
                 <div className="flex items-center gap-3">
@@ -168,15 +168,15 @@ export const Contact = () => {
           </div>
 
           <div className="flex text-blue-800 gap-3 mb-4">
-            <h1 className="text-2xl font-bold">Checkout My Work</h1>
+            <h1 className="text-xl sm:text-2xl font-bold">Checkout My Work</h1>
             <ArrowDownRight />
           </div>
 
           <FlowingMenu items={menuItems} />
 
-          <div className="flex justify-between mt-20 text-blue-800/80 text-sm font-medium">
+          <div className="flex justify-between mt-20 text-blue-800/80 text-[10px] sm:text-sm font-medium">
             <h2>Ambitiously Crafted</h2>
-            <h2>© 2025 Thimeth Sathmik. All rights reserved.</h2>
+            <h2>© 2025 Thimeth Sathmika. All rights reserved.</h2>
           </div>
         </div>
       </div>
