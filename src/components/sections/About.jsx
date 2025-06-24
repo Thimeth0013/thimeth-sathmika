@@ -151,7 +151,7 @@ export const About = () => {
             style={{ minHeight: "500px" }} // Stabilize height to prevent flicker
           >
             <motion.img
-              src="/profile.png"
+              src="./src/assets/profile.png"
               alt="Portfolio Visual"
               className="w-full sm:w-auto h-[500px] will-change-transform" // Optimize with will-change
               transition={{ duration: 0.3, ease: "easeOut" }}
