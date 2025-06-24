@@ -2,6 +2,9 @@ import React, { useRef } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { Sparkle, GithubIcon, ExternalLinkIcon, Lightbulb } from 'lucide-react';
 
+// All projects images
+import vehicleService from '../../assets/projects/vehicleService.png';
+
 export const Project = () => {
   // All Projects
   const allProjects = [
@@ -10,7 +13,7 @@ export const Project = () => {
       title: 'Vehicle Service Center Management System',
       description:
         'A MERN-based platform to manage vehicle service bookings, track repair status, and streamline customer interactions.',
-      image: 'src/assets/projects/vehicleService.png',
+      image: vehicleService,
       tags: ['Node.js', 'React', 'MongoDB', 'Express'],
       designLink: 'https://www.behance.net/gallery/225208747/FixMate-Vehicle-Service-Center-Website',
       githubLink: 'https://github.com/Thimeth0013/IT-Project-2025',

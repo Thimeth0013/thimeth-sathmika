@@ -11,6 +11,26 @@ import {
 } from "lucide-react";
 import profileImage from '../../assets/profile.png';
 
+// Skill icons
+import html from '../../assets/skills/html.svg';
+import css from '../../assets/skills/css.svg';
+import php from '../../assets/skills/php.svg';
+import git from '../../assets/skills/git.svg';
+import javascript from '../../assets/skills/javascript.svg';
+import react from '../../assets/skills/react.svg';
+import nodejs from '../../assets/skills/nodejs.svg';
+import expressjs from '../../assets/skills/expressjs.svg';
+import mongodb from '../../assets/skills/mongodb.svg';
+import tailwindcss from '../../assets/skills/tailwindcss.svg';
+import bootstrap from '../../assets/skills/bootstrap.svg';
+import figma from '../../assets/skills/figma.svg';
+import photoshop from '../../assets/skills/photoshop.svg';
+import kotlin from '../../assets/skills/kotlin.svg';
+import vite from '../../assets/skills/vite.svg';
+import postman from '../../assets/skills/postman.svg';
+import mysql from '../../assets/skills/mysql.svg';
+import java from '../../assets/skills/java.svg';
+
 export const About = () => {
   const titleVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -60,25 +80,26 @@ export const About = () => {
   const educationInView = useInView(educationRef, { once: false, amount: 0.2 });
 
   const skills = [
-    { img: "src/assets/skills/html.svg", label: "HTML" },
-    { img: "src/assets/skills/css.svg", label: "CSS" },
-    { img: "src/assets/skills/php.svg", label: "Php" },
-    { img: "src/assets/skills/git.svg", label: "Git" },
-    { img: "src/assets/skills/javascript.svg", label: "JavaScript" },
-    { img: "src/assets/skills/react.svg", label: "React" },
-    { img: "src/assets/skills/nodejs.svg", label: "Node.js" },
-    { img: "src/assets/skills/expressjs.svg", label: "Express" },
-    { img: "src/assets/skills/mongodb.svg", label: "MongoDB" },
-    { img: "src/assets/skills/tailwindcss.svg", label: "Tailwind" },
-    { img: "src/assets/skills/bootstrap.svg", label: "Bootstrap" },
-    { img: "src/assets/skills/figma.svg", label: "Figma" },
-    { img: "src/assets/skills/photoshop.svg", label: "Photoshop" },
-    { img: "src/assets/skills/kotlin.svg", label: "Kotlin" },
-    { img: "src/assets/skills/vite.svg", label: "Vite" },
-    { img: "src/assets/skills/postman.svg", label: "Postman" },
-    { img: "src/assets/skills/mysql.svg", label: "MySQL" },
-    { img: "src/assets/skills/java.svg", label: "Java" },
+    { img: html, label: "HTML" },
+    { img: css, label: "CSS" },
+    { img: php, label: "Php" },
+    { img: git, label: "Git" },
+    { img: javascript, label: "JavaScript" },
+    { img: react, label: "React" },
+    { img: nodejs, label: "Node.js" },
+    { img: expressjs, label: "Express" },
+    { img: mongodb, label: "MongoDB" },
+    { img: tailwindcss, label: "Tailwind" },
+    { img: bootstrap, label: "Bootstrap" },
+    { img: figma, label: "Figma" },
+    { img: photoshop, label: "Photoshop" },
+    { img: kotlin, label: "Kotlin" },
+    { img: vite, label: "Vite" },
+    { img: postman, label: "Postman" },
+    { img: mysql, label: "MySQL" },
+    { img: java, label: "Java" },
   ];
+
 
   const skillCategories = [
     {

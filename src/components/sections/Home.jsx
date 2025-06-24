@@ -3,6 +3,9 @@ import { motion, useInView } from 'framer-motion';
 import ScrollVelocity from '../ScrollVelocity/ScrollVelocity';
 import GlareHover from '../GlareHover/GlareHover';
 
+// Featured projects images
+import vehicleService from '../../assets/projects/vehicleService.png';
+
 import {
   ArrowDown,
   GithubIcon,
@@ -21,7 +24,7 @@ export const Home = () => {
       title: 'Vehicle Service Center Management System',
       description:
         'A MERN-based platform to manage vehicle service bookings, track repair status, and streamline customer interactions.',
-      image: 'src/assets/projects/vehicleService.png',
+      image: vehicleService,
       tags: ['Node.js', 'React', 'MongoDB', 'Express'],
       designLink: 'https://www.behance.net/gallery/225208747/FixMate-Vehicle-Service-Center-Website',
       githubLink: 'https://github.com/Thimeth0013/IT-Project-2025',
