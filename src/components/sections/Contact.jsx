@@ -53,7 +53,7 @@ export const Contact = () => {
 
   return (
     <section id="contact" className="min-h-screen bg-black overflow-hidden pt-30 pb-10">
-      <div className="container mx-auto px-14 sm:px-6 z-10">
+      <div className="container mx-auto px-10 sm:px-6 z-10">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
             {/* Contact Information */}
