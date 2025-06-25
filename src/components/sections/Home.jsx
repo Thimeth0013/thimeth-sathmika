@@ -6,6 +6,7 @@ import GlareHover from '../GlareHover/GlareHover';
 // Featured projects images
 import vehicleService from '../../assets/projects/vehicleService.png';
 import portfolio from '../../assets/projects/portfolio.png'
+import homekeep from '../../assets/projects/homekeep.png'
 
 import {
   ArrowDown,
@@ -38,9 +39,20 @@ export const Home = () => {
         'A fast and responsive developer portfolio built with React, Tailwind CSS, and Vite — designed to showcase projects, technical skills, and design philosophy with smooth animations and clean UI.',
       image: portfolio,
       tags: ['React', 'TailwindCSS', 'Vite'],
-      designLink: '#',
+      designLink: 'https://www.behance.net/gallery/228890885/My-Portfolio',
       githubLink: 'https://github.com/Thimeth0013/thimeth-sathmika',
       liveLink: 'https://thimeth0013.github.io/thimeth-sathmika/',
+    },
+    {
+      id: 3,
+      title: 'Home Keep',
+      description:
+        'Home Keep is a professionally designed app built in Figma to simplify and streamline home maintenance, helping you keep your home in top shape with ease.',
+      image: homekeep,
+      tags: ['Figma'],
+      designLink: 'https://www.behance.net/gallery/225180721/Home-Keep',
+      githubLink: '',
+      liveLink: '',
     },
   ];
 

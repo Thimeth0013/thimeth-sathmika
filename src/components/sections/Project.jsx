@@ -5,6 +5,7 @@ import { Sparkle, GithubIcon, ExternalLinkIcon, Lightbulb } from 'lucide-react';
 // All projects images
 import vehicleService from '../../assets/projects/vehicleService.png';
 import portfolio from '../../assets/projects/portfolio.png';
+import homekeep from '../../assets/projects/homekeep.png'
 
 export const Project = () => {
   // Tab state
@@ -33,6 +34,17 @@ export const Project = () => {
       designLink: '#',
       githubLink: 'https://github.com/Thimeth0013/thimeth-sathmika',
       liveLink: 'https://thimeth0013.github.io/thimeth-sathmika/',
+    },
+    {
+      id: 3,
+      title: 'Home Keep',
+      description:
+        'Home Keep is a professionally designed app built in Figma to simplify and streamline home maintenance, helping you keep your home in top shape with ease.',
+      image: homekeep,
+      tags: ['Figma'],
+      designLink: 'https://www.behance.net/gallery/225180721/Home-Keep',
+      githubLink: '',
+      liveLink: '',
     },
     // Add more projects here as needed
   ];
