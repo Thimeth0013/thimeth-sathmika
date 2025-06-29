@@ -33,7 +33,7 @@ import java from '../../assets/skills/java.svg';
 
 export const About = () => {
   const titleVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
       y: 0,
@@ -42,7 +42,7 @@ export const About = () => {
   };
 
   const imageVariants = {
-    hidden: { opacity: 0, y: 50 },
+    hidden: { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
       y: 0,
@@ -278,7 +278,7 @@ export const About = () => {
                   {skillSet.items.map((skill) => (
                     <span
                       key={skill}
-                      className="px-4 pt-1 font-medium text-white/60 hover:text-white rounded-full bg-white/10 text-sm border border-white/20 hover:bg-blue-800/20 hover:border-blue-800/40 transition-all duration-200 cursor-default"
+                      className="px-4 py-0.5 font-medium text-white/60 hover:text-white rounded-full bg-white/10 text-sm border border-white/20 hover:bg-blue-800/20 hover:border-blue-800/40 transition-all duration-200 cursor-default"
                     >
                       {skill}
                     </span>

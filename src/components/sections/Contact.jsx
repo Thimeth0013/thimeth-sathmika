@@ -141,7 +141,7 @@ export const Contact = () => {
 
               <button
                 type="submit"
-                className="px-6 pt-2 pb-1.5 rounded-full bg-gradient-to-r from-blue-800 to-blue-600 text-white font-medium hover:from-blue-700 hover:to-blue-500 transition-all"
+                className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-800 to-blue-600 text-white font-medium hover:from-blue-700 hover:to-blue-500 transition-all"
               >
                 <div className="flex gap-4 items-center justify-center">
                   {loading ? 'Sending...' : 'Send Message'} <Send />

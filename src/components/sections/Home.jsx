@@ -125,7 +125,7 @@ export const Home = () => {
             <div className="flex justify-center md:justify-end">
               <a
                 href="#about"
-                className="text-sm md:text-lg px-6 py-2 pt-3 text-white font-medium bg-black backdrop-blur-md rounded-4xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-blue-800 hover:shadow-[0_0_25px_rgba(59,130,246,0.2)] transition-all"
+                className="text-sm md:text-lg px-6 py-2 pt-2 text-white font-medium bg-black backdrop-blur-md rounded-4xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-blue-800 hover:shadow-[0_0_25px_rgba(59,130,246,0.2)] transition-all"
               >
                 Know Me Better
               </a>
@@ -210,7 +210,7 @@ export const Home = () => {
             {featuredProjects.map((project) => (
               <div
                 key={project.id}
-                className="group bg-gray-900/50 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:border-blue-800/26 transition-all duration-300 border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-md"
+                className="group bg-gray-900/50 rounded-xl overflow-hidden shadow-lg hover:bg-gray-900/80 hover:shadow-2xl hover:border-blue-800/26 transition-all duration-300 border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-md"
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
@@ -277,7 +277,7 @@ export const Home = () => {
           <div className="mt-12 text-center">
             <a
               href="#project"
-              className="inline-flex items-center gap-2 px-6 py-2 pt-3 rounded-4xl bg-blue-800 dark:bg-blue-800/12 border-s border-e border-blue-800 text-white font-medium transition-all shadow-lg shadow-blue-500/10 hover:bg-blue-800/18"
+              className="inline-flex items-center gap-2 px-6 py-2 rounded-4xl bg-blue-800 dark:bg-blue-800/12 border-s border-e border-blue-800 text-white font-medium transition-all shadow-lg shadow-blue-500/10 hover:bg-blue-800/18"
             >
               View All Projects
               <ArrowDown className="w-4 h-4" />

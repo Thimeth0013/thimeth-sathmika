@@ -31,7 +31,7 @@ export const Project = () => {
         'A fast and responsive developer portfolio built with React, Tailwind CSS, and Vite — designed to showcase projects, technical skills, and design philosophy with smooth animations and clean UI.',
       image: portfolio,
       tags: ['React', 'TailwindCSS', 'Vite'],
-      designLink: '#',
+      designLink: 'https://www.behance.net/gallery/228890885/My-Portfolio',
       githubLink: 'https://github.com/Thimeth0013/thimeth-sathmika',
       liveLink: 'https://thimeth0013.github.io/thimeth-sathmika/',
     },
@@ -46,7 +46,6 @@ export const Project = () => {
       githubLink: '',
       liveLink: '',
     },
-    // Add more projects here as needed
   ];
 
   // Filter projects based on active tab
@@ -206,7 +205,7 @@ export const Project = () => {
                       layoutId="activeTab"
                       transition={{
                         type: 'spring',
-                        stiffness: 500,
+                        stiffness: 400,
                         damping: 30,
                       }}
                     />
@@ -235,7 +234,7 @@ export const Project = () => {
                 filteredProjects.map((project, index) => (
                   <motion.div
                     key={`${activeTab}-${project.id}`}
-                    className="group w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-lg bg-gray-900/50 hover:border-blue-800/26"
+                    className="group w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-lg bg-gray-900/50 hover:bg-gray-900/80 hover:border-blue-800/26 transition ease-linear"
                     style={{
                       transform: `translateX(${index % 2 === 0 ? '10%' : '-10%'})`,
                       y: parallaxY,
@@ -246,7 +245,6 @@ export const Project = () => {
                     exit="exit"
                     whileHover="hover"
                     custom={index}
-                    whileTap={{ scale: 0.95 }}
                   >
                     <div className="relative h-48 overflow-hidden">
                       <img
