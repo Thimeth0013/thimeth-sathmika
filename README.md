@@ -1,12 +1,31 @@
-# React + Vite
+# 🌐 Personal Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive, and animated portfolio website built using **React**, **Vite**, **Tailwind CSS**, and **Framer Motion**. This project showcases my skills, projects, and contact information in a minimal and interactive layout.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+- ⚡ Fast bundling and development with **Vite**
+- 🎨 Utility-first styling using **Tailwind CSS**
+- 🎬 Smooth page and component transitions with **Framer Motion**
+- 🌙 Dark mode compatible (optional)
+- 📱 Fully responsive across all screen sizes
+- 🔗 Easy to navigate and visually minimal design
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 📁 Tech Stack
+
+- [React](https://reactjs.org/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+
+---
+
+## 🔗 Live Link
+
+> You can view the live portfolio here:  
+[**https://thimeth0013.github.io/thimeth-sathmika/*](https://thimeth0013.github.io/thimeth-sathmika/)
+
