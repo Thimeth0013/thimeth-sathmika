@@ -9,7 +9,6 @@ A modern, responsive, and animated portfolio website built using **React**, **Vi
 - ⚡ Fast bundling and development with **Vite**
 - 🎨 Utility-first styling using **Tailwind CSS**
 - 🎬 Smooth page and component transitions with **Framer Motion**
-- 🌙 Dark mode compatible (optional)
 - 📱 Fully responsive across all screen sizes
 - 🔗 Easy to navigate and visually minimal design
 
