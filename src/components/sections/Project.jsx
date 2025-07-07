@@ -6,6 +6,7 @@ import { Sparkle, GithubIcon, ExternalLinkIcon, Lightbulb } from 'lucide-react';
 import vehicleService from '../../assets/projects/vehicleService.png';
 import portfolio from '../../assets/projects/portfolio.png';
 import homekeep from '../../assets/projects/homekeep.png'
+import cocktails from '../../assets/projects/gsapCocktails.png';
 
 export const Project = () => {
   // Tab state
@@ -34,6 +35,17 @@ export const Project = () => {
       designLink: 'https://www.behance.net/gallery/228890885/My-Portfolio',
       githubLink: 'https://github.com/Thimeth0013/thimeth-sathmika',
       liveLink: 'https://thimeth0013.github.io/thimeth-sathmika/',
+    },
+    {
+      id: 2,
+      title: 'Mojito Cocktails',
+      description:
+        'An animated and visually rich website built with React, Tailwind CSS, Vite, and GSAP — my first project using GSAP to explore advanced frontend animations.',
+      image: cocktails,
+      tags: ['React', 'TailwindCSS', 'Vite', 'GSAP Animations'],
+      designLink: 'https://www.figma.com/design/MByXaI8pcleIbgTvsDat1X/Cocktail-GSAP-Website?node-id=0-1&p=f&t=N6byExgZAx0K0dba-0',
+      githubLink: 'https://github.com/Thimeth0013/gsap-cocktails',
+      liveLink: 'https://gsap-cocktails-topaz.vercel.app/#home',
     },
     {
       id: 3,
@@ -91,42 +103,50 @@ export const Project = () => {
     },
   ];
 
-  // Framer Motion Animation Variants
+  // Framer Motion Animation Variants - FIXED SEQUENCING
   const titleVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: 'easeOut', type: 'spring', stiffness: 100 },
-    },
-  };
-
-  const tabVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: 'easeOut' },
-    },
-  };
-
-  const cardVariants = (index) => ({
     hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        delay: index * 0.15,
+        duration: 0.5,
+        ease: 'easeOut',
+        delay: 0, // Title appears first
+      },
+    },
+  };
+
+  const tabVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
         duration: 0.6,
-        type: 'spring',
-        stiffness: 120,
-        damping: 20,
+        ease: 'easeOut',
+        delay: 0.3, // Tabs appear after title
+      },
+    },
+  };
+
+  const cardVariants = (index = 0) => ({
+    hidden: { opacity: 0}, // Fixed: proper y value and removed duration
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: 'easeOut',
+        delay: 0.3 + index * 0.1, // Cards appear after tabs complete (0.3 + 0.6 = 0.9)
       },
     },
     exit: {
       opacity: 0,
       y: -20,
-      transition: { duration: 0.3, ease: 'easeIn' },
+      transition: {
+        duration: 0.3,
+        ease: 'easeIn',
+      },
     },
   });
 
@@ -140,7 +160,7 @@ export const Project = () => {
 
   // useRef and useInView for animation trigger
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.2 });
+  const isInView = useInView(ref, { once: false, amount: 0.01,   margin: "100px 0px 100px 0px"});
 
   // Parallax effect
   const { scrollYProgress } = useScroll({
@@ -228,7 +248,7 @@ export const Project = () => {
           <div className="mt-12" ref={ref}>
             <motion.div 
               className="flex flex-wrap justify-center gap-8 sm:gap-12"
-              key={activeTab} // Force re-render when tab changes
+              key={activeTab}
             >
               {filteredProjects.length > 0 ? (
                 filteredProjects.map((project, index) => (
@@ -241,7 +261,7 @@ export const Project = () => {
                     }}
                     variants={cardVariants(index)}
                     initial="hidden"
-                    animate="visible"
+                    animate={isInView ? 'visible' : 'hidden'}
                     exit="exit"
                     whileHover="hover"
                     custom={index}
