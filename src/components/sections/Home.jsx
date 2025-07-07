@@ -20,41 +20,41 @@ import {
 } from 'lucide-react';
 
 export const Home = () => {
-  const featuredProjects = [
-    {
-      id: 1,
-      title: 'Vehicle Service Center Management System',
-      description:
-        'A MERN-based platform to manage vehicle service bookings, track repair status, and streamline customer interactions.',
-      image: vehicleService,
-      tags: ['Node.js', 'React', 'MongoDB', 'Express'],
-      designLink: 'https://www.behance.net/gallery/225208747/FixMate-Vehicle-Service-Center-Website',
-      githubLink: 'https://github.com/Thimeth0013/IT-Project-2025',
-      liveLink: '#',
-    },
-    {
-      id: 2,
-      title: 'My Website',
-      description:
-        'A fast and responsive developer portfolio built with React, Tailwind CSS, and Vite — designed to showcase projects, technical skills, and design philosophy with smooth animations and clean UI.',
-      image: portfolio,
-      tags: ['React', 'TailwindCSS', 'Vite'],
-      designLink: 'https://www.behance.net/gallery/228890885/My-Portfolio',
-      githubLink: 'https://github.com/Thimeth0013/thimeth-sathmika',
-      liveLink: 'https://thimeth0013.github.io/thimeth-sathmika/',
-    },
-    {
-      id: 3,
-      title: 'Home Keep',
-      description:
-        'Home Keep is a professionally designed app built in Figma to simplify and streamline home maintenance, helping you keep your home in top shape with ease.',
-      image: homekeep,
-      tags: ['Figma'],
-      designLink: 'https://www.behance.net/gallery/225180721/Home-Keep',
-      githubLink: '',
-      liveLink: '',
-    },
-  ];
+  // const featuredProjects = [
+  //   {
+  //     id: 1,
+  //     title: 'Vehicle Service Center Management System',
+  //     description:
+  //       'A MERN-based platform to manage vehicle service bookings, track repair status, and streamline customer interactions.',
+  //     image: vehicleService,
+  //     tags: ['Node.js', 'React', 'MongoDB', 'Express'],
+  //     designLink: 'https://www.behance.net/gallery/225208747/FixMate-Vehicle-Service-Center-Website',
+  //     githubLink: 'https://github.com/Thimeth0013/IT-Project-2025',
+  //     liveLink: '#',
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'My Website',
+  //     description:
+  //       'A fast and responsive developer portfolio built with React, Tailwind CSS, and Vite — designed to showcase projects, technical skills, and design philosophy with smooth animations and clean UI.',
+  //     image: portfolio,
+  //     tags: ['React', 'TailwindCSS', 'Vite'],
+  //     designLink: 'https://www.behance.net/gallery/228890885/My-Portfolio',
+  //     githubLink: 'https://github.com/Thimeth0013/thimeth-sathmika',
+  //     liveLink: 'https://thimeth0013.github.io/thimeth-sathmika/',
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'Home Keep',
+  //     description:
+  //       'Home Keep is a professionally designed app built in Figma to simplify and streamline home maintenance, helping you keep your home in top shape with ease.',
+  //     image: homekeep,
+  //     tags: ['Figma'],
+  //     designLink: 'https://www.behance.net/gallery/225180721/Home-Keep',
+  //     githubLink: '',
+  //     liveLink: '',
+  //   },
+  // ];
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -193,7 +193,7 @@ export const Home = () => {
       </div>
 
       {/* Featured Projects Section */}
-      <section className="relative py-20 bg-black overflow-hidden pb-10">
+      {/* <section className="relative py-20 bg-black overflow-hidden pb-10">
         <div className="absolute inset-0 z-0 transform scale-y-[-1]">
           <div className="relative h-full w-full bg-black">
             <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
@@ -284,7 +284,7 @@ export const Home = () => {
             </a>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

@@ -48,7 +48,7 @@ export const Contact = () => {
   const menuItems = [
     { link: 'https://github.com/Thimeth0013', text: 'Github', image: 'https://pngimg.com/uploads/github/github_PNG65.png', target: "_blank" },
     { link: 'https://www.behance.net/thimethsathmika', text: 'Behance', image: 'https://www.logo.wine/a/logo/Behance/Behance-Logo.wine.svg', target: "_blank" },
-    { link: '#contact', text: 'LinkedIn', image: 'https://logowik.com/content/uploads/images/linkedin-black9283.jpg', target: "_blank" },
+    { link: 'https://www.linkedin.com/in/thimeth-sathmika/', text: 'LinkedIn', image: 'https://logowik.com/content/uploads/images/linkedin-black9283.jpg', target: "_blank" },
   ];
 
   return (
