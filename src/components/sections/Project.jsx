@@ -2,78 +2,30 @@ import React, { useRef, useState } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { Sparkle, GithubIcon, ExternalLinkIcon, Lightbulb } from 'lucide-react';
 
-// All projects images
-import vehicleService from '../../assets/projects/vehicleService.png';
-import portfolio from '../../assets/projects/portfolio.png';
-import homekeep from '../../assets/projects/homekeep.png'
-import cocktails from '../../assets/projects/gsapCocktails.png';
+// Import project data from separate file
+import { projectsData } from '../../data/projects';
 
 export const Project = () => {
   // Tab state
   const [activeTab, setActiveTab] = useState('all');
 
-  // All Projects
-  const allProjects = [
-    {
-      id: 1,
-      title: 'Vehicle Service Center Management System',
-      description:
-        'A MERN-based platform to manage vehicle service bookings, track repair status, and streamline customer interactions.',
-      image: vehicleService,
-      tags: ['Node.js', 'React', 'MongoDB', 'Express'],
-      designLink: 'https://www.behance.net/gallery/225208747/FixMate-Vehicle-Service-Center-Website',
-      githubLink: 'https://github.com/Thimeth0013/IT-Project-2025',
-      liveLink: '#',
-    },
-    {
-      id: 2,
-      title: 'My Website',
-      description:
-        'A fast and responsive developer portfolio built with React, Tailwind CSS, and Vite — designed to showcase projects, technical skills, and design philosophy with smooth animations and clean UI.',
-      image: portfolio,
-      tags: ['React', 'TailwindCSS', 'Vite'],
-      designLink: 'https://www.behance.net/gallery/228890885/My-Portfolio',
-      githubLink: 'https://github.com/Thimeth0013/thimeth-sathmika',
-      liveLink: 'https://thimeth0013.github.io/thimeth-sathmika/',
-    },
-    {
-      id: 2,
-      title: 'Mojito Cocktails',
-      description:
-        'An animated and visually rich website built with React, Tailwind CSS, Vite, and GSAP — my first project using GSAP to explore advanced frontend animations.',
-      image: cocktails,
-      tags: ['React', 'TailwindCSS', 'Vite', 'GSAP Animations'],
-      designLink: 'https://www.figma.com/design/MByXaI8pcleIbgTvsDat1X/Cocktail-GSAP-Website?node-id=0-1&p=f&t=N6byExgZAx0K0dba-0',
-      githubLink: 'https://github.com/Thimeth0013/gsap-cocktails',
-      liveLink: 'https://gsap-cocktails-topaz.vercel.app/#home',
-    },
-    {
-      id: 3,
-      title: 'Home Keep',
-      description:
-        'Home Keep is a professionally designed app built in Figma to simplify and streamline home maintenance, helping you keep your home in top shape with ease.',
-      image: homekeep,
-      tags: ['Figma'],
-      designLink: 'https://www.behance.net/gallery/225180721/Home-Keep',
-      githubLink: '',
-      liveLink: '',
-    },
-  ];
+  // Use imported project data
+  const allProjects = projectsData;
 
   // Filter projects based on active tab
   const getFilteredProjects = () => {
     switch (activeTab) {
       case 'design':
         return allProjects.filter(project => 
-          project.designLink && project.designLink !== '#'
+          project.designLink && project.designLink.trim() !== ''
         );
       case 'code':
         return allProjects.filter(project => 
-          project.githubLink && project.githubLink !== '#'
+          project.githubLink && project.githubLink.trim() !== ''
         );
       case 'live':
         return allProjects.filter(project => 
-          project.liveLink && project.liveLink !== '#'
+          project.liveLink && project.liveLink.trim() !== ''
         );
       case 'all':
       default:
@@ -89,21 +41,21 @@ export const Project = () => {
     { 
       id: 'design', 
       label: 'Design', 
-      count: allProjects.filter(p => p.designLink && p.designLink !== '#').length 
+      count: allProjects.filter(p => p.designLink && p.designLink.trim() !== '').length 
     },
     { 
       id: 'code', 
       label: 'Code', 
-      count: allProjects.filter(p => p.githubLink && p.githubLink !== '#').length 
+      count: allProjects.filter(p => p.githubLink && p.githubLink.trim() !== '').length 
     },
     { 
       id: 'live', 
       label: 'Live Demo', 
-      count: allProjects.filter(p => p.liveLink && p.liveLink !== '#').length 
+      count: allProjects.filter(p => p.liveLink && p.liveLink.trim() !== '').length 
     },
   ];
 
-  // Framer Motion Animation Variants - FIXED SEQUENCING
+  // Framer Motion Animation Variants
   const titleVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
@@ -112,7 +64,7 @@ export const Project = () => {
       transition: {
         duration: 0.5,
         ease: 'easeOut',
-        delay: 0, // Title appears first
+        delay: 0,
       },
     },
   };
@@ -125,19 +77,19 @@ export const Project = () => {
       transition: {
         duration: 0.6,
         ease: 'easeOut',
-        delay: 0.3, // Tabs appear after title
+        delay: 0.3,
       },
     },
   };
 
   const cardVariants = (index = 0) => ({
-    hidden: { opacity: 0}, // Fixed: proper y value and removed duration
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
         duration: 0.5,
         ease: 'easeOut',
-        delay: 0.3 + index * 0.1, // Cards appear after tabs complete (0.3 + 0.6 = 0.9)
+        delay: 0.6 + index * 0.1,
       },
     },
     exit: {
@@ -150,17 +102,9 @@ export const Project = () => {
     },
   });
 
-  const hoverVariants = {
-    hover: {
-      scale: 1.05,
-      boxShadow: '0 0 20px rgba(59, 130, 246, 0.3)',
-      transition: { duration: 0.3, ease: 'easeOut' },
-    },
-  };
-
   // useRef and useInView for animation trigger
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.01,   margin: "100px 0px 100px 0px"});
+  const isInView = useInView(ref, { once: false, amount: 0.01, margin: "100px 0px 100px 0px" });
 
   // Parallax effect
   const { scrollYProgress } = useScroll({
@@ -201,7 +145,7 @@ export const Project = () => {
 
           {/* Tab Navigation */}
           <motion.div
-            className="flex justify-center mb-12"
+            className="flex justify-center mb-14"
             variants={tabVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
@@ -254,7 +198,7 @@ export const Project = () => {
                 filteredProjects.map((project, index) => (
                   <motion.div
                     key={`${activeTab}-${project.id}`}
-                    className="group w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-lg bg-gray-900/50 hover:bg-gray-900/80 hover:border-blue-800/26 transition ease-linear"
+                    className="group relative w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-lg bg-gray-900/50 hover:bg-gray-900/80 hover:border-blue-800/26 transition-all duration-500 ease-out cursor-pointer"
                     style={{
                       transform: `translateX(${index % 2 === 0 ? '10%' : '-10%'})`,
                       y: parallaxY,
@@ -263,68 +207,87 @@ export const Project = () => {
                     initial="hidden"
                     animate={isInView ? 'visible' : 'hidden'}
                     exit="exit"
-                    whileHover="hover"
+                    whileHover={{ 
+                      scale: 1.08,
+                      transition: { duration: 0.2, ease: 'easeOut' }
+                    }}
                     custom={index}
                   >
-                    <div className="relative h-48 overflow-hidden">
+                    {/* Image Container */}
+                    <div className="relative h-52 overflow-hidden">
                       <img
                         src={project.image}
                         alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-500"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                      
+                      {/* Tags - Always visible on image */}
                       <div className="absolute bottom-0 left-0 p-4 flex gap-2 flex-wrap">
                         {project.tags.map((tag, tagIndex) => (
                           <span
                             key={tagIndex}
-                            className="text-xs font-medium px-2 py-1 rounded-full bg-gray-900/80 text-gray-100"
+                            className="text-xs font-medium px-2 py-1 rounded-full bg-gray-900/60 backdrop-blur-sm text-gray-100"
                           >
                             {tag}
                           </span>
                         ))}
                       </div>
-                    </div>
 
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                      <p className="text-gray-600 dark:text-gray-400 mb-4 font-medium text-sm">
-                        {project.description}
-                      </p>
-                      <div className="flex items-center gap-4">
-                        {project.designLink && project.designLink !== '#' ? (
-                          <a
-                            href={project.designLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-sm font-medium text-blue-500 dark:text-blue-500 hover:underline"
-                          >
-                            <Lightbulb className="w-4 h-4" />
-                            Design
-                          </a>
-                        ) : null}
-                        {project.githubLink && project.githubLink !== '#' ? (
-                          <a
-                            href={project.githubLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:underline"
-                          >
-                            <GithubIcon className="w-4 h-4" />
-                            Code
-                          </a>
-                        ) : null}
-                        {project.liveLink && project.liveLink !== '#' ? (
-                          <a
-                            href={project.liveLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-sm font-medium text-green-500 dark:text-green-500 hover:underline"
-                          >
-                            <ExternalLinkIcon className="w-4 h-4" />
-                            Live Demo
-                          </a>
-                        ) : null}
-                      </div>
+                      {/* Overlay - Hidden by default, shown on hover */}
+                      <motion.div
+                        className="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col justify-center items-center p-6"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      >
+                        <motion.div
+                          className="text-center space-y-3"
+                          initial={{ y: 20, opacity: 0 }}
+                          whileHover={{ y: 0, opacity: 1 }}
+                          transition={{ duration: 0.3, delay: 0.1 }}
+                        >
+                          <h3 className="text-md md:text-lg font-bold text-white mb-2">{project.title}</h3>
+                          <p className="text-gray-300 text-xs md:text-sm leading-relaxed">
+                            {project.description}
+                          </p>
+                          
+                          <div className="flex items-center justify-center gap-4 mt-4">
+                            {project.designLink && project.designLink.trim() !== '' ? (
+                              <a
+                                href={project.designLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 text-sm font-medium text-blue-500 dark:text-blue-500 hover:underline"
+                              >
+                                <Lightbulb className="w-4 h-4" />
+                                Design
+                              </a>
+                            ) : null}
+                            {project.githubLink && project.githubLink.trim() !== '' ? (
+                              <a
+                                href={project.githubLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 text-sm font-medium text-gray-300 dark:text-gray-300 hover:underline"
+                              >
+                                <GithubIcon className="w-4 h-4" />
+                                Code
+                              </a>
+                            ) : null}
+                            {project.liveLink && project.liveLink.trim() !== '' ? (
+                              <a
+                                href={project.liveLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 text-sm font-medium text-green-500 dark:text-green-500 hover:underline"
+                              >
+                                <ExternalLinkIcon className="w-4 h-4" />
+                                Live Demo
+                              </a>
+                            ) : null}
+                          </div>
+                        </motion.div>
+                      </motion.div>
                     </div>
                   </motion.div>
                 ))
