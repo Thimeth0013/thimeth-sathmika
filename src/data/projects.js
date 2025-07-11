@@ -1,4 +1,3 @@
-// Import project images
 import vehicleService from '../assets/projects/vehicleService.png';
 import portfolio from '../assets/projects/portfolio.png';
 import homekeep from '../assets/projects/homekeep.png';
@@ -46,29 +45,3 @@ export const projectsData = [
     liveLink: '',
   },
 ];
-
-/*
-HOW TO ADD A NEW PROJECT:
-1. Import your project image at the top of this file
-2. Add a new object to the projectsData array with the following structure:
-   {
-     id: [unique_number],
-     title: 'Your Project Title',
-     description: 'Brief description of your project',
-     image: [imported_image_variable],
-     tags: ['Tag1', 'Tag2', 'Tag3'],
-     designLink: 'https://your-design-link.com' or '#' if not available,
-     githubLink: 'https://github.com/your-repo' or '' if not available,
-     liveLink: 'https://your-live-demo.com' or '' if not available,
-   }
-
-HOW TO REMOVE A PROJECT:
-Simply delete the corresponding object from the projectsData array.
-
-NOTES:
-- Each project must have a unique id
-- Use '#' for designLink if not available (will be filtered out)
-- Use empty string '' for githubLink and liveLink if not available
-- Tags should be an array of strings
-- Make sure to import your image file at the top if adding new projects
-*/
