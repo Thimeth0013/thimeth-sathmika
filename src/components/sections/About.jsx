@@ -1,15 +1,15 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import CircularText from "../CircularText/CircularText";
 import { 
   Sparkle, 
   BookOpenIcon,
-  BriefcaseIcon,
   GraduationCapIcon,
   AwardIcon,
   Send
 } from "lucide-react";
 import profileImage from '../../assets/profile.png';
+import CertificateData from '../../data/certificate';
 
 // Skill icons
 import html from '../../assets/skills/html.svg';
@@ -73,11 +73,13 @@ export const About = () => {
   const skillsRef = useRef(null);
   const experienceRef = useRef(null);
   const educationRef = useRef(null);
+  const certificatesRef = useRef(null);
   
-  const isInView = useInView(ref, { once: true, amount: 0.2 }); // Changed to once: true
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
   const skillsInView = useInView(skillsRef, { once: false, amount: 0.2 });
   const experienceInView = useInView(experienceRef, { once: false, amount: 0.2 });
   const educationInView = useInView(educationRef, { once: false, amount: 0.2 });
+  const certificatesInView = useInView(certificatesRef, { once: false, amount: 0.2 });
 
   const skills = [
     { img: html, label: "HTML" },
@@ -99,7 +101,6 @@ export const About = () => {
     { img: mysql, label: "MySQL" },
     { img: java, label: "Java" },
   ];
-
 
   const skillCategories = [
     {
@@ -123,6 +124,16 @@ export const About = () => {
       items: ['Figma', 'Photoshop'],
     },
   ];
+
+  const [selectedCertificate, setSelectedCertificate] = useState(null);
+
+  const openModal = (certificate) => {
+    setSelectedCertificate(certificate);
+  };
+
+  const closeModal = () => {
+    setSelectedCertificate(null);
+  };
 
   return (
     <section id="about" className="min-h-screen bg-black text-white py-15">
@@ -170,12 +181,12 @@ export const About = () => {
             variants={imageVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
-            style={{ minHeight: "500px" }} // Stabilize height to prevent flicker
+            style={{ minHeight: "500px" }}
           >
             <motion.img
               src={profileImage}
               alt="Portfolio Visual"
-              className="w-full sm:w-auto h-[500px] will-change-transform" // Optimize with will-change
+              className="w-full sm:w-auto h-[500px] will-change-transform"
               transition={{ duration: 0.3, ease: "easeOut" }}
             />
             <motion.div
@@ -183,17 +194,13 @@ export const About = () => {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              {/* Outer circle with spinning text */}
               <div className="relative w-full h-full">
-                {/* Spinning Circular Text */}
                 <CircularText
                   text="LETS TALK * LETS TALK * "
                   spinDuration={20}
                   onHover="speedUp"
                   className="text-white font-medium h-full w-full align-middle justify-center text-center bg-black/50 rounded-full"
                 />
-
-                {/* Centered button with link */}
                 <a
                   href="#contact"
                   className="absolute inset-0 flex items-center justify-center"
@@ -212,7 +219,6 @@ export const About = () => {
         {/* Seamless Infinite Marquee */}
         <div className="w-full mt-20 overflow-hidden group border-white/20 border-t border-b pt-5 pb-5">
           <div className="flex">
-            {/* First set of skills */}
             <motion.div
               initial={{ x: 0 }}
               animate={{ x: "-100%" }}
@@ -230,8 +236,6 @@ export const About = () => {
                 </div>
               ))}
             </motion.div>
-
-            {/* Second set of skills (starts where first set ends) */}
             <motion.div
               initial={{ x: 0 }}
               animate={{ x: "-100%" }}
@@ -289,57 +293,92 @@ export const About = () => {
           </div>
         </motion.div>
 
-        {/* Education & Certifications */}
+        {/* Education Section */}
         <motion.div 
           ref={educationRef}
+          className="mt-20 mb-20 ml-10 mr-10"
           variants={sectionVariants}
           initial="hidden"
           animate={educationInView ? "visible" : "hidden"}
         >
-          <h2 className="text-3xl font-bold mb-12 ml-10 mr-10 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start">
+          <h2 className="text-3xl font-bold mb-12 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start">
             <GraduationCapIcon className="w-8 h-8 text-blue-800" />
-            <span className="text-blue-800">Education & Certifications</span>
+            <span className="text-blue-800">Education</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ml-10 mr-10">
+          <div className="grid grid-cols-1 gap-8">
             <motion.div 
               className="p-6 rounded-xl bg-gray-900/50 backdrop-blur-sm border border-white/10 hover:border-blue-800/50 transition-all duration-300"
               transition={{ duration: 0.2 }}
             >
               <h3 className="text-xl font-semibold text-blue-800 mb-3">
-                Education
+                BSc (Hons) in Information Technology - Software Engineering
               </h3>
-              <p className="font-medium text-lg text-white mb-1">BSc (Hons) in Information Technology - Software Engineering</p>
               <p className="text-gray-500 font-medium">
                 Sri Lanka Institute of Information Technology (SLIIT) <br />
                 (2023 - present)
               </p>
             </motion.div>
-
-            {/* <motion.div 
-              className="p-6 rounded-xl bg-gray-900/50 backdrop-blur-sm border border-white/10 hover:border-blue-800/50 transition-all duration-300"
-              whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h3 className="text-xl font-semibold text-blue-800 mb-3">
-                Certifications
-              </h3>
-              <ul className="space-y-2 text-gray-300">
-                <li className="flex items-center gap-2">
-                  <AwardIcon className="w-4 h-4 text-emerald-400" />
-                  React Developer Certification
-                </li>
-                <li className="flex items-center gap-2">
-                  <AwardIcon className="w-4 h-4 text-emerald-400" />
-                  Node.js Professional Certificate
-                </li>
-                <li className="flex items-center gap-2">
-                  <AwardIcon className="w-4 h-4 text-emerald-400" />
-                  MongoDB Associate Developer
-                </li>
-              </ul>
-            </motion.div> */}
           </div>
         </motion.div>
+
+        {/* Certifications Section */}
+        <div 
+          ref={certificatesRef}
+          className="mt-20 mb-20 ml-10 mr-10"
+        >
+          <h2 className="text-3xl font-bold mb-12 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start">
+            <AwardIcon className="w-8 h-8 text-blue-800" />
+            <span className="text-blue-800">Certifications</span>
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-6">
+            {CertificateData.map((cert) => (
+              <div
+                key={cert.id}
+                className="relative aspect-[4/3] bg-gray-900/50 backdrop-blur-sm border border-white/10 hover:border-blue-800/50 transition-all duration-300 rounded-xl overflow-hidden cursor-pointer group hover:scale-105"
+                onClick={() => openModal(cert)}
+              >
+                <img
+                  src={cert.thumbnail}
+                  alt={cert.title}
+                  className="w-full h-full object-cover group-hover:blur-sm transition-all duration-300"
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <p className="text-sm font-medium text-white text-center px-2 line-clamp-2">{cert.title}</p>
+                  <p className="text-xs text-gray-400 text-center px-2 mt-2 line-clamp-3">{cert.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Modal for Full Certificate Image */}
+        {selectedCertificate && (
+          <div
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
+            onClick={closeModal}
+          >
+            <div
+              className="relative max-w-3xl w-full m-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={selectedCertificate.fullImage}
+                alt={selectedCertificate.title}
+                className="w-full h-auto rounded-xl border border-white/20"
+              />
+              <button
+                className="absolute top-2 right-2 bg-blue-800/80 text-white rounded-full w-8 h-8 flex items-center justify-center"
+                onClick={closeModal}
+              >
+                ✕
+              </button>
+              <div className="mt-4 text-center">
+                <p className="text-lg font-medium text-white">{selectedCertificate.title}</p>
+                <p className="text-sm text-gray-500">{selectedCertificate.description}</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Tooltip Hover Display Logic */}
