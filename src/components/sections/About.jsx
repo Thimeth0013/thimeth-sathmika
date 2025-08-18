@@ -32,6 +32,7 @@ import mysql from '../../assets/skills/mysql.svg';
 import java from '../../assets/skills/java.svg';
 
 export const About = () => {
+  // Animation variants
   const titleVariants = {
     hidden: { opacity: 0, y: 10 },
     visible: {
@@ -65,6 +66,21 @@ export const About = () => {
         type: "spring",
         stiffness: 100,
         damping: 15,
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
       },
     },
   };
@@ -75,11 +91,11 @@ export const About = () => {
   const educationRef = useRef(null);
   const certificatesRef = useRef(null);
   
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
-  const skillsInView = useInView(skillsRef, { once: false, amount: 0.2 });
-  const experienceInView = useInView(experienceRef, { once: false, amount: 0.2 });
-  const educationInView = useInView(educationRef, { once: false, amount: 0.2 });
-  const certificatesInView = useInView(certificatesRef, { once: false, amount: 0.2 });
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const skillsInView = useInView(skillsRef, { once: true, amount: 0.3 });
+  const experienceInView = useInView(experienceRef, { once: true, amount: 0.3 });
+  const educationInView = useInView(educationRef, { once: true, amount: 0.3 });
+  const certificatesInView = useInView(certificatesRef, { once: true, amount: 0.3 });
 
   const skills = [
     { img: html, label: "HTML" },
@@ -155,20 +171,30 @@ export const About = () => {
               I'm a{" "}
               <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
                 *creative
-                <div className="hidden hover-display absolute text-sm bottom-[-470px] sm:bottom-[-20px] left-[-20px] sm:left-[500px] w-64 p-4 bg-white/40 dark:bg-black/80 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
+                <motion.div
+                  className="hidden hover-display absolute text-sm bottom-[-470px] sm:bottom-[-20px] left-[-20px] sm:left-[500px] w-64 p-4 bg-white/40 dark:bg-black/80 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
                   <p>
                     <span className="font-semibold text-white/80">Creative:</span> using imagination or original ideas to create something meaningful.
                   </p>
-                </div>
+                </motion.div>
               </span>{" "}
               soul with a developer's toolkit —{" "}
               <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
                 *passionate
-                <div className="hidden hover-display absolute text-sm bottom-[-400px] sm:bottom-[110px] left-[40px] sm:left-[630px] w-64 p-4 bg-white/40 dark:bg-black/80 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
+                <motion.div
+                  className="hidden hover-display absolute text-sm bottom-[-400px] sm:bottom-[110px] left-[40px] sm:left-[630px] w-64 p-4 bg-white/40 dark:bg-black/80 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
                   <p>
                     <span className="font-semibold text-white/80">Passionate:</span> showing or caused by strong feelings or a strong belief.
                   </p>
-                </div>
+                </motion.div>
               </span>{" "}
               about shaping engaging digital stories.
             </h1>
@@ -207,6 +233,8 @@ export const About = () => {
                 >
                   <motion.div
                     className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-800/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-blue-800 transition-all duration-300"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     <Send className="w-6 h-6 mr-1 mt-1 sm:w-8 sm:h-8 text-white" />
                   </motion.div>
@@ -217,7 +245,12 @@ export const About = () => {
         </div>
 
         {/* Seamless Infinite Marquee */}
-        <div className="w-full mt-20 overflow-hidden group border-white/20 border-t border-b pt-5 pb-5">
+        <motion.div
+          className="w-full mt-20 overflow-hidden group border-white/20 border-t border-b pt-5 pb-5"
+          variants={sectionVariants}
+          initial="hidden"
+          animate={skillsInView ? "visible" : "hidden"}
+        >
           <div className="flex">
             <motion.div
               initial={{ x: 0 }}
@@ -230,10 +263,14 @@ export const About = () => {
               className="flex gap-20 min-w-full shrink-0 group-hover:[animation-play-state:paused] pr-20"
             >
               {skills.map((item, i) => (
-                <div key={`first-${i}`} className="flex items-center space-x-3 px-4 shrink-0">
+                <motion.div 
+                  key={`first-${i}`} 
+                  className="flex items-center space-x-3 px-4 shrink-0"
+                  variants={itemVariants}
+                >
                   <img src={item.img} alt={item.label} className="w-10 h-10 object-contain" />
                   <span className="text-lg font-medium text-white">{item.label}</span>
-                </div>
+                </motion.div>
               ))}
             </motion.div>
             <motion.div
@@ -247,14 +284,18 @@ export const About = () => {
               className="flex gap-20 min-w-full shrink-0 group-hover:[animation-play-state:paused] pr-20"
             >
               {skills.map((item, i) => (
-                <div key={`second-${i}`} className="flex items-center space-x-3 px-4 shrink-0">
+                <motion.div 
+                  key={`second-${i}`} 
+                  className="flex items-center space-x-3 px-4 shrink-0"
+                  variants={itemVariants}
+                >
                   <img src={item.img} alt={item.label} className="w-10 h-10 object-contain" />
                   <span className="text-lg font-medium text-white">{item.label}</span>
-                </div>
+                </motion.div>
               ))}
             </motion.div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Skills Section */}
         <motion.div 
@@ -264,28 +305,31 @@ export const About = () => {
           initial="hidden"
           animate={skillsInView ? "visible" : "hidden"}
         >
-          <h2 className="text-3xl font-bold mb-12 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start">
+          <motion.h2 
+            className="text-3xl font-bold mb-12 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start"
+            variants={itemVariants}
+          >
             <BookOpenIcon className="w-8 h-8 text-blue-800" />
             <span className="text-blue-800">Technical Skills</span>
-          </h2>
+          </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {skillCategories.map((skillSet) => (
               <motion.div
                 key={skillSet.category}
                 className="p-6 rounded-xl bg-gray-900/50 backdrop-blur-sm border border-white/10 hover:border-blue-800/50 transition-all duration-300"
-                transition={{ duration: 0.2 }}
+                variants={itemVariants}
               >
                 <h3 className="text-xl font-semibold mb-4 text-blue-800">
                   {skillSet.category}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {skillSet.items.map((skill) => (
-                    <span
+                    <motion.span
                       key={skill}
                       className="px-4 py-0.5 font-medium text-white/60 hover:text-white rounded-full bg-white/10 text-sm border border-white/20 hover:bg-blue-800/20 hover:border-blue-800/40 transition-all duration-200 cursor-default"
                     >
                       {skill}
-                    </span>
+                    </motion.span>
                   ))}
                 </div>
               </motion.div>
@@ -301,84 +345,102 @@ export const About = () => {
           initial="hidden"
           animate={educationInView ? "visible" : "hidden"}
         >
-          <h2 className="text-3xl font-bold mb-12 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start">
+          <motion.h2 
+            className="text-3xl font-bold mb-12 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start"
+            variants={itemVariants}
+          >
             <GraduationCapIcon className="w-8 h-8 text-blue-800" />
             <span className="text-blue-800">Education</span>
-          </h2>
-          <div className="grid grid-cols-1 gap-8">
-            <motion.div 
-              className="p-6 rounded-xl bg-gray-900/50 backdrop-blur-sm border border-white/10 hover:border-blue-800/50 transition-all duration-300"
-              transition={{ duration: 0.2 }}
-            >
-              <h3 className="text-xl font-semibold text-blue-800 mb-3">
-                BSc (Hons) in Information Technology - Software Engineering
-              </h3>
-              <p className="text-gray-500 font-medium">
-                Sri Lanka Institute of Information Technology (SLIIT) <br />
-                (2023 - present)
-              </p>
-            </motion.div>
-          </div>
+          </motion.h2>
+          <motion.div 
+            className="p-6 rounded-xl bg-gray-900/50 backdrop-blur-sm border border-white/10 hover:border-blue-800/50 transition-all duration-300"
+            variants={itemVariants}
+          >
+            <h3 className="text-xl font-semibold text-blue-800 mb-3">
+              BSc (Hons) in Information Technology - Software Engineering
+            </h3>
+            <p className="text-gray-500 font-medium">
+              Sri Lanka Institute of Information Technology (SLIIT) <br />
+              (2023 - present)
+            </p>
+          </motion.div>
         </motion.div>
 
         {/* Certifications Section */}
-        <div 
+        <motion.div
           ref={certificatesRef}
           className="mt-20 mb-20 ml-10 mr-10"
+          variants={sectionVariants}
+          initial="hidden"
+          animate={certificatesInView ? "visible" : "hidden"}
         >
-          <h2 className="text-3xl font-bold mb-12 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start">
+          <motion.h2
+            className="text-3xl font-bold mb-12 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start"
+            variants={itemVariants}
+          >
             <AwardIcon className="w-8 h-8 text-blue-800" />
             <span className="text-blue-800">Certifications</span>
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-6">
+          </motion.h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {CertificateData.map((cert) => (
-              <div
+              <motion.div
                 key={cert.id}
-                className="relative aspect-[4/3] bg-gray-900/50 backdrop-blur-sm border border-white/10 hover:border-blue-800/50 transition-all duration-300 rounded-xl overflow-hidden cursor-pointer group hover:scale-105"
+                className="relative flex flex-col bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300"
+                variants={itemVariants}
                 onClick={() => openModal(cert)}
               >
-                <img
+                {/* Date Tag */}
+                <motion.span
+                  className="absolute top-3 right-3 bg-blue-800/80 text-white text-xs px-3 py-1 rounded-full shadow-md"
+                  variants={itemVariants}
+                >
+                  {cert.date}
+                </motion.span>
+
+                {/* Thumbnail */}
+                <motion.img
                   src={cert.thumbnail}
                   alt={cert.title}
-                  className="w-full h-full object-cover group-hover:blur-sm transition-all duration-300"
+                  className="w-full h-40 object-cover border-b border-white/10"
+                  variants={itemVariants}
                 />
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <p className="text-sm font-medium text-white text-center px-2 line-clamp-2">{cert.title}</p>
-                  <p className="text-xs text-gray-400 text-center px-2 mt-2 line-clamp-3">{cert.description}</p>
+
+                {/* Card Body */}
+                <div className="flex flex-col flex-grow p-4">
+                  <motion.h3
+                    className="text-lg font-semibold text-white line-clamp-2"
+                    variants={itemVariants}
+                  >
+                    {cert.title}
+                  </motion.h3>
+                  <motion.p
+                    className="text-sm text-gray-400 mt-2 line-clamp-3"
+                    variants={itemVariants}
+                  >
+                    {cert.description}
+                  </motion.p>
+
+                  {/* Verify Button */}
+                  {cert.pdf && (
+                    <motion.a
+                      href={cert.pdf}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 inline-block px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
+                      variants={itemVariants}
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={(e) => e.stopPropagation()} // Prevent click from bubbling to parent
+                    >
+                      View Certificate
+                    </motion.a>
+                  )}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
-
-        {/* Modal for Full Certificate Image */}
-        {selectedCertificate && (
-          <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
-            onClick={closeModal}
-          >
-            <div
-              className="relative max-w-3xl w-full m-4"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img
-                src={selectedCertificate.fullImage}
-                alt={selectedCertificate.title}
-                className="w-full h-auto rounded-xl border border-white/20"
-              />
-              <button
-                className="absolute top-2 right-2 bg-blue-800/80 text-white rounded-full w-8 h-8 flex items-center justify-center"
-                onClick={closeModal}
-              >
-                ✕
-              </button>
-              <div className="mt-4 text-center">
-                <p className="text-lg font-medium text-white">{selectedCertificate.title}</p>
-                <p className="text-sm text-gray-500">{selectedCertificate.description}</p>
-              </div>
-            </div>
-          </div>
-        )}
+        </motion.div>
       </div>
 
       {/* Tooltip Hover Display Logic */}

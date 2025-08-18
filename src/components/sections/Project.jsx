@@ -140,7 +140,7 @@ export const Project = () => {
                 filteredProjects.map((project, index) => (
                   <motion.div
                     key={`${activeTab}-${project.id}`}
-                    className="group relative w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-lg bg-gray-900/50 hover:bg-gray-900/80 hover:border-blue-800/26 transition-all duration-500 ease-out cursor-pointer"
+                    className="relative w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-lg bg-gray-900/50"
                     style={{
                       transform: `translateX(${index % 2 === 0 ? '10%' : '-10%'})`,
                       y: parallaxY,
@@ -149,17 +149,13 @@ export const Project = () => {
                     initial="hidden"
                     animate={isInView ? 'visible' : 'hidden'}
                     exit="exit"
-                    whileHover={{
-                      scale: 1.08,
-                      transition: { duration: 0.2, ease: 'easeOut' },
-                    }}
                   >
                     {/* Image */}
                     <div className="relative h-52 overflow-hidden">
                       <img
                         src={project.image}
                         alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="w-full h-full object-cover"
                       />
 
                       {/* Tags */}
@@ -173,40 +169,12 @@ export const Project = () => {
                           </span>
                         ))}
                       </div>
-
-                      {/* Overlay for Desktop */}
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-300 ease-in-out bg-black/80 backdrop-blur-sm flex flex-col justify-center items-center p-6">
-                        <div className="text-center space-y-3">
-                          <h3 className="text-md md:text-lg font-bold text-white mb-2">{project.title}</h3>
-                          <p className="text-gray-300 text-xs md:text-sm leading-relaxed">{project.description}</p>
-                          <div className="flex items-center justify-center gap-4 mt-4">
-                            {project.designLink && (
-                              <a href={project.designLink} target="_blank" rel="noopener noreferrer"
-                                className="flex items-center gap-1 text-sm font-medium text-blue-500 hover:underline">
-                                <Lightbulb className="w-4 h-4" /> Design
-                              </a>
-                            )}
-                            {project.githubLink && (
-                              <a href={project.githubLink} target="_blank" rel="noopener noreferrer"
-                                className="flex items-center gap-1 text-sm font-medium text-gray-300 hover:underline">
-                                <GithubIcon className="w-4 h-4" /> Code
-                              </a>
-                            )}
-                            {project.liveLink && (
-                              <a href={project.liveLink} target="_blank" rel="noopener noreferrer"
-                                className="flex items-center gap-1 text-sm font-medium text-green-500 hover:underline">
-                                <ExternalLinkIcon className="w-4 h-4" /> Live Demo
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      </div>
                     </div>
 
-                    {/* Mobile Detail Section */}
-                    <div className="md:hidden p-4 bg-black/60 backdrop-blur-sm">
+                    {/* Detail Section */}
+                    <div className="p-4 bg-[#080b14]">
                       <h3 className="text-md font-bold text-white mb-2">{project.title}</h3>
-                      <p className="text-gray-300 text-xs leading-relaxed">{project.description}</p>
+                      <p className="text-gray-300 text-sm leading-relaxed">{project.description}</p>
                       <div className="flex items-center gap-4 mt-4">
                         {project.designLink && (
                           <a href={project.designLink} target="_blank" rel="noopener noreferrer"
