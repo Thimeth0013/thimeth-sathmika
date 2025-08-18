@@ -1,14 +1,16 @@
-import reactJsFundamentals from '../assets/certificates/reactJsFundamentals.jpg'
+import hpAgileProjectManagementPdf from '../assets/certificates/hpAgileProjectManagement.pdf'
+import hpAgileProjectManagementImg from '../assets/certificates/hpAgileProjectManagement.png'
+
 
 const CertificateData = [
   {
     id: 1,
-    title: "React JavaScript - Fundamentals to Coding & New Beginnings",
-    description: "This free online web development course explains how to use Meta’s React JavaScript library to build user interfaces.",
-    thumbnail: reactJsFundamentals,
-    fullImage: reactJsFundamentals,
+    title: "Agile Project Management",
+    description: "Certificate in Agile methodologies like Scrum and Kanban transforms business development and customer satisfaction management. ",
+    thumbnail: hpAgileProjectManagementImg,
+    pdf: hpAgileProjectManagementPdf,
+    date: "August 2025",
   },
-
 ];
 
 export default CertificateData;
