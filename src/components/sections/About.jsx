@@ -6,12 +6,13 @@ import {
   BookOpenIcon,
   GraduationCapIcon,
   AwardIcon,
-  Send
+  Send,
+  ExternalLink
 } from "lucide-react";
 import profileImage from '../../assets/profile.png';
 import CertificateData from '../../data/certificate';
 
-// Skill icons
+// Skill icons imports (keeping existing imports)
 import html from '../../assets/skills/html.svg';
 import css from '../../assets/skills/css.svg';
 import php from '../../assets/skills/php.svg';
@@ -31,8 +32,133 @@ import postman from '../../assets/skills/postman.svg';
 import mysql from '../../assets/skills/mysql.svg';
 import java from '../../assets/skills/java.svg';
 
+// Enhanced Certificate Card Component with Clickable Company Links
+const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  
+  const toggleDescription = (e) => {
+    e.stopPropagation(); // Prevent card click when toggling description
+    setShowFullDescription(!showFullDescription);
+  };
+
+  const handleCompanyClick = (e) => {
+    e.stopPropagation(); // Prevent card click when clicking company
+    if (cert.companyUrl) {
+      window.open(cert.companyUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  // Function to truncate description
+  const getTruncatedDescription = (text, maxLength = 120) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
+  };
+
+  return (
+    <motion.div
+      key={cert.id}
+      className="relative flex flex-col bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 cursor-pointer"
+      variants={itemVariants}
+      onClick={() => onOpenModal(cert)}
+    >
+      {/* Date Tag */}
+      <motion.span
+        className="absolute top-3 right-3 bg-blue-800/80 text-white text-xs px-3 py-1 rounded-full shadow-md z-10"
+        variants={itemVariants}
+      >
+        {cert.date}
+      </motion.span>
+
+      {/* Thumbnail */}
+      <motion.img
+        src={cert.thumbnail}
+        alt={cert.title}
+        className="w-full h-40 object-cover border-b border-white/10"
+        variants={itemVariants}
+      />
+
+      {/* Card Body */}
+      <div className="flex flex-col flex-grow p-4">
+        <motion.h3
+          className="text-lg font-semibold text-white line-clamp-2 mb-2"
+          variants={itemVariants}
+        >
+          {cert.title}
+        </motion.h3>
+
+        {/* Clickable Company/Institute with Enhanced Styling */}
+        {cert.company && (
+          <motion.div
+            className="mb-3 flex items-center gap-2"
+            variants={itemVariants}
+          >
+            <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
+            {cert.companyUrl ? (
+              <motion.button
+                onClick={handleCompanyClick}
+                className="text-sm text-blue-800 font-medium transition-colors duration-200 flex items-center gap-1 group focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded px-1 py-0.5"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                title={`Visit ${cert.company} website`}
+              >
+                {cert.company}
+                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+              </motion.button>
+            ) : (
+              <span className="text-sm text-blue-800 font-medium">
+                {cert.company}
+              </span>
+            )}
+          </motion.div>
+        )}
+
+        {/* Description with See More/Less */}
+        <div className="flex-grow">
+          <motion.p
+            className="text-sm font-regular text-gray-400 leading-relaxed"
+            variants={itemVariants}
+          >
+            {showFullDescription 
+              ? cert.description 
+              : getTruncatedDescription(cert.description)
+            }
+          </motion.p>
+          
+          {cert.description.length > 120 && (
+            <motion.button
+              onClick={toggleDescription}
+              className="text-gray-300 text-xs mt-2 hover:text-white transition-colors duration-200 focus:outline-none font-medium"
+              variants={itemVariants}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {showFullDescription ? 'See less' : 'See more'}
+            </motion.button>
+          )}
+        </div>
+
+        {/* View Certificate Button */}
+        {cert.pdf && (
+          <motion.a
+            href={cert.pdf}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-block px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
+            variants={itemVariants}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={(e) => e.stopPropagation()} // Prevent click from bubbling to parent
+          >
+            View Certificate
+          </motion.a>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
 export const About = () => {
-  // Animation variants
+  // Animation variants (keeping existing ones)
   const titleVariants = {
     hidden: { opacity: 0, y: 10 },
     visible: {
@@ -366,7 +492,7 @@ export const About = () => {
           </motion.div>
         </motion.div>
 
-        {/* Certifications Section */}
+        {/* Enhanced Certifications Section */}
         <motion.div
           ref={certificatesRef}
           className="mt-20 mb-20 ml-10 mr-10"
@@ -384,60 +510,12 @@ export const About = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {CertificateData.map((cert) => (
-              <motion.div
+              <CertificateCard
                 key={cert.id}
-                className="relative flex flex-col bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300"
-                variants={itemVariants}
-                onClick={() => openModal(cert)}
-              >
-                {/* Date Tag */}
-                <motion.span
-                  className="absolute top-3 right-3 bg-blue-800/80 text-white text-xs px-3 py-1 rounded-full shadow-md"
-                  variants={itemVariants}
-                >
-                  {cert.date}
-                </motion.span>
-
-                {/* Thumbnail */}
-                <motion.img
-                  src={cert.thumbnail}
-                  alt={cert.title}
-                  className="w-full h-40 object-cover border-b border-white/10"
-                  variants={itemVariants}
-                />
-
-                {/* Card Body */}
-                <div className="flex flex-col flex-grow p-4">
-                  <motion.h3
-                    className="text-lg font-semibold text-white line-clamp-2"
-                    variants={itemVariants}
-                  >
-                    {cert.title}
-                  </motion.h3>
-                  <motion.p
-                    className="text-sm text-gray-400 mt-2 line-clamp-3"
-                    variants={itemVariants}
-                  >
-                    {cert.description}
-                  </motion.p>
-
-                  {/* Verify Button */}
-                  {cert.pdf && (
-                    <motion.a
-                      href={cert.pdf}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 inline-block px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
-                      variants={itemVariants}
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={(e) => e.stopPropagation()} // Prevent click from bubbling to parent
-                    >
-                      View Certificate
-                    </motion.a>
-                  )}
-                </div>
-              </motion.div>
+                cert={cert}
+                onOpenModal={openModal}
+                itemVariants={itemVariants}
+              />
             ))}
           </div>
         </motion.div>
