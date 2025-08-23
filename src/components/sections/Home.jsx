@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import ScrollVelocity from '../ScrollVelocity/ScrollVelocity';
 import GlareHover from '../GlareHover/GlareHover';
+import LightRays from '../LightRays/LightRays';
 
 // Featured projects images
 import vehicleService from '../../assets/projects/vehicleService.png';
@@ -20,42 +21,6 @@ import {
 } from 'lucide-react';
 
 export const Home = () => {
-  // const featuredProjects = [
-  //   {
-  //     id: 1,
-  //     title: 'Vehicle Service Center Management System',
-  //     description:
-  //       'A MERN-based platform to manage vehicle service bookings, track repair status, and streamline customer interactions.',
-  //     image: vehicleService,
-  //     tags: ['Node.js', 'React', 'MongoDB', 'Express'],
-  //     designLink: 'https://www.behance.net/gallery/225208747/FixMate-Vehicle-Service-Center-Website',
-  //     githubLink: 'https://github.com/Thimeth0013/IT-Project-2025',
-  //     liveLink: '#',
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'My Website',
-  //     description:
-  //       'A fast and responsive developer portfolio built with React, Tailwind CSS, and Vite — designed to showcase projects, technical skills, and design philosophy with smooth animations and clean UI.',
-  //     image: portfolio,
-  //     tags: ['React', 'TailwindCSS', 'Vite'],
-  //     designLink: 'https://www.behance.net/gallery/228890885/My-Portfolio',
-  //     githubLink: 'https://github.com/Thimeth0013/thimeth-sathmika',
-  //     liveLink: 'https://thimeth0013.github.io/thimeth-sathmika/',
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'Home Keep',
-  //     description:
-  //       'Home Keep is a professionally designed app built in Figma to simplify and streamline home maintenance, helping you keep your home in top shape with ease.',
-  //     image: homekeep,
-  //     tags: ['Figma'],
-  //     designLink: 'https://www.behance.net/gallery/225180721/Home-Keep',
-  //     githubLink: '',
-  //     liveLink: '',
-  //   },
-  // ];
-
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: (i = 1) => ({
@@ -94,8 +59,20 @@ export const Home = () => {
     <div className="w-full" id="home">
       {/* Hero Section */}
       <section className="relative w-full min-h-[90vh] flex items-center overflow-hidden dark:bg-black bg-gray-50">
-        <div className="absolute -right-40 -top-20 w-96 h-96 bg-blue-500 rounded-full filter blur-[150px] opacity-20 dark:opacity-30 z-0"></div>
-        <div className="absolute -left-20 -bottom-40 w-96 h-96 bg-blue-500 rounded-full filter blur-[150px] opacity-20 dark:opacity-30 z-0"></div>
+        <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 0 }}>
+          <LightRays
+            raysOrigin="bottom-left"
+            raysColor="#0059ffff"
+            raysSpeed={1.4}
+            lightSpread={1.0}
+            rayLength={2.6}
+            followMouse={true}
+            mouseInfluence={0.6}
+            noiseAmount={0.01}
+            distortion={0.02}
+            className="custom-rays"
+          />
+        </div>
 
         <div className="absolute inset-0 z-10 pointer-events-none transition-all duration-500 group-hover:backdrop-blur-[6px] group-hover:bg-white/10"></div>
 
@@ -191,100 +168,6 @@ export const Home = () => {
           ))}
         </div>
       </div>
-
-      {/* Featured Projects Section */}
-      {/* <section className="relative py-20 bg-black overflow-hidden pb-10">
-        <div className="absolute inset-0 z-0 transform scale-y-[-1]">
-          <div className="relative h-full w-full bg-black">
-            <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
-            <div className="absolute left-0 right-0 top-[-10%] h-[1000px] w-[1000px] rounded-full bg-[radial-gradient(circle_400px_at_50%_300px,#fbfbfb36,#000)]"></div>
-          </div>
-        </div>
-
-        <div className="relative container mx-auto px-6 z-10">
-          <div className="mb-14 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold">Featured Projects</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProjects.map((project) => (
-              <div
-                key={project.id}
-                className="group bg-gray-900/50 rounded-xl overflow-hidden shadow-lg hover:bg-gray-900/80 hover:shadow-2xl hover:border-blue-800/26 transition-all duration-300 border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-md"
-              >
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 p-4 flex gap-2 flex-wrap">
-                    {project.tags.map((tag, index) => (
-                      <span
-                        key={index}
-                        className="text-xs font-medium px-2 py-1 rounded-full bg-gray-900/80 text-gray-100"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4 font-medium text-sm">{project.description}</p>
-                  <div className="flex items-center gap-4">
-                    {project.designLink && project.designLink !== '#' ? (
-                      <a
-                        href={project.designLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-sm font-medium text-blue-500 dark:text-blue-500 hover:underline"
-                      >
-                        <Lightbulb className="w-4 h-4" />
-                        Design
-                      </a>
-                    ) : null}
-                    {project.githubLink && project.githubLink !== '#' ? (
-                      <a
-                        href={project.githubLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:underline"
-                      >
-                        <GithubIcon className="w-4 h-4" />
-                        Code
-                      </a>
-                    ) : null}
-                    {project.liveLink && project.liveLink !== '#' ? (
-                      <a
-                        href={project.liveLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-sm font-medium text-green-500 dark:text-green-500 hover:underline"
-                      >
-                        <ExternalLinkIcon className="w-4 h-4" />
-                        Live Demo
-                      </a>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <a
-              href="#project"
-              className="inline-flex items-center gap-2 px-6 py-2 rounded-4xl bg-blue-800 dark:bg-blue-800/12 border-s border-e border-blue-800 text-white font-medium transition-all shadow-lg shadow-blue-500/10 hover:bg-blue-800/18"
-            >
-              View All Projects
-              <ArrowDown className="w-4 h-4" />
-            </a>
-          </div>
-        </div>
-      </section> */}
     </div>
   );
 };
