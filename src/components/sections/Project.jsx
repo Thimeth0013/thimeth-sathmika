@@ -78,7 +78,7 @@ export const Project = () => {
         <div className="relative container mx-auto px-4 sm:px-6 z-10">
           {/* Title */}
           <motion.div
-            className="flex items-center pt-10 sm:pt-20 ml-4 sm:ml-8"
+            className="flex items-center pt-10 sm:pt-20 ml-4 sm:ml-4"
             variants={titleVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
@@ -87,7 +87,7 @@ export const Project = () => {
             <h1 className="text-lg sm:text-2xl font-medium text-blue-800">My work</h1>
           </motion.div>
           <motion.h1
-            className="text-2xl sm:text-5xl font-bold mt-4 ml-4 mb-12 sm:ml-8"
+            className="text-2xl sm:text-5xl font-bold mt-4 ml-4 mb-12 sm:ml-4"
             variants={titleVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
@@ -97,40 +97,31 @@ export const Project = () => {
 
           {/* Tabs */}
           <motion.div
-            className="flex justify-center mb-14"
+            className="flex gap-4 mb-14 justify-center sm:justify-start pl-6"
             variants={tabVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
           >
-            <div className="flex flex-wrap justify-center bg-gray-900/50 backdrop-blur-lg rounded-full p-1 border border-gray-700/20 gap-1">
-              {tabs.map((tab) => (
-                <motion.button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`relative px-2 sm:px-6 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
-                    activeTab === tab.id ? 'text-white' : 'text-gray-400 hover:text-gray-200'
-                  }`}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {activeTab === tab.id && (
-                    <motion.div
-                      className="absolute inset-0 bg-blue-800/80 rounded-full"
-                      layoutId="activeTab"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-1 sm:gap-2">
-                    {tab.label}
-                    <span className={`text-xs px-1.5 sm:px-2 py-1 rounded-full ${
-                      activeTab === tab.id ? 'bg-white/20 text-white' : 'bg-gray-700/50 text-gray-400'
-                    }`}>
-                      {tab.count}
-                    </span>
-                  </span>
-                </motion.button>
-              ))}
-            </div>
+            {tabs.map((tab) => (
+              <motion.button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                  activeTab === tab.id
+                    ? 'bg-blue-800 text-white'
+                    : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'
+                }`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {tab.label}
+                <span className={`text-xs px-2 py-1 rounded-full ${
+                  activeTab === tab.id ? 'bg-white/20 text-white' : 'bg-gray-700/50 text-gray-400'
+                }`}>
+                  {tab.count}
+                </span>
+              </motion.button>
+            ))}
           </motion.div>
 
           {/* Projects Grid */}
