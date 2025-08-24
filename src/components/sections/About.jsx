@@ -11,8 +11,9 @@ import {
 } from "lucide-react";
 import profileImage from '../../assets/profile.png';
 import CertificateData from '../../data/certificate';
+import BadgesData from '../../data/badges';
 
-// Skill icons imports (keeping existing imports)
+// Skill icons imports
 import html from '../../assets/skills/html.svg';
 import css from '../../assets/skills/css.svg';
 import php from '../../assets/skills/php.svg';
@@ -32,23 +33,139 @@ import postman from '../../assets/skills/postman.svg';
 import mysql from '../../assets/skills/mysql.svg';
 import java from '../../assets/skills/java.svg';
 
-// Enhanced Certificate Card Component with Clickable Company Links
+// Badge Card Component
+const BadgeCard = ({ badge, itemVariants }) => {
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const toggleDescription = (e) => {
+    e.stopPropagation();
+    setShowFullDescription(!showFullDescription);
+  };
+
+  const getTruncatedDescription = (text, maxLength = 120) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
+  };
+
+  return (
+    <motion.div
+      key={badge.id}
+      className="relative flex flex-col bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300"
+      variants={itemVariants}
+    >
+      {/* Date Tag */}
+      <motion.span
+        className="absolute top-3 right-3 bg-blue-800/80 text-white text-xs px-3 py-1 rounded-full shadow-md z-10"
+        variants={itemVariants}
+      >
+        {badge.dateEarned}
+      </motion.span>
+
+      {/* Badge Image */}
+      <motion.img
+        src={badge.image}
+        alt={badge.title}
+        className="w-full h-40 object-contain bg-white p-4 border-b border-white/10"
+        variants={itemVariants}
+      />
+
+      {/* Card Body */}
+      <div className="flex flex-col flex-grow p-4">
+        <motion.h3
+          className="text-lg font-semibold text-white line-clamp-2 mb-2"
+          variants={itemVariants}
+        >
+          {badge.title}
+        </motion.h3>
+
+        {/* Issuer with Link */}
+        {badge.issuer && (
+          <motion.div
+            className="mb-3 flex items-center gap-2"
+            variants={itemVariants}
+          >
+            <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
+            {badge.issuerUrl ? (
+              <motion.a
+                href={badge.issuerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-blue-800 font-medium transition-colors duration-200 flex items-center gap-1 group focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded px-1 py-0.5"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                title={`Visit ${badge.issuer} website`}
+              >
+                {badge.issuer}
+                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+              </motion.a>
+            ) : (
+              <span className="text-sm text-blue-800 font-medium">
+                {badge.issuer}
+              </span>
+            )}
+          </motion.div>
+        )}
+
+        {/* Description with See More/Less */}
+        <div className="flex-grow">
+          <motion.p
+            className="text-sm font-regular text-gray-400 leading-relaxed"
+            variants={itemVariants}
+          >
+            {showFullDescription 
+              ? badge.description 
+              : getTruncatedDescription(badge.description)
+            }
+          </motion.p>
+          
+          {badge.description.length > 120 && (
+            <motion.button
+              onClick={toggleDescription}
+              className="text-gray-300 text-xs mt-2 hover:text-white transition-colors duration-200 focus:outline-none font-medium"
+              variants={itemVariants}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {showFullDescription ? 'See less' : 'See more'}
+            </motion.button>
+          )}
+        </div>
+
+        {/* View Badge Button */}
+        {badge.badgeUrl && (
+          <motion.a
+            href={badge.badgeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-block px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
+            variants={itemVariants}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            View Badge
+          </motion.a>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
+// Certificate Card Component (unchanged)
 const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
   
   const toggleDescription = (e) => {
-    e.stopPropagation(); // Prevent card click when toggling description
+    e.stopPropagation();
     setShowFullDescription(!showFullDescription);
   };
 
   const handleCompanyClick = (e) => {
-    e.stopPropagation(); // Prevent card click when clicking company
+    e.stopPropagation();
     if (cert.companyUrl) {
       window.open(cert.companyUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
-  // Function to truncate description
   const getTruncatedDescription = (text, maxLength = 120) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
@@ -61,7 +178,6 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
       variants={itemVariants}
       onClick={() => onOpenModal(cert)}
     >
-      {/* Date Tag */}
       <motion.span
         className="absolute top-3 right-3 bg-blue-800/80 text-white text-xs px-3 py-1 rounded-full shadow-md z-10"
         variants={itemVariants}
@@ -69,7 +185,6 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
         {cert.date}
       </motion.span>
 
-      {/* Thumbnail */}
       <motion.img
         src={cert.thumbnail}
         alt={cert.title}
@@ -77,7 +192,6 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
         variants={itemVariants}
       />
 
-      {/* Card Body */}
       <div className="flex flex-col flex-grow p-4">
         <motion.h3
           className="text-lg font-semibold text-white line-clamp-2 mb-2"
@@ -86,7 +200,6 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
           {cert.title}
         </motion.h3>
 
-        {/* Clickable Company/Institute with Enhanced Styling */}
         {cert.company && (
           <motion.div
             className="mb-3 flex items-center gap-2"
@@ -112,7 +225,6 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
           </motion.div>
         )}
 
-        {/* Description with See More/Less */}
         <div className="flex-grow">
           <motion.p
             className="text-sm font-regular text-gray-400 leading-relaxed"
@@ -137,7 +249,6 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
           )}
         </div>
 
-        {/* View Certificate Button */}
         {cert.pdf && (
           <motion.a
             href={cert.pdf}
@@ -147,7 +258,7 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
             variants={itemVariants}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.95 }}
-            onClick={(e) => e.stopPropagation()} // Prevent click from bubbling to parent
+            onClick={(e) => e.stopPropagation()}
           >
             View Certificate
           </motion.a>
@@ -158,7 +269,7 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
 };
 
 export const About = () => {
-  // Animation variants (keeping existing ones)
+  // Animation variants (unchanged)
   const titleVariants = {
     hidden: { opacity: 0, y: 10 },
     visible: {
@@ -268,6 +379,7 @@ export const About = () => {
   ];
 
   const [selectedCertificate, setSelectedCertificate] = useState(null);
+  const [activeTab, setActiveTab] = useState('certificates');
 
   const openModal = (certificate) => {
     setSelectedCertificate(certificate);
@@ -483,7 +595,7 @@ export const About = () => {
             variants={itemVariants}
           >
             <h3 className="text-xl font-semibold text-blue-800 mb-3">
-              BSc (Hons) in Information Technology - Software Engineering
+              BSc (Hons) in Information Technology Specialising in Software Engineering
             </h3>
             <p className="text-gray-500 font-medium">
               Sri Lanka Institute of Information Technology (SLIIT) <br />
@@ -492,7 +604,7 @@ export const About = () => {
           </motion.div>
         </motion.div>
 
-        {/* Enhanced Certifications Section */}
+        {/* Enhanced Certifications and Badges Section */}
         <motion.div
           ref={certificatesRef}
           className="mt-20 mb-20 ml-10 mr-10"
@@ -501,22 +613,60 @@ export const About = () => {
           animate={certificatesInView ? "visible" : "hidden"}
         >
           <motion.h2
-            className="text-3xl font-bold mb-12 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start"
+            className="text-3xl font-bold mb-6 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start"
             variants={itemVariants}
           >
             <AwardIcon className="w-8 h-8 text-blue-800" />
-            <span className="text-blue-800">Certifications</span>
+            <span className="text-blue-800">Certifications and Badges</span>
           </motion.h2>
 
+          {/* Toggle Navigation */}
+          <motion.div
+            className="flex gap-4 mb-10 pt-4 pl-2 justify-center sm:justify-start"
+            variants={itemVariants}
+          >
+            <button
+              onClick={() => setActiveTab('certificates')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                activeTab === 'certificates'
+                  ? 'bg-blue-800 text-white'
+                  : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'
+              }`}
+            >
+              Certificates
+            </button>
+            <button
+              onClick={() => setActiveTab('badges')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                activeTab === 'badges'
+                  ? 'bg-blue-800 text-white'
+                  : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'
+              }`}
+            >
+              Badges
+            </button>
+          </motion.div>
+
+          {/* Content Display */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {CertificateData.map((cert) => (
-              <CertificateCard
-                key={cert.id}
-                cert={cert}
-                onOpenModal={openModal}
-                itemVariants={itemVariants}
-              />
-            ))}
+            {activeTab === 'certificates' ? (
+              CertificateData.map((cert) => (
+                <CertificateCard
+                  key={cert.id}
+                  cert={cert}
+                  onOpenModal={openModal}
+                  itemVariants={itemVariants}
+                />
+              ))
+            ) : (
+              BadgesData.map((badge) => (
+                <BadgeCard
+                  key={badge.id}
+                  badge={badge}
+                  itemVariants={itemVariants}
+                />
+              ))
+            )}
           </div>
         </motion.div>
       </div>
