@@ -20,8 +20,8 @@ export const NavBar = ({ menuOpen, setMenuOpen }) => {  // Fix: Proper destructu
 
                     <div className="hidden md:flex items-center space-x-10">
                         <a href="#home" className="text-gray-300 hover:text-blue-500 transition-colors font-bold">Home</a>
-                        <a href="#project" className="text-gray-300 hover:text-blue-500 transition-colors font-bold">Projects</a>
                         <a href="#about" className="text-gray-300 hover:text-blue-500 transition-colors font-bold">About</a>
+                        <a href="#project" className="text-gray-300 hover:text-blue-500 transition-colors font-bold">Projects</a>
                         <a href="#contact" className="text-gray-300 hover:text-blue-500 transition-colors font-bold">Contact</a>    
                     </div>
                 </div>
