@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import CircularText from "../CircularText/CircularText";
+import Stack from "../Stack/Stack";
 import { 
   Sparkle, 
   BookOpenIcon,
@@ -9,7 +10,8 @@ import {
   Send,
   ExternalLink
 } from "lucide-react";
-import profileImage from '../../assets/profile.png';
+import profileImage from '../../assets/profile1.png';
+import profileImageHover from '../../assets/profile2.png';
 import CertificateData from '../../data/certificate';
 import BadgesData from '../../data/badges';
 
@@ -42,7 +44,7 @@ const BadgeCard = ({ badge, itemVariants }) => {
     setShowFullDescription(!showFullDescription);
   };
 
-  const getTruncatedDescription = (text, maxLength = 120) => {
+  const getTruncatedDescription = (text, maxLength = 160) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
   };
@@ -118,7 +120,7 @@ const BadgeCard = ({ badge, itemVariants }) => {
             }
           </motion.p>
           
-          {badge.description.length > 120 && (
+          {badge.description.length > 160 && (
             <motion.button
               onClick={toggleDescription}
               className="text-gray-300 text-xs mt-2 hover:text-white transition-colors duration-200 focus:outline-none font-medium"
@@ -150,10 +152,10 @@ const BadgeCard = ({ badge, itemVariants }) => {
   );
 };
 
-// Certificate Card Component (unchanged)
+// Certificate Card Component (updated to support certificateUrl instead of pdf)
 const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
-  
+
   const toggleDescription = (e) => {
     e.stopPropagation();
     setShowFullDescription(!showFullDescription);
@@ -166,7 +168,7 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
     }
   };
 
-  const getTruncatedDescription = (text, maxLength = 120) => {
+  const getTruncatedDescription = (text, maxLength = 160) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
   };
@@ -178,6 +180,7 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
       variants={itemVariants}
       onClick={() => onOpenModal(cert)}
     >
+      {/* Date */}
       <motion.span
         className="absolute top-3 right-3 bg-blue-800/80 text-white text-xs px-3 py-1 rounded-full shadow-md z-10"
         variants={itemVariants}
@@ -185,6 +188,7 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
         {cert.date}
       </motion.span>
 
+      {/* Thumbnail */}
       <motion.img
         src={cert.thumbnail}
         alt={cert.title}
@@ -192,6 +196,7 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
         variants={itemVariants}
       />
 
+      {/* Card Body */}
       <div className="flex flex-col flex-grow p-4">
         <motion.h3
           className="text-lg font-semibold text-white line-clamp-2 mb-2"
@@ -200,6 +205,7 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
           {cert.title}
         </motion.h3>
 
+        {/* Company with link */}
         {cert.company && (
           <motion.div
             className="mb-3 flex items-center gap-2"
@@ -225,6 +231,7 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
           </motion.div>
         )}
 
+        {/* Description */}
         <div className="flex-grow">
           <motion.p
             className="text-sm font-regular text-gray-400 leading-relaxed"
@@ -235,7 +242,7 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
               : getTruncatedDescription(cert.description)
             }
           </motion.p>
-          
+
           {cert.description.length > 120 && (
             <motion.button
               onClick={toggleDescription}
@@ -249,9 +256,9 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
           )}
         </div>
 
-        {cert.pdf && (
+        {cert.certificateUrl && (
           <motion.a
-            href={cert.pdf}
+            href={cert.certificateUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 inline-block px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
@@ -278,6 +285,11 @@ export const About = () => {
       transition: { duration: 0.8, ease: "easeOut", type: "spring", stiffness: 100 },
     },
   };
+
+  const images = [
+  { id: 1, img: profileImageHover },
+  { id: 2, img: profileImage },
+  ];
 
   const imageVariants = {
     hidden: { opacity: 0, y: 10 },
@@ -389,6 +401,9 @@ export const About = () => {
     setSelectedCertificate(null);
   };
 
+  // In your component:
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <section id="about" className="min-h-screen bg-black text-white py-15">
       <div className="container mx-auto px-4 sm:px-6 z-10">
@@ -447,15 +462,16 @@ export const About = () => {
             animate={isInView ? "visible" : "hidden"}
             style={{ minHeight: "500px" }}
           >
-            <motion.img
-              src={profileImage}
-              alt="Portfolio Visual"
-              className="w-full sm:w-auto h-[500px] will-change-transform"
-              transition={{ duration: 0.3, ease: "easeOut" }}
+            <Stack
+              randomRotation={true}
+              sensitivity={180}
+              sendToBackOnClick={false}
+              cardDimensions={{ width: 360, height: 500 }}
+              cardsData={images}
             />
             <motion.div
               className="absolute left-[100px] top-[440px] transform -translate-y-1/2 z-20 w-40 h-40"
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, src: profileImageHover }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
               <div className="relative w-full h-full">
