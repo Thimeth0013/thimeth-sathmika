@@ -22,20 +22,24 @@ import {
 
 export const Home = () => {
   const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: (i = 1) => ({
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    visible: (i = 0) => ({
       opacity: 1,
       y: 0,
+      scale: 1,
       transition: {
-        delay: i * 0.2,
-        duration: 0.6,
-        ease: 'easeOut',
+        delay: i * 0.15,
+        duration: 0.5,
+        ease: [0.25, 0.46, 0.45, 0.94],
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
       },
     }),
   };
 
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const infoCards = [
     {
@@ -58,8 +62,9 @@ export const Home = () => {
   return (
     <div className="w-full" id="home">
       {/* Hero Section */}
-      <section className="relative w-full min-h-[90vh] flex items-center overflow-hidden dark:bg-black bg-gray-50">
-        <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 0 }}>
+      <section className="relative w-full min-h-[80vh] md:min-h-[90vh] flex items-center overflow-hidden dark:bg-black">
+        {/* Light Rays - Desktop only */}
+        <div className="hidden md:block absolute inset-0 z-0">
           <LightRays
             raysOrigin="bottom-left"
             raysColor="#0059ffff"
@@ -76,8 +81,9 @@ export const Home = () => {
 
         <div className="absolute inset-0 z-10 pointer-events-none transition-all duration-500 group-hover:backdrop-blur-[6px] group-hover:bg-white/10"></div>
 
-        <div className="container mx-auto mt-22 px-6 z-20 mb-20 group relative">
-          <div className="max-w-6xl mx-auto space-y-8 mb-20">
+        <div className="container mx-auto mt-16 md:mt-22 px-4 sm:px-6 z-20 mb-12 md:mb-20 group relative">
+          {/* Desktop Layout */}
+          <div className="hidden md:block max-w-6xl mx-auto space-y-8 mb-20">
             <h1 className="text-md md:text-xl text-white mt-30 font-medium">
               <div className="flex">
                 <Hand className="text-blue-800 animate-wave mr-4" />
@@ -89,7 +95,7 @@ export const Home = () => {
                 Creating tech with{' '}
                 <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
                   *intention
-                  <div className="hidden hover-display absolute bottom-[-180px] sm:bottom-[-220px] right-[40px] sm:right-[-180px] w-64 p-4 bg-white/40 dark:bg-black/40 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
+                  <div className="hidden hover-display absolute bottom-[-180px] sm:bottom-[-180px] right-[40px] sm:right-[-160px] w-100 p-4 bg-white/40 dark:bg-black/40 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
                     <p>
                       <span className="font-semibold text-white/80 text-sm sm:text-md">Intention:</span> a thing intended; an aim or plan.
                     </p>
@@ -98,13 +104,54 @@ export const Home = () => {
                 — experiences that matter.
               </span>
             </h1>
-            <div className="w-full h-0.5 bg-gradient-to-r from-blue-800/40 to-black mb-[-10px]" />
+            <div className="w-3/5 h-0.5 bg-gradient-to-r from-blue-800/40 to-black mb-[-20px]" />
             <div className="flex justify-center md:justify-end">
               <a
                 href="#about"
-                className="text-sm md:text-lg px-6 py-2 pt-2 text-white font-medium bg-black backdrop-blur-md rounded-4xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-blue-800 hover:shadow-[0_0_25px_rgba(59,130,246,0.2)] transition-all"
+                className="text-sm md:text-lg px-6 py-2 pt-2 text-blue-800/70 font-medium bg-transparent backdrop-blur-md rounded-4xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-white transition-all"
               >
                 Know Me Better
+              </a>
+           <a
+                href=""
+                target="_blank"
+                className="text-sm md:text-lg px-6 py-2 pt-2 text-blue-800/70 font-medium bg-transparent backdrop-blur-md rounded-4xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-white transition-all ml-10"
+              >
+                View Resume
+              </a>
+            </div>
+          </div>
+
+          {/* Mobile Layout */}
+          <div className="md:hidden max-w-3xl mx-auto space-y-6 text-center sm:text-left">
+            <h1 className="text-md text-white font-medium flex justify-center sm:justify-start items-center gap-2">
+              <Hand className="text-blue-800 w-5 h-5 animate-wave" />
+              Hello, I'm Thimeth Sathmika
+            </h1>
+            <h1 className="text-2xl sm:text-3xl font-bold leading-snug">
+              Creating tech with{' '}
+              <span className="relative text-blue-800 font-bold">
+                *intention
+                <span className="hidden sm:block absolute bottom-[-180px] right-0 w-64 p-3 bg-white/30 dark:bg-black/30 backdrop-blur-md text-sm rounded-lg border border-white/20 shadow-md">
+                  Intention: a thing intended; an aim or plan.
+                </span>
+              </span>{' '}
+              — experiences that matter.
+            </h1>
+            <div className="flex justify-center sm:justify-start mt-4">
+              <a
+                href="#about"
+                className="text-sm px-4 py-2 text-white font-medium bg-black/70 backdrop-blur-md rounded-full border border-blue-800/60 shadow-md hover:text-blue-800 hover:shadow-lg transition-all"
+              >
+                Know Me Better
+              </a>
+            </div>
+            <div className="flex justify-center sm:justify-start">
+              <a
+                href=""
+                className="text-sm px-4 py-2 text-white font-medium bg-black/70 backdrop-blur-md rounded-full border border-blue-800/60 shadow-md hover:text-blue-800 hover:shadow-lg transition-all"
+              >
+                View Resume
               </a>
             </div>
           </div>
@@ -119,8 +166,8 @@ export const Home = () => {
         </style>
       </section>
 
-      {/* Scroll Velocity Text */}
-      <div className="mt-[-40px] z-70">
+      {/* Scroll Velocity Text - Desktop only */}
+      <div className="hidden md:block mt-[-40px] z-70">
         <ScrollVelocity
           texts={['Design', 'Development']}
           velocity={60}
@@ -138,31 +185,35 @@ export const Home = () => {
       {/* Info Cards with GlareHover */}
       <div
         ref={ref}
-        className="relative mt-30 mb-20 text-left max-w-6xl mx-auto px-6"
+        className="relative mt-12 md:mt-30 mb-12 md:mb-20 text-left max-w-6xl mx-auto px-4 sm:px-6"
       >
-        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 z-20">
+        <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 z-20">
           {infoCards.map((card, i) => (
             <GlareHover
               key={i}
               glareColor="#ffffff"
-              glareOpacity={0.25}
+              glareOpacity={0.2}
               glareAngle={-35}
-              glareSize={280}
-              transitionDuration={800}
+              glareSize={200}
+              transitionDuration={600}
               playOnce={false}
-              className="rounded-xl border border-white/20 bg-white/20 dark:bg-gray-800/20 backdrop-blur-md shadow-lg hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-300 ease-in-out"
-              style={{ padding: '1.5rem', width: '100%', height: '100%' }}
+              className="rounded-xl border border-white/20 bg-white/10 md:bg-white/20 dark:bg-gray-800/20 backdrop-blur-md shadow-lg hover:bg-white/20 md:hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-300 ease-in-out"
+              style={{ 
+                padding: window.innerWidth >= 768 ? '1.5rem' : '1rem', 
+                width: '100%', 
+                height: '100%' 
+              }}
             >
               <motion.div
-                className="w-full h-full"
+                className="w-full h-full flex flex-col gap-2"
                 variants={cardVariants}
                 initial="hidden"
                 animate={isInView ? 'visible' : 'hidden'}
                 custom={i}
               >
-                <card.icon className="w-8 h-8 text-teal-600 dark:text-blue-800 mb-4" />
+                <card.icon className="w-7 h-7 md:w-8 md:h-8 text-teal-600 dark:text-blue-800 mb-2 md:mb-4" />
                 <h3 className="text-lg font-semibold mb-2">{card.title}</h3>
-                <p className="text-white/60 font-medium text-sm">{card.text}</p>
+                <p className="text-white/70 md:text-white/60 font-medium text-sm">{card.text}</p>
               </motion.div>
             </GlareHover>
           ))}
