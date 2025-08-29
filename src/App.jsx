@@ -22,8 +22,8 @@ const App = () => {
           <NavBar menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
           <MobileMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
           <Home/>
-          <Project/>
           <About/>
+          <Project/>
           <Contact/>
       </div> 
     </>
