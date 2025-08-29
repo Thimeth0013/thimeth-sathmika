@@ -106,18 +106,31 @@ export const Project = () => {
               <motion.button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-                  activeTab === tab.id
+                className={`
+                  px-2 py-1 sm:px-4 sm:py-2  // smaller padding on mobile
+                  rounded-lg
+                  text-xs sm:text-sm          // smaller font on mobile
+                  font-medium
+                  transition-all duration-300
+                  flex items-center gap-1 sm:gap-2  // smaller gap on mobile
+                  ${activeTab === tab.id
                     ? 'bg-blue-800 text-white'
-                    : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'
-                }`}
+                    : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'}
+                `}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
                 {tab.label}
-                <span className={`text-xs px-2 py-1 rounded-full ${
-                  activeTab === tab.id ? 'bg-white/20 text-white' : 'bg-gray-700/50 text-gray-400'
-                }`}>
+                <span
+                  className={`
+                    text-xxs sm:text-xs          // even smaller text on mobile
+                    px-1 sm:px-2 py-0.5 sm:py-1
+                    rounded-full
+                    ${activeTab === tab.id
+                      ? 'bg-white/20 text-white'
+                      : 'bg-gray-700/50 text-gray-400'}
+                  `}
+                >
                   {tab.count}
                 </span>
               </motion.button>
