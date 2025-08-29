@@ -20,6 +20,7 @@ const CertificateData = [
     companyUrl: "https://www.life-global.org/",
     thumbnail: hpAiForBeginnersImg,
     certificateUrl: "https://www.life-global.org/certificate/09a1620f-bd9a-4f3c-9986-0f065e652e8b",
+    date: "August 2025",
   }
 ];
 
