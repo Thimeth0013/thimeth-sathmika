@@ -15,6 +15,7 @@ export const projectsData = [
     designLink: 'https://www.behance.net/gallery/225208747/FixMate-Vehicle-Service-Center-Website',
     githubLink: 'https://github.com/Thimeth0013/IT-Project-2025',
     liveLink: '',
+    status: 'completed',    
   },
   {
     id: 2,
@@ -25,6 +26,7 @@ export const projectsData = [
     designLink: 'https://www.behance.net/gallery/228890885/My-Portfolio',
     githubLink: 'https://github.com/Thimeth0013/thimeth-sathmika',
     liveLink: 'https://thimeth0013.github.io/thimeth-sathmika/',
+    status: 'completed',
   },
   {
     id: 3,
@@ -35,6 +37,7 @@ export const projectsData = [
     designLink: 'https://www.figma.com/design/MByXaI8pcleIbgTvsDat1X/Cocktail-GSAP-Website?node-id=0-1&p=f&t=N6byExgZAx0K0dba-0',
     githubLink: 'https://github.com/Thimeth0013/gsap-cocktails',
     liveLink: 'https://gsap-cocktails-topaz.vercel.app/#home',
+    status: 'completed',
   },
   {
     id: 4,
@@ -45,6 +48,7 @@ export const projectsData = [
     designLink: 'https://www.behance.net/gallery/225180721/Home-Keep',
     githubLink: '',
     liveLink: '',
+    status: 'completed',
   },
   {
     id: 5,
@@ -55,15 +59,17 @@ export const projectsData = [
     designLink: 'https://www.behance.net/gallery/233755199/Smart-Spend',
     githubLink: 'https://github.com/Thimeth0013/SmartSave',
     liveLink: '',
+    status: 'completed',
   },
   {
     id: 6,
     title: 'Ceylon Trails',
-    description: 'Smart Spend is a simple mobile app for managing personal finances. It tracks income, expenses, and savings while providing insights into spending habits through a user-friendly interface.',
+    description: 'Ceylon Trails is a Sri Lanka–based travel blogging web platform where travellers can create, store, and share their travel experiences as digital memories.',
     image: ceylonTrails,
     tags: ['Node.js', 'React', 'MongoDB', 'Express'],
     designLink: '',
     githubLink: 'https://github.com/Y3S1Group/ceylon_trails',
     liveLink: '',
+    status: 'ongoing',
   },
 ];
