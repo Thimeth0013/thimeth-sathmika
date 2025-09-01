@@ -2,6 +2,8 @@ import vehicleService from '../assets/projects/vehicleService.png';
 import portfolio from '../assets/projects/portfolio.png';
 import homekeep from '../assets/projects/homekeep.png';
 import cocktails from '../assets/projects/gsapCocktails.png';
+import smartSpend from '../assets/projects/smartSpend.png';
+import ceylonTrails from '../assets/projects/ceylonTrails.png';
 
 export const projectsData = [
   {
@@ -42,6 +44,26 @@ export const projectsData = [
     tags: ['Figma'],
     designLink: 'https://www.behance.net/gallery/225180721/Home-Keep',
     githubLink: '',
+    liveLink: '',
+  },
+  {
+    id: 5,
+    title: 'Smart Spend',
+    description: 'Smart Spend is a simple mobile app for managing personal finances. It tracks income, expenses, and savings while providing insights into spending habits through a user-friendly interface.',
+    image: smartSpend,
+    tags: ['Kotlin', 'Android Studio', 'Figma'],
+    designLink: 'https://www.behance.net/gallery/233755199/Smart-Spend',
+    githubLink: 'https://github.com/Thimeth0013/SmartSave',
+    liveLink: '',
+  },
+  {
+    id: 6,
+    title: 'Ceylon Trails',
+    description: 'Smart Spend is a simple mobile app for managing personal finances. It tracks income, expenses, and savings while providing insights into spending habits through a user-friendly interface.',
+    image: ceylonTrails,
+    tags: ['Node.js', 'React', 'MongoDB', 'Express'],
+    designLink: '',
+    githubLink: 'https://github.com/Y3S1Group/ceylon_trails',
     liveLink: '',
   },
 ];
