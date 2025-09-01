@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { Sparkle, GithubIcon, ExternalLinkIcon, Lightbulb } from 'lucide-react';
+import { Sparkle, GithubIcon, ExternalLinkIcon, Lightbulb, Clock } from 'lucide-react';
 import { projectsData } from '../../data/projects';
 
 export const Project = () => {
@@ -15,6 +15,8 @@ export const Project = () => {
         return allProjects.filter(p => p.githubLink && p.githubLink.trim() !== '');
       case 'live':
         return allProjects.filter(p => p.liveLink && p.liveLink.trim() !== '');
+      case 'ongoing':
+        return allProjects.filter(p => p.status === 'ongoing');
       default:
         return allProjects;
     }
@@ -27,6 +29,7 @@ export const Project = () => {
     { id: 'design', label: 'Design', count: allProjects.filter(p => p.designLink && p.designLink.trim() !== '').length },
     { id: 'code', label: 'Code', count: allProjects.filter(p => p.githubLink && p.githubLink.trim() !== '').length },
     { id: 'live', label: 'Live Demo', count: allProjects.filter(p => p.liveLink && p.liveLink.trim() !== '').length },
+    { id: 'ongoing', label: 'Ongoing', count: allProjects.filter(p => p.status === 'ongoing').length },
   ];
 
   const titleVariants = {
@@ -97,7 +100,7 @@ export const Project = () => {
 
           {/* Tabs */}
           <motion.div
-            className="flex gap-4 mb-14 justify-center sm:justify-start pl-6"
+            className="flex gap-4 mb-14 justify-center sm:justify-start pl-4 flex-wrap"
             variants={tabVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
@@ -154,6 +157,7 @@ export const Project = () => {
                     animate={isInView ? 'visible' : 'hidden'}
                     exit="exit"
                   >
+
                     {/* Image */}
                     <div className="relative h-52 overflow-hidden">
                       <img
@@ -188,13 +192,17 @@ export const Project = () => {
                         )}
                         {project.githubLink && (
                           <a href={project.githubLink} target="_blank" rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-sm font-medium text-gray-300 hover:underline">
-                            <GithubIcon className="w-4 h-4" /> Code
+                            className="group flex items-center gap-1 text-sm font-medium text-gray-300 hover:underline">
+                            <GithubIcon className="w-4 h-4" /> 
+                            Code
+                            {project.status === 'ongoing' && (
+                              <span className="text-lime-400 group-hover:invisible"> (Ongoing)</span>
+                            )}               
                           </a>
                         )}
                         {project.liveLink && (
                           <a href={project.liveLink} target="_blank" rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-sm font-medium text-green-500 hover:underline">
+                            className="flex items-center gap-1 text-sm font-medium text-green-500  ">
                             <ExternalLinkIcon className="w-4 h-4" /> Live Demo
                           </a>
                         )}
