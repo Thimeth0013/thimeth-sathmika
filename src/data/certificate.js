@@ -21,7 +21,18 @@ const CertificateData = [
     thumbnail: hpAiForBeginnersImg,
     certificateUrl: "https://www.life-global.org/certificate/09a1620f-bd9a-4f3c-9986-0f065e652e8b",
     date: "August 2025",
+  },
+  {
+    id: 3,
+    title: "GIT Training",
+    description: "Certificate in Git fundamentals covering essential version control concepts, git workflows, git branching, and best practices for tracking and managing code efficiently.",
+    company: "Simplilearn",
+    companyUrl: "https://www.simplilearn.com/",
+    thumbnail: "https://certificates.simplicdn.net/share/8931087_92492621757258725674.png",
+    certificateUrl: "https://www.simplilearn.com/skillup-certificate-landing?token=eyJjb3Vyc2VfaWQiOiI3NTgiLCJjZXJ0aWZpY2F0ZV91cmwiOiJodHRwczpcL1wvY2VydGlmaWNhdGVzLnNpbXBsaWNkbi5uZXRcL3NoYXJlXC84OTMxMDg3XzkyNDkyNjIxNzU3MjU4NzI1Njc0LnBuZyIsInVzZXJuYW1lIjoiSyBUIFNhdGhtaWthIn0%3D&utm_source=shared-certificate&utm_medium=lms&utm_campaign=shared-certificate-promotion&referrer=https%3A%2F%2Flms.simplilearn.com%2Fcourses%2F2823%2FGIT%2Fcertificate%2Fdownload-skillup&%24web_only=true&_branch_match_id=1464926032512290847&_branch_referrer=H4sIAAAAAAAAA8soKSkottLXL87MLcjJ1EssKNDLyczL1k%2FVT%2FFPdw0o8c4sCU%2ByrytKTUstKsrMS49PKsovL04tsnXOKMrPTQUAqcQSwz8AAAA%3D",
+    date: "September 2025",
   }
 ];
+
 
 export default CertificateData;

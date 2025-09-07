@@ -17,7 +17,7 @@ const BadgesData = [
     badgeUrl: "https://api.badgr.io/public/assertions/d5va3V0pQYeHoMVMY_2r4w",
     issuer: "Postman",
     issuerUrl: "https://www.postman.com/",
-    dateEarned: "August 2025",
+    dateEarned: "September 2025",
   },
 ];
 
