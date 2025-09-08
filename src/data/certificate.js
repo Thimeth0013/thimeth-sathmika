@@ -15,7 +15,7 @@ const CertificateData = [
   {
     id: 2,
     title: "AI for Beginners",
-    description: "Certificate in key AI concepts and their applications, why data is important to AI, how the technology is being used in businesses, and insight about its ethical implication.",
+    description: "Certificate in key AI concepts, business applications, data importance, and ethical implications.",
     company: "HP LIFE",
     companyUrl: "https://www.life-global.org/",
     thumbnail: hpAiForBeginnersImg,
@@ -25,7 +25,7 @@ const CertificateData = [
   {
     id: 3,
     title: "GIT Training",
-    description: "Certificate in Git fundamentals covering essential version control concepts, git workflows, git branching, and best practices for tracking and managing code efficiently.",
+    description: "Certificate in Git fundamentals covering version control, workflows, branching, and code management best practices.",
     company: "Simplilearn",
     companyUrl: "https://www.simplilearn.com/",
     thumbnail: "https://certificates.simplicdn.net/share/8931087_92492621757258725674.png",

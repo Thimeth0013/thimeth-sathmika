@@ -35,88 +35,108 @@ import postman from '../../assets/skills/postman.svg';
 import mysql from '../../assets/skills/mysql.svg';
 import java from '../../assets/skills/java.svg';
 
-// Badge Card Component
+// Badge Card Component - Fixed Layout
 const BadgeCard = ({ badge, itemVariants }) => {
   return (
     <motion.div
       key={badge.id}
-      className="relative flex flex-col h-full bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300"
+      className="relative bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 flex flex-col h-full"
       variants={itemVariants}
     >
-      <motion.span
-        className="absolute top-3 right-3 bg-blue-800/80 text-white text-xs px-3 py-1 rounded-full shadow-md z-10"
+      {/* Header with image and date */}
+      <div className="flex items-start gap-3 p-4 pb-0">
+        <motion.img
+          src={badge.image}
+          alt={badge.title}
+          className="w-18 h-18 object-contain bg-white rounded-lg p-1 flex-shrink-0"
+          variants={itemVariants}
+        />
+        
+        <div className="flex-grow min-w-0">
+          <div className="flex items-start justify-between gap-2 mb-2">
+            <motion.div
+              className="relative group flex-grow min-w-0"
+              variants={itemVariants}
+            >
+              <motion.h3
+                className="text-base font-semibold text-white cursor-help line-clamp-2"
+                variants={itemVariants}
+              >
+                {badge.title}
+              </motion.h3>
+              
+              {/* Tooltip */}
+              <div className="absolute top-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-xs whitespace-normal w-60 mt-1">
+                {badge.title}
+                <div className="absolute bottom-full left-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
+              </div>
+            </motion.div>
+            
+            <motion.span
+              className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0"
+              variants={itemVariants}
+            >
+              {badge.dateEarned}
+            </motion.span>
+          </div>
+
+          {badge.issuer && (
+            <motion.div
+              className="mb-2 flex items-center gap-2"
+              variants={itemVariants}
+            >
+              <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
+              {badge.issuerUrl ? (
+                <motion.a
+                  href={badge.issuerUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-blue-800 font-medium transition-colors duration-200 flex items-center gap-1 group focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded px-1 py-0.5"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {badge.issuer}
+                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                </motion.a>
+              ) : (
+                <span className="text-sm text-blue-800 font-medium">
+                  {badge.issuer}
+                </span>
+              )}
+            </motion.div>
+          )}
+        </div>
+      </div>
+
+      {/* Description - flex-grow to fill available space */}
+      <motion.p
+        className="px-4 pb-3 text-sm text-gray-400 leading-relaxed flex-grow"
         variants={itemVariants}
       >
-        {badge.dateEarned}
-      </motion.span>
+        {badge.description}
+      </motion.p>
 
-      <motion.img
-        src={badge.image}
-        alt={badge.title}
-        className="w-full h-40 object-contain bg-white p-4 border-b border-white/10"
-        variants={itemVariants}
-      />
-
-      <div className="flex flex-col flex-grow p-4">
-        <motion.h3
-          className="text-lg font-semibold text-white line-clamp-2 mb-2"
-          variants={itemVariants}
-        >
-          {badge.title}
-        </motion.h3>
-
-        {badge.issuer && (
-          <motion.div
-            className="mb-3 flex items-center gap-2"
-            variants={itemVariants}
-          >
-            <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
-            {badge.issuerUrl ? (
-              <motion.a
-                href={badge.issuerUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-blue-800 font-medium transition-colors duration-200 flex items-center gap-1 group focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded px-1 py-0.5"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {badge.issuer}
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-              </motion.a>
-            ) : (
-              <span className="text-sm text-blue-800 font-medium">
-                {badge.issuer}
-              </span>
-            )}
-          </motion.div>
-        )}
-
-        <motion.p
-          className="pb-4 text-sm font-regular text-gray-400 leading-relaxed flex-grow"
-          variants={itemVariants}
-        >
-          {badge.description}
-        </motion.p>
-
-        {badge.badgeUrl && (
+      {/* Action button - always at bottom */}
+      {badge.badgeUrl && (
+        <div className="px-4 pb-4 mt-auto">
           <motion.a
             href={badge.badgeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-auto inline-block px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
+            className="inline-block w-full px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
             variants={itemVariants}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.95 }}
           >
             View Badge
           </motion.a>
-        )}
-      </div>
+        </div>
+      )}
     </motion.div>
   );
 };
 
-// Certificate Card Component
+// Certificate Card Component - Fixed Layout
 const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
   const handleCompanyClick = (e) => {
     e.stopPropagation();
@@ -128,10 +148,11 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
   return (
     <motion.div
       key={cert.id}
-      className="relative flex flex-col h-full bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 cursor-pointer"
+      className="relative bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 cursor-pointer flex flex-col h-full"
       variants={itemVariants}
       onClick={() => onOpenModal(cert)}
     >
+      {/* Date badge positioned over image */}
       <motion.span
         className="absolute top-3 right-3 bg-blue-800/80 text-white text-xs px-3 py-1 rounded-full shadow-md z-10"
         variants={itemVariants}
@@ -142,17 +163,29 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
       <motion.img
         src={cert.thumbnail}
         alt={cert.title}
-        className="w-full h-40 object-cover border-b border-white/10"
+        className="w-full h-32 object-cover border-b border-white/10"
         variants={itemVariants}
       />
 
-      <div className="flex flex-col flex-grow p-4">
-        <motion.h3
-          className="text-lg font-semibold text-white line-clamp-2 mb-2"
+      {/* Content section - flex-grow to fill available space */}
+      <div className="p-4 flex flex-col flex-grow">
+        <motion.div
+          className="relative group mb-2"
           variants={itemVariants}
         >
-          {cert.title}
-        </motion.h3>
+          <motion.h3
+            className="text-base font-semibold text-white line-clamp-1 cursor-help"
+            variants={itemVariants}
+          >
+            {cert.title}
+          </motion.h3>
+          
+          {/* Tooltip */}
+          <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-xs whitespace-normal">
+            {cert.title}
+            <div className="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+          </div>
+        </motion.div>
 
         {cert.company && (
           <motion.div
@@ -178,19 +211,21 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
           </motion.div>
         )}
 
+        {/* Description - flex-grow to fill available space */}
         <motion.p
-          className="pb-4 text-sm font-regular text-gray-400 leading-relaxed flex-grow"
+          className="text-sm text-gray-400 leading-relaxed line-clamp-3 mb-4 flex-grow"
           variants={itemVariants}
         >
           {cert.description}
         </motion.p>
 
+        {/* Action button - always at bottom */}
         {cert.certificateUrl && (
           <motion.a
             href={cert.certificateUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-auto inline-block px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
+            className="inline-block w-full px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300 mt-auto"
             variants={itemVariants}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.95 }}
@@ -238,11 +273,11 @@ export const About = () => {
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, type: "spring", stiffness: 100, damping: 15 },
+      transition: { duration: 0.4, type: "spring", stiffness: 100, damping: 15 },
     },
   };
 
