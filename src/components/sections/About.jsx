@@ -526,30 +526,67 @@ export const About = () => {
 
         <motion.div 
           ref={educationRef}
-          className="mt-20 mb-20 ml-10 mr-10"
+          className="mt-12 mb-12 mx-6"
           variants={sectionVariants}
           initial="hidden"
           animate={educationInView ? "visible" : "hidden"}
         >
           <motion.h2 
-            className="text-3xl font-bold mb-12 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start"
+            className="text-2xl font-bold mb-8 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start"
             variants={itemVariants}
           >
-            <GraduationCapIcon className="w-8 h-8 text-blue-800" />
+            <GraduationCapIcon className="w-7 h-7 text-blue-800" />
             <span className="text-blue-800">Education</span>
           </motion.h2>
-          <motion.div 
-            className="p-6 rounded-xl bg-gray-900/50 backdrop-blur-sm border border-white/10 hover:border-blue-800/50 transition-all duration-300"
-            variants={itemVariants}
-          >
-            <h3 className="text-xl font-semibold text-blue-800 mb-3">
-              BSc (Hons) in Information Technology Specialising in Software Engineering
-            </h3>
-            <p className="text-gray-500 font-medium">
-              Sri Lanka Institute of Information Technology (SLIIT) <br />
-              (2023 - present)
-            </p>
-          </motion.div>
+          
+          <div className="relative">
+            {/* Timeline Line */}
+            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-800/0 via-blue-600 to-transparent"></div>
+            
+            <motion.div 
+              className="relative pl-12 pb-8"
+              variants={itemVariants}
+            >
+              {/* Timeline Dot */}
+              <div className="absolute left-2.5 top-8 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
+              
+              <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:border-blue-800/50 transition-all duration-300">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-blue-800 mb-1">
+                      BSc (Hons) in Information Technology Specialising in Software Engineering
+                    </h3>
+                    <p className="text-gray-400 text-sm">Sri Lanka Institute of Information Technology</p>
+                  </div>
+                  <div className="bg-blue-800/20 px-3 py-1 rounded-full border border-blue-800/30">
+                    <span className="text-blue-300 text-xs font-medium">2023 - Present</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="relative pl-12"
+              variants={itemVariants}
+            >
+              {/* Timeline Dot */}
+              <div className="absolute left-2.5 top-9 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
+              
+              <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:border-blue-800/50 transition-all duration-300">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-blue-800 mb-1">
+                      GCE O/L & A/L (Engineering Technology)
+                    </h3>
+                    <p className="text-gray-400 text-sm">Swarna Jayanthi College, Kegalle</p>
+                  </div>
+                  <div className="bg-blue-600/20 px-3 py-1 rounded-full border border-blue-600/30">
+                    <span className="text-blue-300 text-xs font-medium">2015 - 2022</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </motion.div>
 
         <motion.div
