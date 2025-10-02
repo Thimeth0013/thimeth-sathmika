@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useTransform } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function CardRotate({ children, onSendToBack, sensitivity }) {
   const x = useMotionValue(0);
@@ -37,7 +37,7 @@ function CardRotate({ children, onSendToBack, sensitivity }) {
 export default function Stack({
   randomRotation = false,
   sensitivity = 200,
-  cardDimensions = { width: 208, height: 208 },
+  cardDimensions = { width: 360, height: 500 },
   cardsData = [],
   animationConfig = { stiffness: 260, damping: 20 },
   sendToBackOnClick = false
@@ -53,6 +53,27 @@ export default function Stack({
       ]
   );
 
+  const [dimensions, setDimensions] = useState(cardDimensions);
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (window.innerWidth < 640) {
+        // Mobile: scale down to 70% of original
+        setDimensions({
+          width: cardDimensions.width * 0.7,
+          height: cardDimensions.height * 0.7
+        });
+      } else {
+        // Desktop: use original dimensions
+        setDimensions(cardDimensions);
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, [cardDimensions]);
+
   const sendToBack = (id) => {
     setCards((prev) => {
       const newCards = [...prev];
@@ -67,8 +88,8 @@ export default function Stack({
     <div
       className="relative"
       style={{
-        width: cardDimensions.width,
-        height: cardDimensions.height,
+        width: dimensions.width,
+        height: dimensions.height,
         perspective: 600,
       }}
     >
@@ -98,8 +119,8 @@ export default function Stack({
                 damping: animationConfig.damping,
               }}
               style={{
-                width: cardDimensions.width,
-                height: cardDimensions.height,
+                width: dimensions.width,
+                height: dimensions.height,
               }}
             >
               <img

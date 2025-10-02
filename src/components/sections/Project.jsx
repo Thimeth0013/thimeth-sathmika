@@ -81,16 +81,16 @@ export const Project = () => {
         <div className="relative container mx-auto px-4 sm:px-6 z-10">
           {/* Title */}
           <motion.div
-            className="flex items-center pt-10 sm:pt-20 ml-4 sm:ml-4"
+            className="flex items-center pt-10 sm:pt-20 ml-2 md:ml-12"
             variants={titleVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
           >
-            <Sparkle className="text-blue-800 mr-2 w-6 h-6" />
-            <h1 className="text-lg sm:text-2xl font-medium text-blue-800">My work</h1>
+            <Sparkle className="text-blue-800 mr-2 w-5 h-5 md:w-6 md:h-6" />
+            <h1 className="text-base md:text-lg sm:text-2xl font-medium text-blue-800">My work</h1>
           </motion.div>
           <motion.h1
-            className="text-2xl sm:text-5xl font-bold mt-4 ml-4 mb-12 sm:ml-4"
+            className="text-xl md:text-2xl sm:text-5xl font-bold mt-4 ml-2 md:ml-12 mb-8 md:mb-12"
             variants={titleVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
@@ -100,7 +100,7 @@ export const Project = () => {
 
           {/* Tabs */}
           <motion.div
-            className="flex gap-4 mb-14 justify-center sm:justify-start pl-4 flex-wrap"
+            className="flex gap-2 md:gap-4 mb-10 md:mb-14 justify-center sm:justify-start ml-2 md:ml-12 flex-wrap"
             variants={tabVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
@@ -110,12 +110,12 @@ export const Project = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`
-                  px-2 py-1 sm:px-4 sm:py-2  // smaller padding on mobile
+                  px-2 py-1 sm:px-4 sm:py-2
                   rounded-lg
-                  text-xs sm:text-sm          // smaller font on mobile
+                  text-xs sm:text-sm
                   font-medium
                   transition-all duration-300
-                  flex items-center gap-1 sm:gap-2  // smaller gap on mobile
+                  flex items-center gap-1 sm:gap-2
                   ${activeTab === tab.id
                     ? 'bg-blue-800 text-white'
                     : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'}
@@ -126,7 +126,7 @@ export const Project = () => {
                 {tab.label}
                 <span
                   className={`
-                    text-xxs sm:text-xs          // even smaller text on mobile
+                    text-xs
                     px-1 sm:px-2 py-0.5 sm:py-1
                     rounded-full
                     ${activeTab === tab.id
@@ -141,16 +141,16 @@ export const Project = () => {
           </motion.div>
 
           {/* Projects Grid */}
-          <div className="mt-12" ref={ref}>
-            <motion.div className="flex flex-wrap justify-center gap-8 sm:gap-12" key={activeTab}>
+          <div className="mt-12 mx-6 md:ml-6 md:mr-10" ref={ref}>
+            <motion.div className="flex flex-wrap justify-center gap-6 md:gap-8 sm:gap-12" key={activeTab}>
               {filteredProjects.length > 0 ? (
                 filteredProjects.map((project, index) => (
                   <motion.div
                     key={`${activeTab}-${project.id}`}
                     className="relative w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-lg bg-gray-900/50"
                     style={{
-                      transform: `translateX(${index % 2 === 0 ? '10%' : '-10%'})`,
-                      y: parallaxY,
+                      transform: window.innerWidth >= 640 ? `translateX(${index % 2 === 0 ? '10%' : '-10%'})` : 'none',
+                      y: window.innerWidth >= 640 ? parallaxY : 0,
                     }}
                     variants={cardVariants(index)}
                     initial="hidden"
@@ -159,7 +159,7 @@ export const Project = () => {
                   >
 
                     {/* Image */}
-                    <div className="relative h-52 overflow-hidden">
+                    <div className="relative h-48 md:h-52 overflow-hidden">
                       <img
                         src={project.image}
                         alt={project.title}
@@ -167,7 +167,7 @@ export const Project = () => {
                       />
 
                       {/* Tags */}
-                      <div className="absolute bottom-0 left-0 p-4 flex gap-2 flex-wrap">
+                      <div className="absolute bottom-0 left-0 p-3 md:p-4 flex gap-2 flex-wrap">
                         {project.tags.map((tag, tagIndex) => (
                           <span
                             key={tagIndex}
@@ -181,29 +181,29 @@ export const Project = () => {
 
                     {/* Detail Section */}
                     <div className="p-4 bg-[#080b14]">
-                      <h3 className="text-md font-bold text-white mb-2">{project.title}</h3>
-                      <p className="text-gray-300 text-sm leading-relaxed">{project.description}</p>
-                      <div className="flex items-center gap-4 mt-4">
+                      <h3 className="text-sm md:text-md font-bold text-white mb-2">{project.title}</h3>
+                      <p className="text-gray-300 text-xs md:text-sm leading-relaxed mb-3">{project.description}</p>
+                      <div className="flex items-center flex-wrap gap-3 md:gap-4 mt-4">
                         {project.designLink && (
                           <a href={project.designLink} target="_blank" rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-sm font-medium text-blue-500 hover:underline">
-                            <Lightbulb className="w-4 h-4" /> Design
+                            className="flex items-center gap-1 text-xs md:text-sm font-medium text-blue-500 hover:underline">
+                            <Lightbulb className="w-3 h-3 md:w-4 md:h-4" /> Design
                           </a>
                         )}
                         {project.githubLink && (
                           <a href={project.githubLink} target="_blank" rel="noopener noreferrer"
-                            className="group flex items-center gap-1 text-sm font-medium text-gray-300 hover:underline">
-                            <GithubIcon className="w-4 h-4" /> 
+                            className="group flex items-center gap-1 text-xs md:text-sm font-medium text-gray-300 hover:underline">
+                            <GithubIcon className="w-3 h-3 md:w-4 md:h-4" /> 
                             Code
                             {project.status === 'ongoing' && (
-                              <span className="text-lime-400 group-hover:invisible"> (Ongoing)</span>
+                              <span className="text-lime-400 group-hover:invisible text-xs md:text-sm"> (Ongoing)</span>
                             )}               
                           </a>
                         )}
                         {project.liveLink && (
                           <a href={project.liveLink} target="_blank" rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-sm font-medium text-green-500  ">
-                            <ExternalLinkIcon className="w-4 h-4" /> Live Demo
+                            className="flex items-center gap-1 text-xs md:text-sm font-medium text-green-500">
+                            <ExternalLinkIcon className="w-3 h-3 md:w-4 md:h-4" /> Live Demo
                           </a>
                         )}
                       </div>
@@ -212,7 +212,7 @@ export const Project = () => {
                 ))
               ) : (
                 <motion.div className="text-center py-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                  <div className="text-gray-400 text-lg font-medium">No projects found for this category</div>
+                  <div className="text-gray-400 text-base md:text-lg font-medium">No projects found for this category</div>
                 </motion.div>
               )}
             </motion.div>

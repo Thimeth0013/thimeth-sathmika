@@ -81,7 +81,7 @@ export const Home = () => {
 
         <div className="absolute inset-0 z-10 pointer-events-none transition-all duration-500 group-hover:backdrop-blur-[6px] group-hover:bg-white/10"></div>
 
-        <div className="container mx-auto mt-16 md:mt-22 px-4 sm:px-6 z-20 mb-12 md:mb-20 group relative">
+        <div className="container mx-auto mt-8 md:mt-22 px-6 md:px-4 sm:px-6 z-20 mb-12 md:mb-20 group relative">
           {/* Desktop Layout */}
           <div className="hidden md:block max-w-6xl mx-auto space-y-8 mb-20">
             <h1 className="text-md md:text-xl text-white mt-30 font-medium">
@@ -123,33 +123,29 @@ export const Home = () => {
           </div>
 
           {/* Mobile Layout */}
-          <div className="md:hidden max-w-3xl mx-auto space-y-6 text-center sm:text-left">
-            <h1 className="text-md text-white font-medium flex justify-center sm:justify-start items-center gap-2">
-              <Hand className="text-blue-800 w-5 h-5 animate-wave" />
+          <div className="md:hidden max-w-3xl mx-auto space-y-6">
+            <h1 className="text-sm text-white font-medium flex items-center gap-2">
+              <Hand className="text-blue-800 w-4 h-4 animate-wave" />
               Hello, I'm Thimeth Sathmika
             </h1>
-            <h1 className="text-2xl sm:text-3xl font-bold leading-snug">
+            <h1 className="text-xl font-bold leading-snug">
               Creating tech with{' '}
-              <span className="relative text-blue-800 font-bold">
+              <span className="text-blue-800 font-bold">
                 *intention
-                <span className="hidden sm:block absolute bottom-[-180px] right-0 w-64 p-3 bg-white/30 dark:bg-black/30 backdrop-blur-md text-sm rounded-lg border border-white/20 shadow-md">
-                  Intention: a thing intended; an aim or plan.
-                </span>
               </span>{' '}
               — experiences that matter.
             </h1>
-            <div className="flex justify-center sm:justify-start mt-4">
+            <div className="flex flex-col gap-3 mt-6">
               <a
                 href="#about"
-                className="text-sm px-4 py-2 text-white font-medium bg-black/70 backdrop-blur-md rounded-full border border-blue-800/60 shadow-md hover:text-blue-800 hover:shadow-lg transition-all"
+                className="text-sm px-4 py-2 text-center text-blue-800/70 font-medium bg-transparent backdrop-blur-md rounded-xl border border-blue-800/60 shadow-md hover:text-white transition-all"
               >
                 Know Me Better
               </a>
-            </div>
-            <div className="flex justify-center sm:justify-start">
               <a
                 href=""
-                className="text-sm px-4 py-2 text-white font-medium bg-black/70 backdrop-blur-md rounded-full border border-blue-800/60 shadow-md hover:text-blue-800 hover:shadow-lg transition-all"
+                target="_blank"
+                className="text-sm px-4 py-2 text-center text-blue-800/70 font-medium bg-transparent backdrop-blur-md rounded-xl border border-blue-800/60 shadow-md hover:text-white transition-all"
               >
                 View Resume
               </a>
@@ -185,7 +181,7 @@ export const Home = () => {
       {/* Info Cards with GlareHover */}
       <div
         ref={ref}
-        className="relative mt-12 md:mt-30 mb-12 md:mb-20 text-left max-w-6xl mx-auto px-4 sm:px-6"
+        className="relative mt-12 md:mt-30 mb-12 md:mb-20 text-left max-w-6xl mx-auto px-6 md:px-4 sm:px-6"
       >
         <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 z-20">
           {infoCards.map((card, i) => (
@@ -212,7 +208,7 @@ export const Home = () => {
                 custom={i}
               >
                 <card.icon className="w-7 h-7 md:w-8 md:h-8 text-teal-600 dark:text-blue-800 mb-2 md:mb-4" />
-                <h3 className="text-lg font-semibold mb-2">{card.title}</h3>
+                <h3 className="text-base md:text-lg font-semibold mb-2">{card.title}</h3>
                 <p className="text-white/70 md:text-white/60 font-medium text-sm">{card.text}</p>
               </motion.div>
             </GlareHover>
