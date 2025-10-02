@@ -9,7 +9,8 @@ import {
   GraduationCapIcon,
   AwardIcon,
   Send,
-  ExternalLink
+  ExternalLink,
+  Music4
 } from "lucide-react";
 import profileImage from '../../assets/profile1.png';
 import profileImageHover from '../../assets/profile2.png';
@@ -347,7 +348,7 @@ export const About = () => {
       <div className="container mx-auto px-4 sm:px-6 z-10">
         <div className="flex flex-col sm:flex-row justify-between gap-4 pb-10">
           <motion.div
-            className="w-full sm:w-2/3 text-left ml-4 sm:ml-6 flex flex-col justify-start"
+            className="w-full sm:w-3/5 text-left ml-4 sm:ml-6 flex flex-col justify-start"
             variants={titleVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
@@ -358,16 +359,15 @@ export const About = () => {
             </div>
 
             <div className="pr-4 sm:pr-0">
-              <h1 className="text-base sm:text-2xl font-bold mb-6 mt-6">
-                I'm a 22 year old Software Engineering undergrad from Colombo, Sri Lanka - currently in my 3rd year. 
-                <br/>With 5+ years of learning IT,&nbsp;I focus on full-stack development with a stronger passion for frontend. 
-                <br/>I enjoy building{" "}
+              <h1 className="text-base sm:text-2xl font-bold mb-6 mt-6 leading-snug">
+                Software Engineering undergrad from Colombo, Sri Lanka, specializing in full-stack development with a strong focus on frontend engineering. 
+                <br />Over 3 years of experience working with modern web technologies, creating{" "}
                 <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
                   *interactive
                   <motion.div
-                    className="hidden hover-display absolute text-sm bottom-[-60px] left-0 sm:bottom-[-20px] sm:left-[500px] w-56 sm:w-64 p-3 sm:p-4 bg-white/40 dark:bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
+                    className="hidden hover-display absolute text-sm bottom-[-60px] left-0 sm:bottom-[1px] sm:left-[660px] w-56 sm:w-64 p-3 sm:p-4 bg-white/40 dark:bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
                     initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }} 
+                    animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3 }}
                   >
                     <p>
@@ -375,11 +375,11 @@ export const About = () => {
                     </p>
                   </motion.div>
                 </span>{" "}
-                and{" "}
+                and<br/>
                 <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
                   *detail-oriented
                   <motion.div
-                    className="hidden hover-display absolute text-sm bottom-[-80px] left-0 sm:bottom-[20px] sm:left-[620px] w-56 sm:w-64 p-3 sm:p-4 bg-white/40 dark:bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
+                    className="hidden hover-display absolute text-sm bottom-[-80px] left-0 sm:bottom-[-40px] sm:left-[620px] w-56 sm:w-64 p-3 sm:p-4 bg-white/40 dark:bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3 }}
@@ -389,12 +389,14 @@ export const About = () => {
                     </p>
                   </motion.div>
                 </span>{" "}
-                UIs and exploring creative ways to enhance user experience.
-
-                <div className="mt-4 text-base sm:text-lg">                
-                  No professional work experience yet, but actively enhancing skills through projects and continuous learning.
-                </div>
+                UIs, while bridging design and code to deliver seamless user experiences.
               </h1>
+              <div className="flex gap-2">
+                <Music4 className="mt-4 text-gray-300"/>
+                <h2 className="text-xs sm:text-sm text-gray-300 mt-4 mb-2 font-medium">
+                  Tracks that keep the ideas flowing
+                </h2>
+              </div>
               <SpotifyCard />
             </div>
           </motion.div>
