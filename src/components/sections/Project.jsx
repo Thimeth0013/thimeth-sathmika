@@ -90,7 +90,7 @@ export const Project = () => {
             <h1 className="text-base md:text-lg sm:text-2xl font-medium text-blue-800">My work</h1>
           </motion.div>
           <motion.h1
-            className="text-xl md:text-2xl sm:text-5xl font-bold mt-4 ml-2 md:ml-12 mb-8 md:mb-12"
+            className="text-xl md:text-5xl sm:text-5xl font-bold mt-4 ml-2 md:ml-12 mb-8 md:mb-12"
             variants={titleVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
