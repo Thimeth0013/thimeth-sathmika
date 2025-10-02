@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import CircularText from "../CircularText/CircularText";
 import Stack from "../Stack/Stack";
+import SpotifyCard from "../SpotifyCard";
 import { 
   Sparkle, 
   BookOpenIcon,
@@ -344,102 +345,103 @@ export const About = () => {
   return (
     <section id="about" className="min-h-screen bg-black text-white py-10 md:py-15 pl-0 md:pl-10">
       <div className="container mx-auto px-4 sm:px-6 z-10">
-<div className="flex flex-col sm:flex-row justify-between gap-4 pb-10">
-  <motion.div
-    className="w-full sm:w-2/3 text-left ml-4 sm:ml-6 flex flex-col justify-start"
-    variants={titleVariants}
-    initial="hidden"
-    animate={isInView ? "visible" : "hidden"}
-  >
-    <div className="flex gap-3 mt-10 sm:mt-20">
-      <Sparkle className="text-blue-800" />
-      <h1 className="text-xl sm:text-2xl font-medium text-left text-blue-800">About Me</h1>
-    </div>
-
-    <div className="pr-4 sm:pr-0">
-      <h1 className="text-base sm:text-2xl font-bold mb-4 mt-6">
-        I'm a 22 year old Software Engineering undergrad from Colombo, Sri Lanka - currently in my 3rd year. 
-        <br/>With 5+ years of learning IT,&nbsp;I focus on full-stack development with a stronger passion for frontend. 
-        <br/>I enjoy building{" "}
-        <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
-          *interactive
+        <div className="flex flex-col sm:flex-row justify-between gap-4 pb-10">
           <motion.div
-            className="hidden hover-display absolute text-sm bottom-[-60px] left-0 sm:bottom-[-20px] sm:left-[500px] w-56 sm:w-64 p-3 sm:p-4 bg-white/40 dark:bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }} 
-            transition={{ duration: 0.3 }}
+            className="w-full sm:w-2/3 text-left ml-4 sm:ml-6 flex flex-col justify-start"
+            variants={titleVariants}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
           >
-            <p>
-              <span className="font-semibold text-white/80">Interactive:</span> allowing users to actively engage and respond, not just consume.
-            </p>
-          </motion.div>
-        </span>{" "}
-        and{" "}
-        <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
-          *detail-oriented
-          <motion.div
-            className="hidden hover-display absolute text-sm bottom-[-80px] left-0 sm:bottom-[20px] sm:left-[620px] w-56 sm:w-64 p-3 sm:p-4 bg-white/40 dark:bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <p>
-              <span className="font-semibold text-white/80">Detail-oriented:</span> marked by careful attention to accuracy and precision.
-            </p>
-          </motion.div>
-        </span>{" "}
-        UIs and exploring creative ways to enhance user experience.
+            <div className="flex gap-3 mt-10 sm:mt-15">
+              <Sparkle className="text-blue-800" />
+              <h1 className="text-xl sm:text-2xl font-medium text-left text-blue-800">About Me</h1>
+            </div>
 
-        <div className="mt-4 text-base sm:text-lg">                
-          No professional work experience yet, but actively enhancing skills through projects and continuous learning.
+            <div className="pr-4 sm:pr-0">
+              <h1 className="text-base sm:text-2xl font-bold mb-6 mt-6">
+                I'm a 22 year old Software Engineering undergrad from Colombo, Sri Lanka - currently in my 3rd year. 
+                <br/>With 5+ years of learning IT,&nbsp;I focus on full-stack development with a stronger passion for frontend. 
+                <br/>I enjoy building{" "}
+                <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
+                  *interactive
+                  <motion.div
+                    className="hidden hover-display absolute text-sm bottom-[-60px] left-0 sm:bottom-[-20px] sm:left-[500px] w-56 sm:w-64 p-3 sm:p-4 bg-white/40 dark:bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }} 
+                    transition={{ duration: 0.3 }}
+                  >
+                    <p>
+                      <span className="font-semibold text-white/80">Interactive:</span> allowing users to actively engage and respond, not just consume.
+                    </p>
+                  </motion.div>
+                </span>{" "}
+                and{" "}
+                <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
+                  *detail-oriented
+                  <motion.div
+                    className="hidden hover-display absolute text-sm bottom-[-80px] left-0 sm:bottom-[20px] sm:left-[620px] w-56 sm:w-64 p-3 sm:p-4 bg-white/40 dark:bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <p>
+                      <span className="font-semibold text-white/80">Detail-oriented:</span> marked by careful attention to accuracy and precision.
+                    </p>
+                  </motion.div>
+                </span>{" "}
+                UIs and exploring creative ways to enhance user experience.
+
+                <div className="mt-4 text-base sm:text-lg">                
+                  No professional work experience yet, but actively enhancing skills through projects and continuous learning.
+                </div>
+              </h1>
+              <SpotifyCard />
+            </div>
+          </motion.div>
+
+          <motion.div
+            ref={ref}
+            className="w-full sm:w-1/2 flex justify-center sm:justify-end mx-auto sm:mr-20 mt-5 relative px-4 sm:px-0"
+            variants={imageVariants}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            style={{ minHeight: "500px" }}
+          >
+            <Stack
+              randomRotation={true}
+              sensitivity={180}
+              sendToBackOnClick={false}
+              cardDimensions={{ width: 360, height: 500 }}
+              cardsData={images}
+            />
+            <motion.div
+              className="absolute left-1/2 -translate-x-1/2 sm:left-[40px] sm:translate-x-0 top-[440px] transform -translate-y-1/2 z-20 w-32 h-32 sm:w-40 sm:h-40"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            >
+              <div className="relative w-full h-full">
+                <CircularText
+                  text="LETS TALK * LETS TALK * "
+                  spinDuration={20}
+                  onHover="speedUp"
+                  className="text-white font-medium h-full w-full align-middle justify-center text-center bg-black/50 rounded-full"
+                />
+                <a
+                  href="#contact"
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  <motion.div
+                    className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-800/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-blue-800 transition-all duration-300"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Send className="w-6 h-6 mr-1 mt-1 sm:w-8 sm:h-8 text-white" />
+                  </motion.div>
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
-      </h1>
-    </div>
-  </motion.div>
-
-  <motion.div
-    ref={ref}
-    className="w-full sm:w-1/2 flex justify-center sm:justify-end mx-auto sm:mr-20 mt-5 relative px-4 sm:px-0"
-    variants={imageVariants}
-    initial="hidden"
-    animate={isInView ? "visible" : "hidden"}
-    style={{ minHeight: "500px" }}
-  >
-    <Stack
-      randomRotation={true}
-      sensitivity={180}
-      sendToBackOnClick={false}
-      cardDimensions={{ width: 360, height: 500 }}
-      cardsData={images}
-    />
-    <motion.div
-      className="absolute left-1/2 -translate-x-1/2 sm:left-[40px] sm:translate-x-0 top-[440px] transform -translate-y-1/2 z-20 w-32 h-32 sm:w-40 sm:h-40"
-      whileHover={{ scale: 1.05 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-    >
-      <div className="relative w-full h-full">
-        <CircularText
-          text="LETS TALK * LETS TALK * "
-          spinDuration={20}
-          onHover="speedUp"
-          className="text-white font-medium h-full w-full align-middle justify-center text-center bg-black/50 rounded-full"
-        />
-        <a
-          href="#contact"
-          className="absolute inset-0 flex items-center justify-center"
-        >
-          <motion.div
-            className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-800/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-blue-800 transition-all duration-300"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Send className="w-6 h-6 mr-1 mt-1 sm:w-8 sm:h-8 text-white" />
-          </motion.div>
-        </a>
-      </div>
-    </motion.div>
-  </motion.div>
-</div>
 
         <motion.div
           className="w-full mt-20 overflow-hidden group border-white/20 border-t border-b pt-5 pb-5"
