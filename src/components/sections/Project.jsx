@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { Sparkle, GithubIcon, ExternalLinkIcon, Lightbulb, Clock } from 'lucide-react';
+import { Sparkle, GithubIcon, ExternalLinkIcon, Lightbulb, ChevronDown } from 'lucide-react';
 import { projectsData } from '../../data/projects';
 
 export const Project = () => {
   const [activeTab, setActiveTab] = useState('all');
+  const [displayCount, setDisplayCount] = useState(6);
   const allProjects = projectsData;
 
   const getFilteredProjects = () => {
@@ -23,6 +24,17 @@ export const Project = () => {
   };
 
   const filteredProjects = getFilteredProjects();
+  const displayedProjects = filteredProjects.slice(0, displayCount);
+  const hasMore = displayCount < filteredProjects.length;
+
+  const handleLoadMore = () => {
+    setDisplayCount(prev => prev + 6);
+  };
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    setDisplayCount(6); // Reset display count when changing tabs
+  };
 
   const tabs = [
     { id: 'all', label: 'All Projects', count: allProjects.length },
@@ -108,7 +120,7 @@ export const Project = () => {
             {tabs.map((tab) => (
               <motion.button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className={`
                   px-2 py-1 sm:px-4 sm:py-2
                   rounded-lg
@@ -143,8 +155,8 @@ export const Project = () => {
           {/* Projects Grid */}
           <div className="mt-12 mx-6 md:ml-6 md:mr-10" ref={ref}>
             <motion.div className="flex flex-wrap justify-center gap-6 md:gap-8 sm:gap-12" key={activeTab}>
-              {filteredProjects.length > 0 ? (
-                filteredProjects.map((project, index) => (
+              {displayedProjects.length > 0 ? (
+                displayedProjects.map((project, index) => (
                   <motion.div
                     key={`${activeTab}-${project.id}`}
                     className="relative w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-lg bg-gray-900/50"
@@ -216,6 +228,25 @@ export const Project = () => {
                 </motion.div>
               )}
             </motion.div>
+
+            {/* Load More Button */}
+            {hasMore && (
+              <motion.div
+                className="flex justify-center mt-4 mb-4"
+                initial={{ opacity: 0, y: 0 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <motion.button
+                  onClick={handleLoadMore}
+                  className="group relative px-4 py-3 bg-blue-800/40 hover:bg-blue-800 rounded-lg transition-all duration-300 flex items-center gap-2"
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <span className="text-sm text-gray-200 hover:text-white font-medium">Load More Projects</span>
+                  <ChevronDown className="w-5 h-5 group-hover:animate-bounce" />
+                </motion.button>
+              </motion.div>
+            )}
           </div>
         </div>
       </section>

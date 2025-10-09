@@ -4,6 +4,7 @@ import homekeep from '../assets/projects/homekeep.png';
 import cocktails from '../assets/projects/gsapCocktails.png';
 import smartSpend from '../assets/projects/smartSpend.png';
 import ceylonTrails from '../assets/projects/ceylonTrails.png';
+import safeCert from '../assets/projects/safecert.png'
 
 export const projectsData = [
   {
@@ -19,17 +20,6 @@ export const projectsData = [
   },
   {
     id: 2,
-    title: 'My Website',
-    description: 'A fast and responsive developer portfolio built with React, Tailwind CSS, and Vite — designed to showcase projects, technical skills, and design philosophy with smooth animations and clean UI.',
-    image: portfolio,
-    tags: ['React', 'TailwindCSS', 'Vite'],
-    designLink: 'https://www.behance.net/gallery/228890885/My-Portfolio',
-    githubLink: 'https://github.com/Thimeth0013/thimeth-sathmika',
-    liveLink: 'https://thimeth0013.github.io/thimeth-sathmika/',
-    status: 'completed',
-  },
-  {
-    id: 3,
     title: 'Mojito Cocktails',
     description: 'An animated and visually rich website built with React, Tailwind CSS, Vite, and GSAP — my first project using GSAP to explore advanced frontend animations.',
     image: cocktails,
@@ -40,7 +30,7 @@ export const projectsData = [
     status: 'completed',
   },
   {
-    id: 4,
+    id: 3,
     title: 'Home Keep',
     description: 'Home Keep is a professionally designed app built in Figma to simplify and streamline home maintenance, helping you keep your home in top shape with ease.',
     image: homekeep,
@@ -51,7 +41,7 @@ export const projectsData = [
     status: 'completed',
   },
   {
-    id: 5,
+    id: 4,
     title: 'Smart Spend',
     description: 'Smart Spend is a simple mobile app for managing personal finances. It tracks income, expenses, and savings while providing insights into spending habits through a user-friendly interface.',
     image: smartSpend,
@@ -62,7 +52,7 @@ export const projectsData = [
     status: 'completed',
   },
   {
-    id: 6,
+    id: 5,
     title: 'Ceylon Trails',
     description: 'Ceylon Trails is a Sri Lanka–based travel blogging web platform where travellers can create, store, and share their travel experiences as digital memories.',
     image: ceylonTrails,
@@ -71,5 +61,27 @@ export const projectsData = [
     githubLink: 'https://github.com/Y3S1Group/ceylon_trails',
     liveLink: '',
     status: 'ongoing',
+  },
+  {
+    id: 6,
+    title: 'Safe Cert',
+    description: 'Safe Cert is a comprehensive workplace safety and compliance management app designed to streamline employee training, certification tracking, and incident reporting.',
+    image: safeCert,
+    tags: ['TypeScript', 'Firebase', 'Expo Go'],
+    designLink: 'https://www.figma.com/design/In14fTZofTB2vIbuuzCPry/UEE-App?node-id=108-1376&t=iXt5r3rRNcdP6QPi-1',
+    githubLink: 'https://github.com/Y3S1Group/safecert_app',
+    liveLink: '',
+    status: 'ongoing',
+  },
+  {
+    id: 7,
+    title: 'My Website',
+    description: 'A fast and responsive developer portfolio built with React, Tailwind CSS, and Vite — designed to showcase projects, technical skills, and design philosophy with smooth animations and clean UI.',
+    image: portfolio,
+    tags: ['React', 'TailwindCSS', 'Vite'],
+    designLink: 'https://www.behance.net/gallery/228890885/My-Portfolio',
+    githubLink: 'https://github.com/Thimeth0013/thimeth-sathmika',
+    liveLink: 'https://thimeth0013.github.io/thimeth-sathmika/',
+    status: 'completed',
   },
 ];
