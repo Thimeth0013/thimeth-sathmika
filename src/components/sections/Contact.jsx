@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import emailjs from 'emailjs-com';
-import { MailIcon, Sparkle, Send, ArrowDownRight } from 'lucide-react';
+import { MailIcon, Sparkle, Send, ArrowDownRight, Copy, Check } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
 import FlowingMenu from '../FlowingMenu/FlowingMenu';
 
@@ -14,6 +14,15 @@ export const Contact = () => {
 
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
+  const [emailCopied, setEmailCopied] = useState(false);
+
+  const handleEmailClick = () => {
+    navigator.clipboard.writeText('sathmikakb@gmail.com');
+    setEmailCopied(true);
+    setTimeout(() => {
+      setEmailCopied(false);
+    }, 2000);
+  };
 
   // Refs for useInView
   const contactRef = useRef(null);
@@ -129,7 +138,56 @@ export const Contact = () => {
 
                 <motion.div className="flex items-center gap-2 md:gap-3" variants={emailVariants}>
                   <MailIcon className="w-4 h-4 md:w-5 md:h-5 text-blue-800" />
-                  <span className="text-gray-300 font-medium text-sm md:text-base">sathmikakb@gmail.com</span>
+                  <span className="text-gray-300 font-medium text-sm md:text-base">
+                    <a 
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=sathmikakb@gmail.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-blue-800 transition-colors"
+                    >
+                      sathmikakb@gmail.com
+                    </a>                  
+                  </span>
+                  
+                  <motion.button
+                    onClick={handleEmailClick}
+                    className="relative w-8 h-8 md:w-4 md:h-4 flex items-left justify-left"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <motion.div
+                      className="absolute inset-0"
+                      animate={{ 
+                        rotateY: emailCopied ? 180 : 0,
+                        opacity: emailCopied ? 0 : 1
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Copy className="w-2 h-4 md:w-3 md:h-3 text-gray-400 hover:text-blue-800 transition-colors" />
+                    </motion.div>
+                    
+                    <motion.div
+                      className="absolute inset-0 flex items-center justify-center"
+                      animate={{ 
+                        rotateY: emailCopied ? 0 : -180,
+                        opacity: emailCopied ? 1 : 0
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Check className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
+                    </motion.div>
+                  </motion.button>
+                  
+                  {emailCopied && (
+                    <motion.span
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="text-xs text-blue-600 font-medium"
+                    >
+                      Copied!
+                    </motion.span>
+                  )}
                 </motion.div>
               </div>
             </motion.div>

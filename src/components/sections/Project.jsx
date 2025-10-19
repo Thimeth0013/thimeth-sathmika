@@ -6,7 +6,7 @@ import { projectsData } from '../../data/projects';
 export const Project = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [displayCount, setDisplayCount] = useState(6);
-  const allProjects = projectsData;
+  const allProjects = [...projectsData].reverse();
 
   const getFilteredProjects = () => {
     switch (activeTab) {

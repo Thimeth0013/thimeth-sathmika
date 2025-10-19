@@ -328,7 +328,7 @@ export const About = () => {
       items: ['MongoDB', 'MySQL'],
     },
     {
-      category: 'Tools & DevOps',
+      category: 'Tools & Workflow',
       items: ['Git', 'Vite', 'Postman'],
     },
     {
@@ -445,11 +445,11 @@ export const About = () => {
           </motion.div>
         </div>
 
-        <motion.div
+      <motion.div
           className="w-full mt-20 overflow-hidden group border-white/20 border-t border-b pt-5 pb-5"
           variants={sectionVariants}
           initial="hidden"
-          animate={skillsInView ? "visible" : "hidden"}
+          animate="visible"
         >
           <div className="flex">
             <motion.div
@@ -525,7 +525,7 @@ export const About = () => {
                   {skillSet.items.map((skill) => (
                     <motion.span
                       key={skill}
-                      className="px-3 md:px-4 py-0.5 font-medium text-white/60 hover:text-white rounded-full bg-white/10 text-xs md:text-sm border border-white/20 hover:bg-blue-800/20 hover:border-blue-800/40 transition-all duration-200 cursor-default"
+                      className="px-3 md:px-4 py-0.5 font-medium text-white/70 rounded-full bg-white/10 text-xs md:text-sm border border-white/20 transition-all duration-200 cursor-default"
                     >
                       {skill}
                     </motion.span>
