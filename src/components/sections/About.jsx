@@ -644,21 +644,25 @@ export const About = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {activeTab === 'certificates'
-              ? CertificateData.map((cert) => (
-                  <CertificateCard
-                    key={cert.id}
-                    cert={cert}
-                    onOpenModal={openModal}
-                    itemVariants={itemVariants}
-                  />
-                ))
-              : BadgesData.map((badge) => (
-                  <BadgeCard
-                    key={badge.id}
-                    badge={badge}
-                    itemVariants={itemVariants}
-                  />
-                ))}
+                ? CertificateData
+                    .sort((a, b) => b.id - a.id)
+                    .map((cert) => (
+                      <CertificateCard
+                        key={cert.id}
+                        cert={cert}
+                        onOpenModal={openModal}
+                        itemVariants={itemVariants}
+                      />
+                    ))
+                : BadgesData
+                    .sort((a, b) => b.id - a.id)
+                    .map((badge) => (
+                      <BadgeCard
+                        key={badge.id}
+                        badge={badge}
+                        itemVariants={itemVariants}
+                      />
+                    ))}
           </div>
         </motion.div>
       </div>

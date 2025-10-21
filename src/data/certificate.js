@@ -35,11 +35,21 @@ const CertificateData = [
   {
     id: 4,
     title: "Introduction to Graphic Design: Basics of UI/UX",
-    description: "Certificate in Graphic Design Fundamentals covering design principles, typography, color theory, and Basics of UI/UX with introductions to tools like Figma and Adobe XD.",
+    description: "Certificate in Graphic Design Fundamentals covering design principles, typography, color theory, and Basics of UI/UX with tools like Figma and Adobe XD.",
     company: "Simplilearn",
     companyUrl: "https://www.simplilearn.com/",
     thumbnail: "https://certificates.simplicdn.net/share/9081664_92492621759342061552.png",
     certificateUrl: "https://www.simplilearn.com/skillup-certificate-landing?token=eyJjb3Vyc2VfaWQiOiIzNDA1IiwiY2VydGlmaWNhdGVfdXJsIjoiaHR0cHM6XC9cL2NlcnRpZmljYXRlcy5zaW1wbGljZG4ubmV0XC9zaGFyZVwvOTA4MTY2NF85MjQ5MjYyMTc1OTM0MjA2MTU1Mi5wbmciLCJ1c2VybmFtZSI6IksgVCBTYXRobWlrYSJ9&utm_source=shared-certificate&utm_medium=lms&utm_campaign=shared-certificate-promotion&referrer=https%3A%2F%2Flms.simplilearn.com%2Fcourses%2F6307%2FIntroduction-to-Graphic-Design%253B-Basics-of-UI%252FUX%2Fcertificate%2Fdownload-skillup&%24web_only=true&_branch_match_id=1464926032512290847&_branch_referrer=H4sIAAAAAAAAA8soKSkottLXL87MLcjJ1EssKNDLyczL1k%2FVD48oSDLKN8oyD0%2ByrytKTUstKsrMS49PKsovL04tsnXOKMrPTQUAzfUikT8AAAA%3D",
+    date: "October 2025",
+  },
+  {
+    id: 5,
+    title: "AI/ML Engineer - Stage 1",
+    description: "Certificate in AI and Machine Learning fundamentals with model building, and hands-on applications using TensorFlow, PyTorch & Google Colab.",
+    company: "SLIIT - CODE",
+    companyUrl: "https://code.sliit.org",
+    thumbnail: "https://cdn.filestackcontent.com/OAtTT5bRPOgRB2wZ0W3Q?policy=eyJjYWxsIjpbInJlYWQiXSwiZXhwaXJ5IjoxNzYxMDQ0MTEyLCJwYXRoIjoiLyJ9&signature=37006dbc572fe661c0873e707159c5b443cdf77b1afa59a56a74546391f3e935",
+    certificateUrl: "https://code.sliit.org/certificates/snecdrd9td",
     date: "October 2025",
   }
 ];
