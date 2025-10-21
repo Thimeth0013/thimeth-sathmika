@@ -108,14 +108,14 @@ export const Home = () => {
             <div className="flex justify-center md:justify-end">
               <a
                 href="#about"
-                className="text-sm md:text-lg px-6 py-2 pt-2 text-blue-800/70 font-medium bg-transparent backdrop-blur-md rounded-xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-white transition-all"
+                className="text-sm md:text-lg px-6 py-2 pt-2 text-blue-700 font-medium bg-transparent backdrop-blur-md rounded-xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-white transition-all"
               >
                 Know Me Better
               </a>
            <a
                 href=""
                 target="_blank"
-                className="text-sm md:text-lg px-6 py-2 pt-2 text-blue-800/70 font-medium bg-transparent backdrop-blur-md rounded-xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-white transition-all ml-10"
+                className="text-sm md:text-lg px-6 py-2 pt-2 text-blue-700 font-medium bg-transparent backdrop-blur-md rounded-xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-white transition-all ml-10"
               >
                 View Resume
               </a>
