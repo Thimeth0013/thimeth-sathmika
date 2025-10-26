@@ -19,6 +19,16 @@ const BadgesData = [
     issuerUrl: "https://www.postman.com/",
     dateEarned: "September 2025",
   },
+  {
+    id: 3,
+    title: "From Relational Model (SQL) to MongoDB's Document Model",
+    description: "This digital credential was awarded for demonstrating your knowledge of converting SQL or relational models to MongoDB's document model.",
+    image: "https://images.credly.com/size/340x340/images/234edfc5-0177-46e7-a61a-071f060af2f6/blob",
+    badgeUrl: "https://www.credly.com/badges/b27443a4-9ecc-4e9e-ab44-135c9f6ec788/public_url",
+    issuer: "MongoDB",
+    issuerUrl: "https://learn.mongodb.com",
+    dateEarned: "October 2025",
+  },
 ];
 
 export default BadgesData;
