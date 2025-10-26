@@ -1,5 +1,7 @@
 import hpAgileProjectManagementImg from '../assets/certificates/hpAgileProjectManagement.png'
 import hpAiForBeginnersImg from '../assets/certificates/hpAiForBeginners.png'
+import aiMLStage1 from '../assets/certificates/aiMLImg.png'
+import pythonMongoCC from '../assets/certificates/pythonCCMongo.png'
 
 const CertificateData = [
   {
@@ -48,8 +50,18 @@ const CertificateData = [
     description: "Certificate in AI and Machine Learning fundamentals with model building, and hands-on applications using TensorFlow, PyTorch & Google Colab.",
     company: "SLIIT - CODE",
     companyUrl: "https://code.sliit.org",
-    thumbnail: "https://cdn.filestackcontent.com/OAtTT5bRPOgRB2wZ0W3Q?policy=eyJjYWxsIjpbInJlYWQiXSwiZXhwaXJ5IjoxNzYxMDQ0MTEyLCJwYXRoIjoiLyJ9&signature=37006dbc572fe661c0873e707159c5b443cdf77b1afa59a56a74546391f3e935",
+    thumbnail: aiMLStage1,
     certificateUrl: "https://code.sliit.org/certificates/snecdrd9td",
+    date: "October 2025",
+  },
+  {
+    id: 6,
+    title: "MongoDB Python Developer Path",
+    description: "Certification in building modern applications with Python and MongoDB, covering database fundamentals, data modeling, and CRUD operations.",
+    company: "MongoDB",
+    companyUrl: "https://learn.mongodb.com/",
+    thumbnail: pythonMongoCC,
+    certificateUrl: "https://ti-user-certificates.s3.amazonaws.com/ae62dcd7-abdc-4e90-a570-83eccba49043/7a6f2d12-9bb7-4926-9971-f48a5f12199d-thimeth-sathmika-578f84e1-8ffa-4056-94de-19c6d4a1c43c-certificate.pdf",
     date: "October 2025",
   }
 ];
