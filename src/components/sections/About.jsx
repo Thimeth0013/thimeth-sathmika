@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useMemo } from "react";
 import { motion, useInView } from "framer-motion";
 import CircularText from "../CircularText/CircularText";
 import Stack from "../Stack/Stack";
@@ -10,9 +10,9 @@ import {
   AwardIcon,
   Send,
   ExternalLink,
-  Music4
+  Music4,
+  Search
 } from "lucide-react";
-import profileImage from '../../assets/profile1.png';
 import profileImageHover from '../../assets/profile2.png';
 import CertificateData from '../../data/certificate';
 import BadgesData from '../../data/badges';
@@ -253,7 +253,6 @@ export const About = () => {
 
   const images = [
     { id: 1, img: profileImageHover },
-    { id: 2, img: profileImage },
   ];
 
   const imageVariants = {
@@ -292,6 +291,10 @@ export const About = () => {
   const skillsInView = useInView(skillsRef, { once: true, amount: 0.3 });
   const educationInView = useInView(educationRef, { once: true, amount: 0.3 });
   const certificatesInView = useInView(certificatesRef, { once: true, amount: 0.3 });
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   const skills = [
     { img: html, label: "HTML" },
@@ -342,6 +345,45 @@ export const About = () => {
 
   const openModal = (certificate) => setSelectedCertificate(certificate);
   const closeModal = () => setSelectedCertificate(null);
+
+  // Filter data based on search query
+  const filteredData = useMemo(() => {
+    const data = activeTab === 'certificates' ? CertificateData : BadgesData;
+    
+    if (!searchQuery.trim()) {
+      return data.sort((a, b) => b.id - a.id);
+    }
+
+    const query = searchQuery.toLowerCase();
+    return data
+      .filter(item => {
+        const searchableText = `${item.title} ${item.description} ${item.company || item.issuer || ''}`.toLowerCase();
+        return searchableText.includes(query);
+      })
+      .sort((a, b) => b.id - a.id);
+  }, [activeTab, searchQuery]);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = filteredData.slice(startIndex, endIndex);
+
+  // Reset to page 1 when changing tabs or search query
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setCurrentPage(1);
+    setSearchQuery('');
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleLoadMore = () => {
+    setCurrentPage(prev => prev + 1);
+  };
 
   return (
     <section id="about" className="min-h-screen bg-black text-white py-10 md:py-15 pl-0 md:pl-10">
@@ -608,20 +650,21 @@ export const About = () => {
           initial="hidden"
           animate={certificatesInView ? "visible" : "hidden"}
         >
-          <motion.h2
-            className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start"
-            variants={itemVariants}
-          >
-            <AwardIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
-            <span className="text-blue-800">Certifications and Badges</span>
-          </motion.h2>
+        <motion.h2
+          className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start"
+          variants={itemVariants}
+        >
+          <AwardIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
+          <span className="text-blue-800">Certifications and Badges</span>
+        </motion.h2>
 
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 md:mb-10 pt-4">
           <motion.div
-            className="flex gap-3 md:gap-4 mb-8 md:mb-10 pt-4 pl-0 md:pl-2 justify-center sm:justify-start"
+            className="flex gap-3 md:gap-4 pl-0 md:pl-2"
             variants={itemVariants}
           >
             <button
-              onClick={() => setActiveTab('certificates')}
+              onClick={() => handleTabChange('certificates')}
               className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 ${
                 activeTab === 'certificates'
                   ? 'bg-blue-800 text-white'
@@ -631,7 +674,7 @@ export const About = () => {
               Certificates
             </button>
             <button
-              onClick={() => setActiveTab('badges')}
+              onClick={() => handleTabChange('badges')}
               className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 ${
                 activeTab === 'badges'
                   ? 'bg-blue-800 text-white'
@@ -642,28 +685,70 @@ export const About = () => {
             </button>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {activeTab === 'certificates'
-                ? CertificateData
-                    .sort((a, b) => b.id - a.id)
-                    .map((cert) => (
-                      <CertificateCard
-                        key={cert.id}
-                        cert={cert}
-                        onOpenModal={openModal}
-                        itemVariants={itemVariants}
-                      />
-                    ))
-                : BadgesData
-                    .sort((a, b) => b.id - a.id)
-                    .map((badge) => (
-                      <BadgeCard
-                        key={badge.id}
-                        badge={badge}
-                        itemVariants={itemVariants}
-                      />
-                    ))}
-          </div>
+          <motion.div
+            className="relative w-full md:w-64"
+            variants={itemVariants}
+          >
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="w-full pl-10 pr-4 py-2 bg-gray-900/50 border border-white/10 rounded-lg text-sm text-white placeholder-gray-400 focus:outline-none focus:border-blue-800/50 transition-all duration-300"
+            />
+          </motion.div>
+        </div>
+
+        {filteredData.length === 0 ? (
+          <motion.div
+            className="text-center py-12"
+            variants={itemVariants}
+          >
+            <p className="text-gray-400 text-lg">No results found for "{searchQuery}"</p>
+          </motion.div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {currentItems.map((item) =>
+                activeTab === 'certificates' ? (
+                  <CertificateCard
+                    key={item.id}
+                    cert={item}
+                    onOpenModal={openModal}
+                    itemVariants={itemVariants}
+                  />
+                ) : (
+                  <BadgeCard
+                    key={item.id}
+                    badge={item}
+                    itemVariants={itemVariants}
+                  />
+                )
+              )}
+            </div>
+
+            {currentPage < totalPages && (
+              <motion.div
+                className="flex justify-center mt-10"
+                variants={itemVariants}
+              >
+                <motion.button
+                  onClick={handleLoadMore}
+                  className="group relative px-6 py-3 bg-blue-800/40 hover:bg-blue-800 rounded-lg transition-all duration-300 flex items-center gap-3"
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <span className="text-sm text-gray-200 group-hover:text-white font-medium">
+                    Load More {activeTab === 'certificates' ? 'Certificates' : 'Badges'}
+                  </span>
+                  <span className="text-xs bg-blue-700/50 group-hover:bg-blue-700 px-2.5 py-1 rounded-full text-gray-200 group-hover:text-white transition-all duration-300">
+                    {currentPage} / {totalPages}
+                  </span>
+                </motion.button>
+              </motion.div>
+            )}
+          </>
+        )}
         </motion.div>
       </div>
 
