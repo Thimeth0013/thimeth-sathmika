@@ -138,7 +138,7 @@ const BadgeCard = ({ badge, itemVariants }) => {
   );
 };
 
-// Certificate Card Component - Fixed Layout
+// Certificate Card Component
 const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
   const handleCompanyClick = (e) => {
     e.stopPropagation();
@@ -150,93 +150,96 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
   return (
     <motion.div
       key={cert.id}
-      className="relative bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 cursor-pointer flex flex-col h-full"
+      className="relative bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 flex flex-col h-full"
       variants={itemVariants}
-      onClick={() => onOpenModal(cert)}
     >
-      {/* Date badge positioned over image */}
-      <motion.span
-        className="absolute top-3 right-3 bg-blue-800/80 text-white text-xs px-3 py-1 rounded-full shadow-md z-10"
+      {/* Header with image and date */}
+      <div className="flex items-start gap-3 p-4">
+        <motion.img
+          src={cert.thumbnail}
+          alt={cert.title}
+          className="w-22 h-16 md:w-24 md:h-18 object-cover bg-white rounded-lg flex-shrink-0"
+          variants={itemVariants}
+        />
+        
+        <div className="flex-grow min-w-0">
+          <div className="flex items-start justify-between gap-2 mb-2">
+            <motion.div
+              className="relative group flex-grow min-w-0"
+              variants={itemVariants}
+            >
+              <motion.h3
+                className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2"
+                variants={itemVariants}
+              >
+                {cert.title}
+              </motion.h3>
+              
+              {/* Tooltip - Desktop only */}
+              <div className="hidden md:block absolute top-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-xs whitespace-normal w-60 mt-1">
+                {cert.title}
+                <div className="absolute bottom-full left-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
+              </div>
+            </motion.div>
+            
+            <motion.span
+              className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0"
+              variants={itemVariants}
+            >
+              {cert.date}
+            </motion.span>
+          </div>
+
+          {cert.company && (
+            <motion.div
+              className="flex items-center gap-2"
+              variants={itemVariants}
+            >
+              <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
+              {cert.companyUrl ? (
+                <motion.button
+                  onClick={handleCompanyClick}
+                  className="text-xs md:text-sm text-blue-800 font-medium transition-colors duration-200 flex items-center gap-1 group focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded px-1 py-0.5"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {cert.company}
+                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                </motion.button>
+              ) : (
+                <span className="text-xs md:text-sm text-blue-800 font-medium">
+                  {cert.company}
+                </span>
+              )}
+            </motion.div>
+          )}
+        </div>
+      </div>
+
+      {/* Description - flex-grow to fill available space */}
+      <motion.p
+        className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow"
         variants={itemVariants}
       >
-        {cert.date}
-      </motion.span>
+        {cert.description}
+      </motion.p>
 
-      <motion.img
-        src={cert.thumbnail}
-        alt={cert.title}
-        className="w-full h-32 object-cover border-b border-white/10"
-        variants={itemVariants}
-      />
-
-      {/* Content section - flex-grow to fill available space */}
-      <div className="p-4 flex flex-col flex-grow">
-        <motion.div
-          className="relative group mb-2"
-          variants={itemVariants}
-        >
-          <motion.h3
-            className="text-sm md:text-base font-semibold text-white line-clamp-1 cursor-help"
-            variants={itemVariants}
-          >
-            {cert.title}
-          </motion.h3>
-          
-          {/* Tooltip - Desktop only */}
-          <div className="hidden md:block absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-xs whitespace-normal">
-            {cert.title}
-            <div className="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
-          </div>
-        </motion.div>
-
-        {cert.company && (
-          <motion.div
-            className="mb-3 flex items-center gap-2"
-            variants={itemVariants}
-          >
-            <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
-            {cert.companyUrl ? (
-              <motion.button
-                onClick={handleCompanyClick}
-                className="text-xs md:text-sm text-blue-800 font-medium transition-colors duration-200 flex items-center gap-1 group focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded px-1 py-0.5"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {cert.company}
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-              </motion.button>
-            ) : (
-              <span className="text-xs md:text-sm text-blue-800 font-medium">
-                {cert.company}
-              </span>
-            )}
-          </motion.div>
-        )}
-
-        {/* Description - flex-grow to fill available space */}
-        <motion.p
-          className="text-xs md:text-sm text-gray-400 leading-relaxed line-clamp-3 mb-4 flex-grow"
-          variants={itemVariants}
-        >
-          {cert.description}
-        </motion.p>
-
-        {/* Action button - always at bottom */}
-        {cert.certificateUrl && (
+      {/* Action button - always at bottom */}
+      {cert.certificateUrl && (
+        <div className="px-4 pb-4 mt-auto">
           <motion.a
             href={cert.certificateUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block w-full px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300 mt-auto"
+            className="inline-block w-full px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
             variants={itemVariants}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.95 }}
-            onClick={(e) => e.stopPropagation()}
           >
             View Certificate
           </motion.a>
-        )}
-      </div>
+        </div>
+      )}
     </motion.div>
   );
 };
