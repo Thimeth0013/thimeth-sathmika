@@ -81,7 +81,7 @@ export const Home = () => {
 
         <div className="absolute inset-0 z-10 pointer-events-none transition-all duration-500 group-hover:backdrop-blur-[6px] group-hover:bg-white/10"></div>
 
-        <div className="container mx-auto mt-8 md:mt-22 px-6 md:px-4 sm:px-6 z-20 mb-12 md:mb-20 group relative">
+        <div className="container mx-auto mt-0 md:mt-22 px-6 md:px-4 sm:px-6 z-20 mb-0 md:mb-20 group relative">
           {/* Desktop Layout */}
           <div className="hidden md:block max-w-6xl mx-auto space-y-8 mb-20">
             <h1 className="text-md md:text-xl text-white mt-30 font-medium">
@@ -138,14 +138,14 @@ export const Home = () => {
             <div className="flex flex-col gap-3 mt-6">
               <a
                 href="#about"
-                className="text-sm px-4 py-2 text-center text-blue-800/70 font-medium bg-transparent backdrop-blur-md rounded-xl border border-blue-800/60 shadow-md hover:text-white transition-all"
+                className="text-sm px-4 py-2 text-center text-blue-700 font-medium bg-transparent backdrop-blur-md rounded-xl border border-blue-800 shadow-md hover:text-white transition-all"
               >
                 Know Me Better
               </a>
               <a
                 href=""
                 target="_blank"
-                className="text-sm px-4 py-2 text-center text-blue-800/70 font-medium bg-transparent backdrop-blur-md rounded-xl border border-blue-800/60 shadow-md hover:text-white transition-all"
+                className="text-sm px-4 py-2 text-center text-blue-700 font-medium bg-transparent backdrop-blur-md rounded-xl border border-blue-800 shadow-md hover:text-white transition-all"
               >
                 View Resume
               </a>
@@ -181,7 +181,7 @@ export const Home = () => {
       {/* Info Cards with GlareHover */}
       <div
         ref={ref}
-        className="relative mt-12 md:mt-30 mb-12 md:mb-20 text-left max-w-6xl mx-auto px-6 md:px-4 sm:px-6"
+        className="relative mt-0 md:mt-30 mb-2 md:mb-20 text-left max-w-6xl mx-auto px-6 md:px-4 sm:px-6"
       >
         <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 z-20">
           {infoCards.map((card, i) => (

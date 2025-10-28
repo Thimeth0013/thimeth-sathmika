@@ -335,7 +335,7 @@ export const About = () => {
     },
     {
       category: 'Tools & Workflow',
-      items: ['Git', 'Vite', 'Postman'],
+      items: ['Git', 'Vite', 'Postman', 'Expo'],
     },
     {
       category: 'Design',
@@ -410,7 +410,7 @@ export const About = () => {
                 <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
                   *interactive
                   <motion.div
-                    className="hidden hover-display absolute text-sm bottom-[-60px] left-0 sm:bottom-[1px] sm:left-[660px] w-56 sm:w-64 p-3 sm:p-4 bg-white/40 dark:bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
+                    className="hidden hover-display absolute text-sm bottom-[-60px] left-0 sm:bottom-[-180px] sm:left-[660px] w-56 sm:w-64 p-3 sm:p-4 bg-white/40 dark:bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3 }}
