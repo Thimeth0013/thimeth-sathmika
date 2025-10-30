@@ -14,14 +14,21 @@ const LetterboxdSpotifyCard = () => {
   const [spotifyLoading, setSpotifyLoading] = useState(true);
 
   useEffect(() => {
-    const fetchLastMovie = async () => {
+    const fetchLastMovie = async (retryCount = 0) => {
+      const maxRetries = 3;
       setLoading(true);
       setLetterboxdError(false);
+      
       try {
         const proxyUrl = 'https://api.allorigins.win/raw?url=';
         const rssUrl = encodeURIComponent('https://letterboxd.com/thimeth/rss/');
         
         const response = await fetch(proxyUrl + rssUrl);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const text = await response.text();
         
         const parser = new DOMParser();
@@ -47,12 +54,23 @@ const LetterboxdSpotifyCard = () => {
             rewatch,
             posterUrl
           });
+          setLoading(false);
+          setLetterboxdError(false);
+        } else {
+          throw new Error('No items found in RSS feed');
         }
-        setLoading(false);
       } catch (error) {
-        console.error('Error fetching Letterboxd data:', error);
-        setLetterboxdError(true);
-        setLoading(false);
+        console.error(`Error fetching Letterboxd data (attempt ${retryCount + 1}/${maxRetries}):`, error);
+        
+        if (retryCount < maxRetries) {
+          // Retry after a delay (1 second, then 2 seconds)
+          const delay = (retryCount + 1) * 1000;
+          console.log(`Retrying in ${delay}ms...`);
+          setTimeout(() => fetchLastMovie(retryCount + 1), delay);
+        } else {
+          setLetterboxdError(true);
+          setLoading(false);
+        }
       }
     };
 
@@ -296,12 +314,7 @@ const LetterboxdSpotifyCard = () => {
               ) : letterboxdError ? (
                 <div className="text-center py-4">
                   <p className="text-gray-400 text-sm">Failed to load movie data</p>
-                  <button 
-                    onClick={() => window.location.reload()} 
-                    className="text-xs text-blue-600 mt-2 hover:underline"
-                  >
-                    Retry
-                  </button>
+                  <p className="text-gray-500 text-xs mt-1">Already tried 3 times</p>
                 </div>
               ) : lastMovie ? (
                 <div className="flex items-center gap-3">
@@ -346,7 +359,7 @@ const LetterboxdSpotifyCard = () => {
                             <span className="text-gray-600">•</span>
                             <div className="flex items-center gap-1">
                               <RefreshCw className="w-3 h-3 text-purple-400" />
-                              <span className="text-[10px] text-purple-400 font-medium">Rewatched</span>
+                              <span className="text-[10px] text-purple-400 font-medium">Rewatch</span>
                             </div>
                           </>
                         )}
