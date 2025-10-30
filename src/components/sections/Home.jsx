@@ -62,7 +62,7 @@ export const Home = () => {
   return (
     <div className="w-full" id="home">
       {/* Hero Section */}
-      <section className="relative w-full min-h-[80vh] md:min-h-[90vh] flex items-center overflow-hidden dark:bg-black">
+      <section className="relative w-full min-h-[80vh] md:min-h-[90vh] flex items-center overflow-hidden bg-black">
         {/* Light Rays - Desktop only */}
         <div className="hidden md:block absolute inset-0 z-0">
           <LightRays
@@ -95,7 +95,7 @@ export const Home = () => {
                 Creating tech with{' '}
                 <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
                   *intention
-                  <div className="hidden hover-display absolute bottom-[-180px] sm:bottom-[-180px] right-[40px] sm:right-[-160px] w-100 p-4 bg-white/40 dark:bg-black/40 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
+                  <div className="hidden hover-display absolute bottom-[-180px] sm:bottom-[-180px] right-[40px] sm:right-[-160px] w-100 p-4 bg-black/40 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
                     <p>
                       <span className="font-semibold text-white/80 text-sm sm:text-md">Intention:</span> a thing intended; an aim or plan.
                     </p>
@@ -193,7 +193,7 @@ export const Home = () => {
               glareSize={200}
               transitionDuration={600}
               playOnce={false}
-              className="rounded-xl border border-white/20 bg-white/10 md:bg-white/20 dark:bg-gray-800/20 backdrop-blur-md shadow-lg hover:bg-white/20 md:hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-300 ease-in-out"
+              className="rounded-xl border border-white/20 md:bg-white/20 bg-gray-800/20 backdrop-blur-md shadow-lg hover:bg-white/20 md:hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-300 ease-in-out"
               style={{ 
                 padding: window.innerWidth >= 768 ? '1.5rem' : '1rem', 
                 width: '100%', 
@@ -207,7 +207,7 @@ export const Home = () => {
                 animate={isInView ? 'visible' : 'hidden'}
                 custom={i}
               >
-                <card.icon className="w-7 h-7 md:w-8 md:h-8 text-teal-600 dark:text-blue-800 mb-2 md:mb-4" />
+                <card.icon className="w-7 h-7 md:w-8 md:h-8 text-blue-800 dark:text-blue-800 mb-2 md:mb-4" />
                 <h3 className="text-base md:text-lg font-semibold mb-2">{card.title}</h3>
                 <p className="text-white/70 md:text-white/60 font-medium text-sm">{card.text}</p>
               </motion.div>
