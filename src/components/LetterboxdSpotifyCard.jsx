@@ -9,11 +9,14 @@ const LetterboxdSpotifyCard = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [lastMovie, setLastMovie] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [letterboxdError, setLetterboxdError] = useState(false);
   const [spotifyData, setSpotifyData] = useState(null);
   const [spotifyLoading, setSpotifyLoading] = useState(true);
 
   useEffect(() => {
     const fetchLastMovie = async () => {
+      setLoading(true);
+      setLetterboxdError(false);
       try {
         const proxyUrl = 'https://api.allorigins.win/raw?url=';
         const rssUrl = encodeURIComponent('https://letterboxd.com/thimeth/rss/');
@@ -48,10 +51,12 @@ const LetterboxdSpotifyCard = () => {
         setLoading(false);
       } catch (error) {
         console.error('Error fetching Letterboxd data:', error);
+        setLetterboxdError(true);
         setLoading(false);
       }
     };
 
+    // Fetch immediately on mount
     fetchLastMovie();
   }, []);
 
@@ -287,6 +292,16 @@ const LetterboxdSpotifyCard = () => {
               {loading ? (
                 <div className="flex items-center justify-center py-4">
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-800"></div>
+                </div>
+              ) : letterboxdError ? (
+                <div className="text-center py-4">
+                  <p className="text-gray-400 text-sm">Failed to load movie data</p>
+                  <button 
+                    onClick={() => window.location.reload()} 
+                    className="text-xs text-blue-600 mt-2 hover:underline"
+                  >
+                    Retry
+                  </button>
                 </div>
               ) : lastMovie ? (
                 <div className="flex items-center gap-3">
