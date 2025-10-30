@@ -3,7 +3,7 @@ import portfolio from '../assets/projects/portfolio.png';
 import homekeep from '../assets/projects/homekeep.png';
 import cocktails from '../assets/projects/gsapCocktails.png';
 import smartSpend from '../assets/projects/smartSpend.png';
-import ceylonTrails from '../assets/projects/ceylonTrails.png';
+import ceylonTrails from '../assets/projects/ceylonTrails.jpg';
 import safeCert from '../assets/projects/safecert.png'
 
 export const projectsData = [
