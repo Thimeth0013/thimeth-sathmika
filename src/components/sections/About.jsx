@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo } from "react";
 import { motion, useInView } from "framer-motion";
 import CircularText from "../CircularText/CircularText";
 import Stack from "../Stack/Stack";
-import SpotifyCard from "../SpotifyCard";
+import LetterboxdSpotifyCard from '../LetterboxdSpotifyCard';
 import { 
   Sparkle, 
   BookOpenIcon,
@@ -158,6 +158,7 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
         <motion.img
           src={cert.thumbnail}
           alt={cert.title}
+          loading="lazy"
           className="w-22 h-16 md:w-24 md:h-18 object-cover bg-white rounded-lg flex-shrink-0"
           variants={itemVariants}
         />
@@ -404,7 +405,7 @@ export const About = () => {
             </div>
 
             <div className="pr-4 sm:pr-0">
-              <h1 className="text-base sm:text-2xl font-bold mb-6 mt-6 leading-snug">
+              <h1 className="text-base sm:text-2xl font-bold mb-12 mt-6 leading-snug">
                 Software Engineering undergrad from Colombo, Sri Lanka, specializing in full-stack development with a strong focus on frontend engineering. 
                 <br />Over 3 years of experience working with modern web technologies, creating{" "}
                 <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
@@ -436,13 +437,7 @@ export const About = () => {
                 </span>{" "}
                 UIs, while bridging design and code to deliver seamless user experiences.
               </h1>
-              <div className="flex gap-2">
-                <Music4 className="mt-4 text-gray-300"/>
-                <h2 className="text-xs sm:text-sm text-gray-300 mt-4 mb-2 font-medium">
-                  Tracks that keep the ideas flowing
-                </h2>
-              </div>
-              <SpotifyCard />
+              <LetterboxdSpotifyCard/>
             </div>
           </motion.div>
 
