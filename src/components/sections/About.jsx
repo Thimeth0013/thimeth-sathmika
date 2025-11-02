@@ -38,7 +38,7 @@ import postman from '../../assets/skills/postman.svg';
 import mysql from '../../assets/skills/mysql.svg';
 import java from '../../assets/skills/java.svg';
 
-// Badge Card Component - Fixed Layout
+// Badge Card Component
 const BadgeCard = ({ badge, itemVariants }) => {
   return (
     <motion.div
@@ -46,7 +46,6 @@ const BadgeCard = ({ badge, itemVariants }) => {
       className="relative bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 flex flex-col h-full"
       variants={itemVariants}
     >
-      {/* Header with image and date */}
       <div className="flex items-start gap-3 p-4 pb-0">
         <motion.img
           src={badge.image}
@@ -57,37 +56,24 @@ const BadgeCard = ({ badge, itemVariants }) => {
         
         <div className="flex-grow min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <motion.div
-              className="relative group flex-grow min-w-0"
-              variants={itemVariants}
-            >
-              <motion.h3
-                className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2"
-                variants={itemVariants}
-              >
+            <motion.div className="relative group flex-grow min-w-0" variants={itemVariants}>
+              <motion.h3 className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2" variants={itemVariants}>
                 {badge.title}
               </motion.h3>
               
-              {/* Tooltip - Desktop only */}
               <div className="hidden md:block absolute top-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-xs whitespace-normal w-60 mt-1">
                 {badge.title}
                 <div className="absolute bottom-full left-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
               </div>
             </motion.div>
             
-            <motion.span
-              className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0"
-              variants={itemVariants}
-            >
+            <motion.span className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0" variants={itemVariants}>
               {badge.dateEarned}
             </motion.span>
           </div>
 
           {badge.issuer && (
-            <motion.div
-              className="mb-2 flex items-center gap-2"
-              variants={itemVariants}
-            >
+            <motion.div className="mb-2 flex items-center gap-2" variants={itemVariants}>
               <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
               {badge.issuerUrl ? (
                 <motion.a
@@ -102,24 +88,17 @@ const BadgeCard = ({ badge, itemVariants }) => {
                   <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                 </motion.a>
               ) : (
-                <span className="text-xs md:text-sm text-blue-800 font-medium">
-                  {badge.issuer}
-                </span>
+                <span className="text-xs md:text-sm text-blue-800 font-medium">{badge.issuer}</span>
               )}
             </motion.div>
           )}
         </div>
       </div>
 
-      {/* Description - flex-grow to fill available space */}
-      <motion.p
-        className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow"
-        variants={itemVariants}
-      >
+      <motion.p className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow" variants={itemVariants}>
         {badge.description}
       </motion.p>
 
-      {/* Action button - always at bottom */}
       {badge.badgeUrl && (
         <div className="px-4 pb-4 mt-auto">
           <motion.a
@@ -154,7 +133,6 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
       className="relative bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 flex flex-col h-full"
       variants={itemVariants}
     >
-      {/* Header with image and date */}
       <div className="flex items-start gap-3 p-4">
         <motion.img
           src={cert.thumbnail}
@@ -166,37 +144,24 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
         
         <div className="flex-grow min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <motion.div
-              className="relative group flex-grow min-w-0"
-              variants={itemVariants}
-            >
-              <motion.h3
-                className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2"
-                variants={itemVariants}
-              >
+            <motion.div className="relative group flex-grow min-w-0" variants={itemVariants}>
+              <motion.h3 className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2" variants={itemVariants}>
                 {cert.title}
               </motion.h3>
               
-              {/* Tooltip - Desktop only */}
               <div className="hidden md:block absolute top-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-xs whitespace-normal w-60 mt-1">
                 {cert.title}
                 <div className="absolute bottom-full left-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
               </div>
             </motion.div>
             
-            <motion.span
-              className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0"
-              variants={itemVariants}
-            >
+            <motion.span className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0" variants={itemVariants}>
               {cert.date}
             </motion.span>
           </div>
 
           {cert.company && (
-            <motion.div
-              className="flex items-center gap-2"
-              variants={itemVariants}
-            >
+            <motion.div className="flex items-center gap-2" variants={itemVariants}>
               <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
               {cert.companyUrl ? (
                 <motion.button
@@ -209,24 +174,17 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
                   <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                 </motion.button>
               ) : (
-                <span className="text-xs md:text-sm text-blue-800 font-medium">
-                  {cert.company}
-                </span>
+                <span className="text-xs md:text-sm text-blue-800 font-medium">{cert.company}</span>
               )}
             </motion.div>
           )}
         </div>
       </div>
 
-      {/* Description - flex-grow to fill available space */}
-      <motion.p
-        className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow"
-        variants={itemVariants}
-      >
+      <motion.p className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow" variants={itemVariants}>
         {cert.description}
       </motion.p>
 
-      {/* Action button - always at bottom */}
       {cert.certificateUrl && (
         <div className="px-4 pb-4 mt-auto">
           <motion.a
@@ -301,26 +259,10 @@ export const About = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  // Skill images for IconCloud - using imported assets
   const skillImages = [
-    html,
-    css,
-    php,
-    git,
-    javascript,
-    react,
-    nodejs,
-    expressjs,
-    mongodb,
-    tailwindcss,
-    bootstrap,
-    figma,
-    photoshop,
-    kotlin,
-    vite,
-    postman,
-    mysql,
-    java,
+    html, css, php, git, javascript, react, nodejs, expressjs,
+    mongodb, tailwindcss, bootstrap, figma, photoshop, kotlin,
+    vite, postman, mysql, java,
   ];
 
   const skillCategories = [
@@ -352,7 +294,6 @@ export const About = () => {
   const openModal = (certificate) => setSelectedCertificate(certificate);
   const closeModal = () => setSelectedCertificate(null);
 
-  // Filter data based on search query
   const filteredData = useMemo(() => {
     const data = activeTab === 'certificates' ? CertificateData : BadgesData;
     
@@ -369,13 +310,11 @@ export const About = () => {
       .sort((a, b) => b.id - a.id);
   }, [activeTab, searchQuery]);
 
-  // Calculate pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = filteredData.slice(startIndex, endIndex);
 
-  // Reset to page 1 when changing tabs or search query
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setCurrentPage(1);
@@ -446,7 +385,7 @@ export const About = () => {
 
           <motion.div
             ref={ref}
-            className="hidden sm:flex w-full sm:w-1/2 justify-center sm:justify-end mx-auto sm:mr-20 mt-5 relative px-4 sm:px-0"
+            className="w-full sm:w-1/2 flex justify-center sm:justify-end mx-auto sm:mr-20 mt-5 relative px-4 sm:px-0"
             variants={imageVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
@@ -460,7 +399,7 @@ export const About = () => {
               cardsData={images}
             />
             <motion.div
-              className="absolute left-1/2 -translate-x-1/2 sm:left-[40px] sm:translate-x-0 top-[440px] transform -translate-y-1/2 z-20 w-32 h-32 sm:w-40 sm:h-40"
+              className="hidden sm:block absolute left-1/2 -translate-x-1/2 sm:left-[40px] sm:translate-x-0 top-[440px] transform -translate-y-1/2 z-20 w-32 h-32 sm:w-40 sm:h-40"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
@@ -471,10 +410,7 @@ export const About = () => {
                   onHover="speedUp"
                   className="text-white font-medium h-full w-full align-middle justify-center text-center bg-black/50 rounded-full"
                 />
-                <a
-                  href="#contact"
-                  className="absolute inset-0 flex items-center justify-center"
-                >
+                <a href="#contact" className="absolute inset-0 flex items-center justify-center">
                   <motion.div
                     className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-800/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-blue-800 transition-all duration-300"
                     whileHover={{ scale: 1.1 }}
@@ -490,13 +426,13 @@ export const About = () => {
 
         <motion.div 
           ref={skillsRef}
-          className="mt-20 md:mt-32 mb-20 mx-6 md:ml-10 md:mr-10"
+          className="mb-6 md:mb-0 mt-0 md:mt-24 mx-6 md:ml-8 md:mr-10"
           variants={sectionVariants}
           initial="hidden"
           animate={skillsInView ? "visible" : "hidden"}
         >
           <motion.h2 
-            className="text-2xl md:text-3xl font-bold mb-8 md:mb-12 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start"
+            className="text-xl md:text-3xl font-bold mb-8 md:mb-12 flex items-center gap-3 text-center sm:text-left justify-start sm:justify-start"
             variants={itemVariants}
           >
             <BookOpenIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
@@ -504,15 +440,10 @@ export const About = () => {
           </motion.h2>
           
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
-            {/* Skills List */}
-            <div className="space-y-8 flex-[1.2]">
+            <div className="space-y-8 flex-1">
               {skillCategories.map((skillSet, index) => (
-                <motion.div
-                  key={skillSet.category}
-                  className="group"
-                  variants={itemVariants}
-                >
-                  <h3 className="text-lg md:text-xl font-medium text-blue-800 mb-2">
+                <motion.div key={skillSet.category} className="group" variants={itemVariants}>
+                  <h3 className="text-lg md:text-xl font-medium text-blue-800 mb-3">
                     {skillSet.category}
                   </h3>
                   
@@ -528,23 +459,22 @@ export const About = () => {
                       >
                         {skill}
                         <motion.span
-                          className="absolute -bottom-1 left-0 h-px bg-blue-800"
-                          initial={{ width: 0 }}
-                          whileHover={{ width: "50%" }}
+                          className="absolute -bottom-1 left-1/4 right-1/4 h-px bg-blue-800"
+                          initial={{ scaleX: 0 }}
+                          whileHover={{ scaleX: 1 }}
                           transition={{ duration: 0.3 }}
                         />
                       </motion.span>
                     ))}
                   </div>
                   
-                  <div className="h-px bg-blue-800/40 mt-2" />
+                  <div className="h-px bg-blue-800/40 mt-3" />
                 </motion.div>
               ))}
             </div>
 
-            {/* Icon Cloud */}
             <motion.div 
-              className="hidden lg:flex lg:w-[600px] lg:h-[600px] flex-shrink-0"
+              className="hidden lg:flex lg:w-[600px] lg:h-[600px] flex-shrink-0 items-center justify-center"
               variants={itemVariants}
             >
               <IconCloud images={skillImages} />
@@ -554,13 +484,13 @@ export const About = () => {
 
         <motion.div 
           ref={educationRef}
-          className="mt-12 mb-12 mx-6"
+          className="mt-12 md:mt-0 mb-12 mx-6"
           variants={sectionVariants}
           initial="hidden"
           animate={educationInView ? "visible" : "hidden"}
         >
           <motion.h2 
-            className="text-xl md:text-2xl font-bold mb-6 md:mb-8 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start"
+            className="text-xl md:text-3xl font-bold mb-6 md:mb-8 flex items-center gap-3 text-center sm:text-left justify-start"
             variants={itemVariants}
           >
             <GraduationCapIcon className="w-6 h-6 md:w-7 md:h-7 text-blue-800" />
@@ -568,14 +498,9 @@ export const About = () => {
           </motion.h2>
           
           <div className="relative">
-            {/* Timeline Line */}
             <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-800/0 via-blue-600 to-transparent"></div>
             
-            <motion.div 
-              className="relative pl-12 pb-8"
-              variants={itemVariants}
-            >
-              {/* Timeline Dot */}
+            <motion.div className="relative pl-12 pb-8" variants={itemVariants}>
               <div className="absolute left-2.5 top-8 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
               
               <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
@@ -593,10 +518,7 @@ export const About = () => {
               </div>
             </motion.div>
 
-            <motion.div 
-              className="relative pl-12"
-              variants={itemVariants}
-            >
+            <motion.div className="relative pl-12" variants={itemVariants}>
               <div className="absolute left-2.5 top-9 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
               
               <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
@@ -624,7 +546,7 @@ export const About = () => {
           animate={certificatesInView ? "visible" : "hidden"}
         >
         <motion.h2
-          className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3 text-center sm:text-left justify-center sm:justify-start"
+          className="text-xl md:text-3xl font-bold mb-6 flex items-center gap-3 text-center sm:text-left justify-start"
           variants={itemVariants}
         >
           <AwardIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
@@ -632,10 +554,7 @@ export const About = () => {
         </motion.h2>
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 md:mb-10 pt-4">
-          <motion.div
-            className="flex gap-3 md:gap-4 pl-0 md:pl-2"
-            variants={itemVariants}
-          >
+          <motion.div className="flex gap-3 md:gap-4 pl-0 md:pl-2" variants={itemVariants}>
             <button
               onClick={() => handleTabChange('certificates')}
               className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 ${
@@ -658,10 +577,7 @@ export const About = () => {
             </button>
           </motion.div>
 
-          <motion.div
-            className="relative w-full md:w-64"
-            variants={itemVariants}
-          >
+          <motion.div className="relative w-full md:w-64" variants={itemVariants}>
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
@@ -674,10 +590,7 @@ export const About = () => {
         </div>
 
         {filteredData.length === 0 ? (
-          <motion.div
-            className="text-center py-12"
-            variants={itemVariants}
-          >
+          <motion.div className="text-center py-12" variants={itemVariants}>
             <p className="text-gray-400 text-lg">No results found for "{searchQuery}"</p>
           </motion.div>
         ) : (
@@ -702,10 +615,7 @@ export const About = () => {
             </div>
 
             {currentPage < totalPages && (
-              <motion.div
-                className="flex justify-center mt-10"
-                variants={itemVariants}
-              >
+              <motion.div className="flex justify-center mt-10" variants={itemVariants}>
                 <motion.button
                   onClick={handleLoadMore}
                   className="group relative px-6 py-3 bg-blue-800/40 hover:bg-blue-800 rounded-lg transition-all duration-300 flex items-center gap-3"
