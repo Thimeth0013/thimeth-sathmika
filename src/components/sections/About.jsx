@@ -3,6 +3,7 @@ import { motion, useInView } from "framer-motion";
 import CircularText from "../CircularText/CircularText";
 import Stack from "../Stack/Stack";
 import LetterboxdSpotifyCard from '../LetterboxdSpotifyCard';
+import {IconCloud} from "../IconCloud";
 import { 
   Sparkle, 
   BookOpenIcon,
@@ -300,31 +301,32 @@ export const About = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  const skills = [
-    { img: html, label: "HTML" },
-    { img: css, label: "CSS" },
-    { img: php, label: "Php" },
-    { img: git, label: "Git" },
-    { img: javascript, label: "JavaScript" },
-    { img: react, label: "React" },
-    { img: nodejs, label: "Node.js" },
-    { img: expressjs, label: "Express" },
-    { img: mongodb, label: "MongoDB" },
-    { img: tailwindcss, label: "Tailwind" },
-    { img: bootstrap, label: "Bootstrap" },
-    { img: figma, label: "Figma" },
-    { img: photoshop, label: "Photoshop" },
-    { img: kotlin, label: "Kotlin" },
-    { img: vite, label: "Vite" },
-    { img: postman, label: "Postman" },
-    { img: mysql, label: "MySQL" },
-    { img: java, label: "Java" },
+  // Skill images for IconCloud - using imported assets
+  const skillImages = [
+    html,
+    css,
+    php,
+    git,
+    javascript,
+    react,
+    nodejs,
+    expressjs,
+    mongodb,
+    tailwindcss,
+    bootstrap,
+    figma,
+    photoshop,
+    kotlin,
+    vite,
+    postman,
+    mysql,
+    java,
   ];
 
   const skillCategories = [
     {
       category: 'Frontend',
-      items: ['HTML', 'CSS', 'JavaScript', 'React', 'Tailwind CSS', 'Bootstrap'],
+      items: ['HTML', 'CSS', 'JavaScript', 'React', 'TypeScript', 'Tailwind CSS', 'Bootstrap'],
     },
     {
       category: 'Backend',
@@ -437,13 +439,14 @@ export const About = () => {
                 </span>{" "}
                 UIs, while bridging design and code to deliver seamless user experiences.
               </h1>
+              <h3 className="text-gray-200 sm:text-lg font-medium">Beyond code, I find inspiration in music and cinema.</h3>
               <LetterboxdSpotifyCard/>
             </div>
           </motion.div>
 
           <motion.div
             ref={ref}
-            className="w-full sm:w-1/2 flex justify-center sm:justify-end mx-auto sm:mr-20 mt-5 relative px-4 sm:px-0"
+            className="hidden sm:flex w-full sm:w-1/2 justify-center sm:justify-end mx-auto sm:mr-20 mt-5 relative px-4 sm:px-0"
             variants={imageVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
@@ -485,58 +488,6 @@ export const About = () => {
           </motion.div>
         </div>
 
-      <motion.div
-          className="w-full mt-20 overflow-hidden group border-white/20 border-t border-b pt-5 pb-5"
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <div className="flex">
-            <motion.div
-              initial={{ x: 0 }}
-              animate={{ x: "-100%" }}
-              transition={{
-                duration: 60,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              className="flex gap-12 md:gap-20 min-w-full shrink-0 group-hover:[animation-play-state:paused] pr-12 md:pr-20"
-            >
-              {skills.map((item, i) => (
-                <motion.div 
-                  key={`first-${i}`} 
-                  className="flex items-center space-x-2 md:space-x-3 px-2 md:px-4 shrink-0"
-                  variants={itemVariants}
-                >
-                  <img src={item.img} alt={item.label} className="w-8 h-8 md:w-10 md:h-10 object-contain" />
-                  <span className="text-base md:text-lg font-medium text-white">{item.label}</span>
-                </motion.div>
-              ))}
-            </motion.div>
-            <motion.div
-              initial={{ x: 0 }}
-              animate={{ x: "-100%" }}
-              transition={{
-                duration: 60,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              className="flex gap-12 md:gap-20 min-w-full shrink-0 group-hover:[animation-play-state:paused] pr-12 md:pr-20"
-            >
-              {skills.map((item, i) => (
-                <motion.div 
-                  key={`second-${i}`} 
-                  className="flex items-center space-x-2 md:space-x-3 px-2 md:px-4 shrink-0"
-                  variants={itemVariants}
-                >
-                  <img src={item.img} alt={item.label} className="w-8 h-8 md:w-10 md:h-10 object-contain" />
-                  <span className="text-base md:text-lg font-medium text-white">{item.label}</span>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </motion.div>
-
         <motion.div 
           ref={skillsRef}
           className="mt-20 md:mt-32 mb-20 mx-6 md:ml-10 md:mr-10"
@@ -551,28 +502,53 @@ export const About = () => {
             <BookOpenIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
             <span className="text-blue-800">Technical Skills</span>
           </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {skillCategories.map((skillSet) => (
-              <motion.div
-                key={skillSet.category}
-                className="p-5 md:p-6 rounded-xl bg-gray-900/50 backdrop-blur-sm border border-white/10 hover:border-blue-800/50 transition-all duration-300"
-                variants={itemVariants}
-              >
-                <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-blue-800">
-                  {skillSet.category}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {skillSet.items.map((skill) => (
-                    <motion.span
-                      key={skill}
-                      className="px-3 md:px-4 py-0.5 font-medium text-white/70 rounded-full bg-white/10 text-xs md:text-sm border border-white/20 transition-all duration-200 cursor-default"
-                    >
-                      {skill}
-                    </motion.span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
+          
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
+            {/* Skills List */}
+            <div className="space-y-8 flex-[1.2]">
+              {skillCategories.map((skillSet, index) => (
+                <motion.div
+                  key={skillSet.category}
+                  className="group"
+                  variants={itemVariants}
+                >
+                  <h3 className="text-lg md:text-xl font-medium text-blue-800 mb-2">
+                    {skillSet.category}
+                  </h3>
+                  
+                  <div className="flex flex-wrap gap-4">
+                    {skillSet.items.map((skill, skillIndex) => (
+                      <motion.span
+                        key={skill}
+                        className="text-white/80 text-sm md:text-base font-regular tracking-wide cursor-default relative"
+                        whileHover={{ scale: 1.05 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: index * 0.1 + skillIndex * 0.05 }}
+                      >
+                        {skill}
+                        <motion.span
+                          className="absolute -bottom-1 left-0 h-px bg-blue-800"
+                          initial={{ width: 0 }}
+                          whileHover={{ width: "50%" }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      </motion.span>
+                    ))}
+                  </div>
+                  
+                  <div className="h-px bg-blue-800/40 mt-2" />
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Icon Cloud */}
+            <motion.div 
+              className="hidden lg:flex lg:w-[600px] lg:h-[600px] flex-shrink-0"
+              variants={itemVariants}
+            >
+              <IconCloud images={skillImages} />
+            </motion.div>
           </div>
         </motion.div>
 
@@ -621,7 +597,6 @@ export const About = () => {
               className="relative pl-12"
               variants={itemVariants}
             >
-              {/* Timeline Dot */}
               <div className="absolute left-2.5 top-9 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
               
               <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
