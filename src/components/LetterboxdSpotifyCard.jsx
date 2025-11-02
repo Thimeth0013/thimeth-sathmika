@@ -398,8 +398,8 @@ const LetterboxdSpotifyCard = () => {
         </div>
         
         {/* Drag Indicator */}
-        <div className="absolute bottom-0 left-130 right-0 h-0.5 bg-gradient-to-r from-transparent via-blue-800/30 to-transparent"></div>
-        <div className="absolute bottom-1 left-130 right-0 flex justify-center items-center gap-1">
+        <div className="absolute bottom-0 left-0 md:left-130 right-0 h-0.5 bg-gradient-to-r from-transparent via-blue-800/40 to-transparent"></div>
+        <div className="absolute bottom-1 left-0 md:left-130 right-0 flex justify-center items-center gap-1">
           <Dot 
             className={`transition-all duration-300 ${
               showLetterboxd ? 'w-2 h-2 text-gray-500' : 'w-3 h-3 text-blue-600'
