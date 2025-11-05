@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState, useMemo, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import CircularText from "../CircularText/CircularText";
 import Stack from "../Stack/Stack";
@@ -39,41 +39,42 @@ import mysql from '../../assets/skills/mysql.svg';
 import java from '../../assets/skills/java.svg';
 
 // Badge Card Component
-const BadgeCard = ({ badge, itemVariants }) => {
+const BadgeCard = ({ badge }) => {
   return (
     <motion.div
-      key={badge.id}
       className="relative bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 flex flex-col h-full"
-      variants={itemVariants}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.4 }}
     >
       <div className="flex items-start gap-3 p-4 pb-0">
-        <motion.img
+        <img
           src={badge.image}
           alt={badge.title}
           className="w-16 h-16 md:w-18 md:h-18 object-contain bg-white rounded-lg p-1 flex-shrink-0"
-          variants={itemVariants}
         />
         
         <div className="flex-grow min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <motion.div className="relative group flex-grow min-w-0" variants={itemVariants}>
-              <motion.h3 className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2" variants={itemVariants}>
+            <div className="relative group flex-grow min-w-0">
+              <h3 className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2">
                 {badge.title}
-              </motion.h3>
+              </h3>
               
               <div className="hidden md:block absolute top-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-xs whitespace-normal w-60 mt-1">
                 {badge.title}
                 <div className="absolute bottom-full left-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
               </div>
-            </motion.div>
+            </div>
             
-            <motion.span className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0" variants={itemVariants}>
+            <span className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0">
               {badge.dateEarned}
-            </motion.span>
+            </span>
           </div>
 
           {badge.issuer && (
-            <motion.div className="mb-2 flex items-center gap-2" variants={itemVariants}>
+            <div className="mb-2 flex items-center gap-2">
               <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
               {badge.issuerUrl ? (
                 <motion.a
@@ -90,14 +91,14 @@ const BadgeCard = ({ badge, itemVariants }) => {
               ) : (
                 <span className="text-xs md:text-sm text-blue-800 font-medium">{badge.issuer}</span>
               )}
-            </motion.div>
+            </div>
           )}
         </div>
       </div>
 
-      <motion.p className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow" variants={itemVariants}>
+      <p className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow">
         {badge.description}
-      </motion.p>
+      </p>
 
       {badge.badgeUrl && (
         <div className="px-4 pb-4 mt-auto">
@@ -106,7 +107,6 @@ const BadgeCard = ({ badge, itemVariants }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block w-full px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
-            variants={itemVariants}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -119,7 +119,7 @@ const BadgeCard = ({ badge, itemVariants }) => {
 };
 
 // Certificate Card Component
-const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
+const CertificateCard = ({ cert }) => {
   const handleCompanyClick = (e) => {
     e.stopPropagation();
     if (cert.companyUrl) {
@@ -129,39 +129,40 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
 
   return (
     <motion.div
-      key={cert.id}
       className="relative bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 flex flex-col h-full"
-      variants={itemVariants}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.4 }}
     >
       <div className="flex items-start gap-3 p-4">
-        <motion.img
+        <img
           src={cert.thumbnail}
           alt={cert.title}
           loading="lazy"
           className="w-22 h-16 md:w-24 md:h-18 object-cover bg-white rounded-lg flex-shrink-0"
-          variants={itemVariants}
         />
         
         <div className="flex-grow min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <motion.div className="relative group flex-grow min-w-0" variants={itemVariants}>
-              <motion.h3 className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2" variants={itemVariants}>
+            <div className="relative group flex-grow min-w-0">
+              <h3 className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2">
                 {cert.title}
-              </motion.h3>
+              </h3>
               
               <div className="hidden md:block absolute top-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-xs whitespace-normal w-60 mt-1">
                 {cert.title}
                 <div className="absolute bottom-full left-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
               </div>
-            </motion.div>
+            </div>
             
-            <motion.span className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0" variants={itemVariants}>
+            <span className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0">
               {cert.date}
-            </motion.span>
+            </span>
           </div>
 
           {cert.company && (
-            <motion.div className="flex items-center gap-2" variants={itemVariants}>
+            <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
               {cert.companyUrl ? (
                 <motion.button
@@ -176,14 +177,14 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
               ) : (
                 <span className="text-xs md:text-sm text-blue-800 font-medium">{cert.company}</span>
               )}
-            </motion.div>
+            </div>
           )}
         </div>
       </div>
 
-      <motion.p className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow" variants={itemVariants}>
+      <p className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow">
         {cert.description}
-      </motion.p>
+      </p>
 
       {cert.certificateUrl && (
         <div className="px-4 pb-4 mt-auto">
@@ -192,7 +193,6 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block w-full px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
-            variants={itemVariants}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -205,59 +205,38 @@ const CertificateCard = ({ cert, onOpenModal, itemVariants }) => {
 };
 
 export const About = () => {
-  const titleVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut", type: "spring", stiffness: 100 },
-    },
-  };
+  const [isMobile, setIsMobile] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [activeTab, setActiveTab] = useState('certificates');
+  const itemsPerPage = 6;
 
-  const images = [
-    { id: 1, img: profileImageHover },
-  ];
+  // Handle responsive
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 800);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-  const imageVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, type: "spring", stiffness: 120, damping: 20 },
-    },
-  };
-
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, type: "spring", stiffness: 100, damping: 15, staggerChildren: 0.2 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.4, type: "spring", stiffness: 100, damping: 15 },
-    },
-  };
-
-  const ref = useRef(null);
+  // Refs for sections
+  const heroRef = useRef(null);
   const skillsRef = useRef(null);
   const educationRef = useRef(null);
   const certificatesRef = useRef(null);
 
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
-  const skillsInView = useInView(skillsRef, { once: true, amount: 0.3 });
-  const educationInView = useInView(educationRef, { once: true, amount: 0.3 });
-  const certificatesInView = useInView(certificatesRef, { once: true, amount: 0.3 });
+  // Simple in-view detection with better thresholds
+  const heroInView = useInView(heroRef, { once: true, amount: 0.1 });
+  const skillsInView = useInView(skillsRef, { once: true, amount: 0.1 });
+  const educationInView = useInView(educationRef, { once: true, amount: 0.1 });
+  const certificatesInView = useInView(certificatesRef, { once: true, amount: 0.05 });
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const images = [
+    { id: 1, img: profileImageHover },
+  ];
 
   const skillImages = [
     html, css, php, git, javascript, react, nodejs, expressjs,
@@ -287,12 +266,6 @@ export const About = () => {
       items: ['Figma', 'Photoshop'],
     },
   ];
-
-  const [selectedCertificate, setSelectedCertificate] = useState(null);
-  const [activeTab, setActiveTab] = useState('certificates');
-
-  const openModal = (certificate) => setSelectedCertificate(certificate);
-  const closeModal = () => setSelectedCertificate(null);
 
   const filteredData = useMemo(() => {
     const data = activeTab === 'certificates' ? CertificateData : BadgesData;
@@ -330,15 +303,50 @@ export const About = () => {
     setCurrentPage(prev => prev + 1);
   };
 
+  // Simplified animation variants
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" }
+    }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1
+      }
+    }
+  };
+
+  const staggerItem = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.4 }
+    }
+  };
+
   return (
     <section id="about" className="min-h-screen bg-black text-white py-10 md:py-15 pl-0 md:pl-10">
       <div className="container mx-auto px-4 sm:px-6 z-10">
-        <div className="flex flex-col sm:flex-row justify-between gap-4 pb-10">
+        {/* Hero Section */}
+        <motion.div 
+          ref={heroRef}
+          className="flex flex-col sm:flex-row justify-between gap-4 pb-10"
+          initial="hidden"
+          animate={heroInView ? "visible" : "hidden"}
+          variants={staggerContainer}
+        >
           <motion.div
             className="w-full sm:w-3/5 text-left ml-4 sm:ml-6 flex flex-col justify-start"
-            variants={titleVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
+            variants={staggerItem}
           >
             <div className="flex gap-3 mt-10 sm:mt-15">
               <Sparkle className="text-blue-800" />
@@ -346,7 +354,10 @@ export const About = () => {
             </div>
 
             <div className="pr-4 sm:pr-0">
-              <h1 className="text-base sm:text-2xl font-bold mb-12 mt-6 leading-snug">
+              <motion.h1 
+                className="text-base sm:text-2xl font-bold mb-12 mt-6 leading-snug"
+                variants={staggerItem}
+              >
                 Software Engineering undergrad from Colombo, Sri Lanka, specializing in full-stack development with a strong focus on frontend engineering. 
                 <br />Over 3 years of experience working with modern web technologies, creating{" "}
                 <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
@@ -377,18 +388,24 @@ export const About = () => {
                   </motion.div>
                 </span>{" "}
                 UIs, while bridging design and code to deliver seamless user experiences.
-              </h1>
-              <h3 className="text-gray-200 sm:text-lg font-medium">Beyond code, I find inspiration in music and cinema.</h3>
-              <LetterboxdSpotifyCard/>
+              </motion.h1>
+              
+              <motion.h3 
+                className="text-gray-200 sm:text-lg font-medium"
+                variants={staggerItem}
+              >
+                Beyond code, I find inspiration in music and cinema.
+              </motion.h3>
+              
+              <motion.div variants={staggerItem}>
+                <LetterboxdSpotifyCard/>
+              </motion.div>
             </div>
           </motion.div>
 
           <motion.div
-            ref={ref}
             className="w-full sm:w-1/2 flex justify-center sm:justify-end mx-auto sm:mr-20 mt-5 relative px-4 sm:px-0"
-            variants={imageVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
+            variants={staggerItem}
             style={{ minHeight: "500px" }}
           >
             <Stack
@@ -422,40 +439,45 @@ export const About = () => {
               </div>
             </motion.div>
           </motion.div>
-        </div>
+        </motion.div>
 
+        {/* Skills Section */}
         <motion.div 
           ref={skillsRef}
           className="mb-6 md:mb-0 mt-0 md:mt-24 mx-6 md:ml-8 md:mr-10"
-          variants={sectionVariants}
           initial="hidden"
           animate={skillsInView ? "visible" : "hidden"}
+          variants={staggerContainer}
         >
           <motion.h2 
             className="text-xl md:text-3xl font-bold mb-8 md:mb-12 flex items-center gap-3 text-center sm:text-left justify-start sm:justify-start"
-            variants={itemVariants}
+            variants={staggerItem}
           >
             <BookOpenIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
             <span className="text-blue-800">Technical Skills</span>
           </motion.h2>
           
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
-            <div className="space-y-8 flex-1">
+            <motion.div 
+              className="space-y-8 flex-1"
+              variants={staggerContainer}
+            >
               {skillCategories.map((skillSet, index) => (
-                <motion.div key={skillSet.category} className="group" variants={itemVariants}>
+                <motion.div 
+                  key={skillSet.category} 
+                  className="group"
+                  variants={staggerItem}
+                >
                   <h3 className="text-lg md:text-xl font-medium text-blue-800 mb-3">
                     {skillSet.category}
                   </h3>
                   
                   <div className="flex flex-wrap gap-4">
-                    {skillSet.items.map((skill, skillIndex) => (
+                    {skillSet.items.map((skill) => (
                       <motion.span
                         key={skill}
                         className="text-white/80 text-sm md:text-base font-regular tracking-wide cursor-default relative"
                         whileHover={{ scale: 1.05 }}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: index * 0.1 + skillIndex * 0.05 }}
                       >
                         {skill}
                         <motion.span
@@ -471,27 +493,28 @@ export const About = () => {
                   <div className="h-px bg-blue-800/40 mt-3" />
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
 
             <motion.div 
               className="hidden lg:flex lg:w-[600px] lg:h-[600px] flex-shrink-0 items-center justify-center"
-              variants={itemVariants}
+              variants={staggerItem}
             >
               <IconCloud images={skillImages} />
             </motion.div>
           </div>
         </motion.div>
 
+        {/* Education Section */}
         <motion.div 
           ref={educationRef}
-          className="mt-12 md:mt-0 mb-12 mx-6"
-          variants={sectionVariants}
+          className="mt-12 md:mt-24 mb-12 mx-6"
           initial="hidden"
           animate={educationInView ? "visible" : "hidden"}
+          variants={staggerContainer}
         >
           <motion.h2 
             className="text-xl md:text-3xl font-bold mb-6 md:mb-8 flex items-center gap-3 text-center sm:text-left justify-start"
-            variants={itemVariants}
+            variants={staggerItem}
           >
             <GraduationCapIcon className="w-6 h-6 md:w-7 md:h-7 text-blue-800" />
             <span className="text-blue-800">Education</span>
@@ -500,7 +523,10 @@ export const About = () => {
           <div className="relative">
             <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-800/0 via-blue-600 to-transparent"></div>
             
-            <motion.div className="relative pl-12 pb-8" variants={itemVariants}>
+            <motion.div 
+              className="relative pl-12 pb-8"
+              variants={staggerItem}
+            >
               <div className="absolute left-2.5 top-8 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
               
               <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
@@ -518,7 +544,10 @@ export const About = () => {
               </div>
             </motion.div>
 
-            <motion.div className="relative pl-12" variants={itemVariants}>
+            <motion.div 
+              className="relative pl-12"
+              variants={staggerItem}
+            >
               <div className="absolute left-2.5 top-9 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
               
               <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
@@ -538,100 +567,105 @@ export const About = () => {
           </div>
         </motion.div>
 
+        {/* Certificates and Badges Section */}
         <motion.div
           ref={certificatesRef}
           className="mt-20 mb-20 mx-6 md:ml-10 md:mr-10"
-          variants={sectionVariants}
           initial="hidden"
           animate={certificatesInView ? "visible" : "hidden"}
+          variants={staggerContainer}
         >
-        <motion.h2
-          className="text-xl md:text-3xl font-bold mb-6 flex items-center gap-3 text-center sm:text-left justify-start"
-          variants={itemVariants}
-        >
-          <AwardIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
-          <span className="text-blue-800">Certifications and Badges</span>
-        </motion.h2>
+          <motion.h2
+            className="text-xl md:text-3xl font-bold mb-6 flex items-center gap-3 text-center sm:text-left justify-start"
+            variants={staggerItem}
+          >
+            <AwardIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
+            <span className="text-blue-800">Certifications and Badges</span>
+          </motion.h2>
 
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 md:mb-10 pt-4">
-          <motion.div className="flex gap-3 md:gap-4 pl-0 md:pl-2" variants={itemVariants}>
-            <button
-              onClick={() => handleTabChange('certificates')}
-              className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 ${
-                activeTab === 'certificates'
-                  ? 'bg-blue-800 text-white'
-                  : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'
-              }`}
-            >
-              Certificates
-            </button>
-            <button
-              onClick={() => handleTabChange('badges')}
-              className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 ${
-                activeTab === 'badges'
-                  ? 'bg-blue-800 text-white'
-                  : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'
-              }`}
-            >
-              Badges
-            </button>
-          </motion.div>
-
-          <motion.div className="relative w-full md:w-64" variants={itemVariants}>
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="w-full pl-10 pr-4 py-2 bg-gray-900/50 border border-white/10 rounded-lg text-sm text-white placeholder-gray-400 focus:outline-none focus:border-blue-800/50 transition-all duration-300"
-            />
-          </motion.div>
-        </div>
-
-        {filteredData.length === 0 ? (
-          <motion.div className="text-center py-12" variants={itemVariants}>
-            <p className="text-gray-400 text-lg">No results found for "{searchQuery}"</p>
-          </motion.div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {currentItems.map((item) =>
-                activeTab === 'certificates' ? (
-                  <CertificateCard
-                    key={item.id}
-                    cert={item}
-                    onOpenModal={openModal}
-                    itemVariants={itemVariants}
-                  />
-                ) : (
-                  <BadgeCard
-                    key={item.id}
-                    badge={item}
-                    itemVariants={itemVariants}
-                  />
-                )
-              )}
+          <motion.div 
+            className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 md:mb-10 pt-4"
+            variants={staggerItem}
+          >
+            <div className="flex gap-3 md:gap-4 pl-0 md:pl-2">
+              <button
+                onClick={() => handleTabChange('certificates')}
+                className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 ${
+                  activeTab === 'certificates'
+                    ? 'bg-blue-800 text-white'
+                    : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'
+                }`}
+              >
+                Certificates
+              </button>
+              <button
+                onClick={() => handleTabChange('badges')}
+                className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 ${
+                  activeTab === 'badges'
+                    ? 'bg-blue-800 text-white'
+                    : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'
+                }`}
+              >
+                Badges
+              </button>
             </div>
 
-            {currentPage < totalPages && (
-              <motion.div className="flex justify-center mt-10" variants={itemVariants}>
-                <motion.button
-                  onClick={handleLoadMore}
-                  className="group relative px-6 py-3 bg-blue-800/40 hover:bg-blue-800 rounded-lg transition-all duration-300 flex items-center gap-3"
-                  whileHover={{ scale: 1.02 }}
+            <div className="relative w-full md:w-64">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="w-full pl-10 pr-4 py-2 bg-gray-900/50 border border-white/10 rounded-lg text-sm text-white placeholder-gray-400 focus:outline-none focus:border-blue-800/50 transition-all duration-300"
+              />
+            </div>
+          </motion.div>
+
+          {filteredData.length === 0 ? (
+            <motion.div 
+              className="text-center py-12"
+              variants={staggerItem}
+            >
+              <p className="text-gray-400 text-lg">No results found for "{searchQuery}"</p>
+            </motion.div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                {currentItems.map((item) =>
+                  activeTab === 'certificates' ? (
+                    <CertificateCard key={item.id} cert={item} />
+                  ) : (
+                    <BadgeCard key={item.id} badge={item} />
+                  )
+                )}
+              </div>
+
+              {currentPage < totalPages && (
+                <motion.div 
+                  className="flex justify-center mt-10"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 }}
                 >
-                  <span className="text-sm text-gray-200 group-hover:text-white font-medium">
-                    Load More {activeTab === 'certificates' ? 'Certificates' : 'Badges'}
-                  </span>
-                  <span className="text-xs bg-blue-700/50 group-hover:bg-blue-700 px-2.5 py-1 rounded-full text-gray-200 group-hover:text-white transition-all duration-300">
-                    {currentPage} / {totalPages}
-                  </span>
-                </motion.button>
-              </motion.div>
-            )}
-          </>
-        )}
+                  <motion.button
+                    onClick={handleLoadMore}
+                    className="group relative px-6 py-3 bg-blue-800/40 hover:bg-blue-800 rounded-lg transition-all duration-300 flex items-center gap-3"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <span className="text-sm text-gray-200 group-hover:text-white font-medium">
+                      Load More {activeTab === 'certificates' ? 'Certificates' : 'Badges'}
+                    </span>
+                    <span className="text-xs bg-blue-700/50 group-hover:bg-blue-700 px-2.5 py-1 rounded-full text-gray-200 group-hover:text-white transition-all duration-300">
+                      {currentPage} / {totalPages}
+                    </span>
+                  </motion.button>
+                </motion.div>
+              )}
+            </>
+          )}
         </motion.div>
       </div>
 
