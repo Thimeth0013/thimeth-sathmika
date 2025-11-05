@@ -43,7 +43,7 @@ export const projectsData = [
   {
     id: 4,
     title: 'Vehicle Service Center Management System',
-    description: 'A MERN-based platform to manage vehicle service bookings, track repair status, and streamline customer interactions.',
+    description: 'A MERN-based platform to schedule services with automated inventory management, financial management, customer management & staff management to streamline business operations.',
     image: vehicleService,
     tags: ['Node.js', 'React', 'MongoDB', 'Express'],
     designLink: 'https://www.behance.net/gallery/225208747/FixMate-Vehicle-Service-Center-Website',

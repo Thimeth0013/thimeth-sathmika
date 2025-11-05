@@ -99,7 +99,7 @@ export const Project = () => {
             animate={isInView ? 'visible' : 'hidden'}
           >
             <Sparkle className="text-blue-800 mr-2 w-5 h-5 md:w-6 md:h-6" />
-            <h1 className="text-base md:text-lg sm:text-2xl font-medium text-blue-800">My work</h1>
+            <h1 className="text-base md:text-2xl sm:text-xl font-medium text-blue-800">My work</h1>
           </motion.div>
           <motion.h1
             className="text-xl md:text-5xl sm:text-5xl font-bold mt-4 ml-2 md:ml-12 mb-8 md:mb-12"
@@ -159,7 +159,7 @@ export const Project = () => {
                 displayedProjects.map((project, index) => (
                   <motion.div
                     key={`${activeTab}-${project.id}`}
-                    className="relative w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border border-gray-200/20 dark:border-gray-700/20 backdrop-blur-lg bg-gray-900/50"
+                    className="relative w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border hover:border-blue-800/30 border-gray-200/20 backdrop-blur-lg bg-gray-900/50"
                     style={{
                       transform: window.innerWidth >= 640 ? `translateX(${index % 2 === 0 ? '10%' : '-10%'})` : 'none',
                       y: window.innerWidth >= 640 ? parallaxY : 0,
@@ -171,7 +171,7 @@ export const Project = () => {
                   >
 
                     {/* Image */}
-                    <div className="relative h-48 md:h-52 overflow-hidden">
+                    <div className="relative h-48 md:h-52 overflow-hidden rounded-xl">
                       <img
                         src={project.image}
                         alt={project.title}
