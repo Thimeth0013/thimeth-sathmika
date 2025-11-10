@@ -5,6 +5,7 @@ import cocktails from '../assets/projects/gsapCocktails.png';
 import smartSpend from '../assets/projects/smartSpend.png';
 import ceylonTrails from '../assets/projects/ceylonTrails.jpg';
 import safeCert from '../assets/projects/safecert.png'
+import launchWindow from '../assets/projects/launchWindow.jpg';
 
 export const projectsData = [
   {
@@ -83,5 +84,16 @@ export const projectsData = [
     githubLink: 'https://github.com/Y3S1Group/ceylon_trails',
     liveLink: '',
     status: 'completed',
+  },
+  {
+    id: 8,
+    title: 'Launch Window',
+    description: 'A centralized platform for discovering rocket launches, Launch Window automatically aggregates live streams from YouTube, creating a single hub for space enthusiasts.',
+    image: launchWindow,
+    tags: ['Node.js', 'React', 'MongoDB', 'Express'],
+    designLink: '',
+    githubLink: 'https://github.com/Thimeth0013/launch-window',
+    liveLink: '',
+    status: 'ongoing',
   },
 ];
