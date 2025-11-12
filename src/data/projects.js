@@ -93,7 +93,7 @@ export const projectsData = [
     tags: ['Node.js', 'React', 'MongoDB', 'Express'],
     designLink: '',
     githubLink: 'https://github.com/Thimeth0013/launch-window',
-    liveLink: '',
+    liveLink: 'https://launch-window-ochre.vercel.app/',
     status: 'ongoing',
   },
 ];
