@@ -91,7 +91,7 @@ export const projectsData = [
     description: 'A centralized platform for discovering rocket launches, Launch Window automatically aggregates live streams from YouTube, creating a single hub for space enthusiasts.',
     image: launchWindow,
     tags: ['Node.js', 'React', 'MongoDB', 'Express'],
-    designLink: '',
+    designLink: 'https://www.behance.net/gallery/238751997/LAUNCH-WINDOW',
     githubLink: 'https://github.com/Thimeth0013/launch-window',
     liveLink: 'https://launch-window-ochre.vercel.app/',
     status: 'ongoing',
