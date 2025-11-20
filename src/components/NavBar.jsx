@@ -67,8 +67,6 @@ export const NavBar = ({ menuOpen, setMenuOpen }) => {
                     <motion.a 
                         href="#home" 
                         className="font-mono text-xl font-bold text-white"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
                     >
                         T<span className="text-blue-500">S</span>
                     </motion.a>

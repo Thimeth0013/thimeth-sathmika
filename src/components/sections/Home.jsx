@@ -97,7 +97,7 @@ export const Home = () => {
                   *intention
                   <div className="hidden hover-display absolute bottom-[-180px] sm:bottom-[-180px] right-[40px] sm:right-[-160px] w-100 p-4 bg-black/40 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
                     <p>
-                      <span className="font-semibold text-white/80 text-sm sm:text-md">Intention:</span> a thing intended; an aim or plan.
+                      <span className="font-semibold text-white/80 text-sm sm:text-md delay-5000">Intention:</span> a thing intended; an aim or plan.
                     </p>
                   </div>
                 </span>{' '}
