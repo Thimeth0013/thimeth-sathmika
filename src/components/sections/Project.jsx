@@ -1,11 +1,15 @@
 import React, { useRef, useState } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { Sparkle, GithubIcon, ExternalLinkIcon, Lightbulb, ChevronDown } from 'lucide-react';
+import { Sparkle, Github, ExternalLink, Lightbulb, ChevronDown } from 'lucide-react';
 import { projectsData } from '../../data/projects';
+import { ProjectDetailModal } from '../ProjectDetails';
 
 export const Project = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [displayCount, setDisplayCount] = useState(6);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   const allProjects = [...projectsData].reverse();
 
   const getFilteredProjects = () => {
@@ -33,7 +37,17 @@ export const Project = () => {
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
-    setDisplayCount(6); // Reset display count when changing tabs
+    setDisplayCount(6);
+  };
+
+  const handleProjectClick = (project) => {
+    setSelectedProject(project);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => setSelectedProject(null), 300);
   };
 
   const tabs = [
@@ -159,7 +173,7 @@ export const Project = () => {
                 displayedProjects.map((project, index) => (
                   <motion.div
                     key={`${activeTab}-${project.id}`}
-                    className="relative w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border hover:border-blue-800/30 border-gray-200/20 backdrop-blur-lg bg-gray-900/50"
+                    className="relative w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border hover:border-blue-800/30 border-gray-200/20 backdrop-blur-lg bg-gray-900/50 cursor-pointer group"
                     style={{
                       transform: window.innerWidth >= 640 ? `translateX(${index % 2 === 0 ? '10%' : '-10%'})` : 'none',
                       y: window.innerWidth >= 640 ? parallaxY : 0,
@@ -168,15 +182,17 @@ export const Project = () => {
                     initial="hidden"
                     animate={isInView ? 'visible' : 'hidden'}
                     exit="exit"
+                    onClick={() => handleProjectClick(project)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-
                     {/* Image */}
-                    <div className="relative h-48 md:h-52 overflow-hidden rounded-xl">
+                    <div className="relative h-38 md:h-42 overflow-hidden rounded-xl">
                       <img
                         src={project.image}
                         alt={project.title}
                         loading="lazy"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
 
                       {/* Tags */}
@@ -195,28 +211,43 @@ export const Project = () => {
                     {/* Detail Section */}
                     <div className="p-4 bg-[#080b14]">
                       <h3 className="text-sm md:text-md font-bold text-white mb-2">{project.title}</h3>
-                      <p className="text-gray-300 text-xs md:text-sm leading-relaxed mb-3">{project.description}</p>
+                      <p className="text-gray-300 text-xs md:text-sm leading-relaxed mb-3 line-clamp-2">{project.description}</p>
                       <div className="flex items-center flex-wrap gap-3 md:gap-4 mt-4">
                         {project.designLink && (
-                          <a href={project.designLink} target="_blank" rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-xs md:text-sm font-medium text-blue-500 hover:underline">
+                          <a 
+                            href={project.designLink} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 text-xs md:text-sm font-medium text-blue-500 hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <Lightbulb className="w-3 h-3 md:w-4 md:h-4" /> Design
                           </a>
                         )}
                         {project.githubLink && (
-                          <a href={project.githubLink} target="_blank" rel="noopener noreferrer"
-                            className="group flex items-center gap-1 text-xs md:text-sm font-medium text-gray-300 hover:underline">
-                            <GithubIcon className="w-3 h-3 md:w-4 md:h-4" /> 
+                          <a 
+                            href={project.githubLink} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="group flex items-center gap-1 text-xs md:text-sm font-medium text-gray-300 hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Github className="w-3 h-3 md:w-4 md:h-4" /> 
                             Code
                             {project.status === 'ongoing' && (
-                              <span className="text-lime-400 group-hover:invisible text-xs md:text-sm"> (Ongoing)</span>
+                              <span className="text-lime-400 text-xs md:text-sm"> (Ongoing)</span>
                             )}               
                           </a>
                         )}
                         {project.liveLink && (
-                          <a href={project.liveLink} target="_blank" rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-xs md:text-sm font-medium text-green-500 hover:underline">
-                            <ExternalLinkIcon className="w-3 h-3 md:w-4 md:h-4" /> Live Demo
+                          <a 
+                            href={project.liveLink} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 text-xs md:text-sm font-medium text-green-500 hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <ExternalLink className="w-3 h-3 md:w-4 md:h-4" /> Live Demo
                           </a>
                         )}
                       </div>
@@ -251,6 +282,13 @@ export const Project = () => {
           </div>
         </div>
       </section>
+
+      {/* Project Detail Modal */}
+      <ProjectDetailModal 
+        project={selectedProject}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };
