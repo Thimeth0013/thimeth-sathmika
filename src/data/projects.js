@@ -1,11 +1,11 @@
-import vehicleService from '../assets/projects/vehicleService.png';
-import portfolio from '../assets/projects/portfolio.png';
-import homekeep from '../assets/projects/homekeep.png';
-import cocktails from '../assets/projects/gsapCocktails.png';
-import smartSpend from '../assets/projects/smartSpend.png';
-import ceylonTrails from '../assets/projects/ceylonTrails.jpg';
-import safeCert from '../assets/projects/safecert.png'
-import launchWindow from '../assets/projects/launchWindow.jpg';
+import vehicleService from '../assets/projects/vehicleService.webp';
+import portfolio from '../assets/projects/portfolio.webp';
+import homekeep from '../assets/projects/homekeep.webp';
+import cocktails from '../assets/projects/gsapCocktails.webp';
+import smartSpend from '../assets/projects/smartSpend.webp';
+import ceylonTrails from '../assets/projects/ceylonTrails.webp';
+import safeCert from '../assets/projects/safecert.webp';
+import launchWindow from '../assets/projects/launchWindow.webp';
 
 export const projectsData = [
   {

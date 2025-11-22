@@ -8,7 +8,7 @@ import {
   GraduationCapIcon,
   Send
 } from "lucide-react";
-import profileImageHover from '../../assets/profile2.png';
+import profileImageHover from '../../assets/profile2.webp';
 
 // Lazy Loading heavy components
 const SkillsSection = React.lazy(() => import('../SkillsSection'));
