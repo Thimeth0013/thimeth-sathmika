@@ -140,7 +140,7 @@ export const Home = () => {
                 Know Me Better
               </a>
               <a
-                href=""
+                href={CV}
                 target="_blank"
                 className="text-sm px-4 py-2 text-center text-blue-700 font-medium bg-transparent backdrop-blur-md rounded-xl border border-blue-800 shadow-md hover:text-white transition-all"
               >
