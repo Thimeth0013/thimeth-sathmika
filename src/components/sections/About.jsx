@@ -1,318 +1,33 @@
-import React, { useRef, useState, useMemo, useEffect } from "react";
+import React, { useRef, Suspense } from "react";
 import { motion, useInView } from "framer-motion";
 import CircularText from "../CircularText/CircularText";
 import Stack from "../Stack/Stack";
 import LetterboxdSpotifyCard from '../LetterboxdSpotifyCard';
-import {IconCloud} from "../IconCloud";
 import { 
   Sparkle, 
-  BookOpenIcon,
   GraduationCapIcon,
-  AwardIcon,
-  Send,
-  ExternalLink,
-  Music4,
-  Search
+  Send
 } from "lucide-react";
 import profileImageHover from '../../assets/profile2.png';
-import CertificateData from '../../data/certificate';
-import BadgesData from '../../data/badges';
 
-// Skill icons imports
-import html from '../../assets/skills/html.svg';
-import css from '../../assets/skills/css.svg';
-import php from '../../assets/skills/php.svg';
-import git from '../../assets/skills/git.svg';
-import javascript from '../../assets/skills/javascript.svg';
-import react from '../../assets/skills/react.svg';
-import nodejs from '../../assets/skills/nodejs.svg';
-import expressjs from '../../assets/skills/expressjs.svg';
-import mongodb from '../../assets/skills/mongodb.svg';
-import tailwindcss from '../../assets/skills/tailwindcss.svg';
-import bootstrap from '../../assets/skills/bootstrap.svg';
-import figma from '../../assets/skills/figma.svg';
-import photoshop from '../../assets/skills/photoshop.svg';
-import kotlin from '../../assets/skills/kotlin.svg';
-import vite from '../../assets/skills/vite.svg';
-import postman from '../../assets/skills/postman.svg';
-import mysql from '../../assets/skills/mysql.svg';
-import java from '../../assets/skills/java.svg';
-
-// Badge Card Component
-const BadgeCard = ({ badge }) => {
-  return (
-    <motion.div
-      className="relative bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 flex flex-col h-full"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.4 }}
-    >
-      <div className="flex items-start gap-3 p-4 pb-0">
-        <img
-          src={badge.image}
-          alt={badge.title}
-          className="w-16 h-16 md:w-18 md:h-18 object-contain bg-white rounded-lg p-1 flex-shrink-0"
-        />
-        
-        <div className="flex-grow min-w-0">
-          <div className="flex items-start justify-between gap-2 mb-2">
-            <div className="relative group flex-grow min-w-0">
-              <h3 className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2">
-                {badge.title}
-              </h3>
-              
-              <div className="hidden md:block absolute top-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-xs whitespace-normal w-60 mt-1">
-                {badge.title}
-                <div className="absolute bottom-full left-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
-              </div>
-            </div>
-            
-            <span className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0">
-              {badge.dateEarned}
-            </span>
-          </div>
-
-          {badge.issuer && (
-            <div className="mb-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
-              {badge.issuerUrl ? (
-                <motion.a
-                  href={badge.issuerUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs md:text-sm text-blue-800 font-medium transition-colors duration-200 flex items-center gap-1 group focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded px-1 py-0.5"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {badge.issuer}
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                </motion.a>
-              ) : (
-                <span className="text-xs md:text-sm text-blue-800 font-medium">{badge.issuer}</span>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <p className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow">
-        {badge.description}
-      </p>
-
-      {badge.badgeUrl && (
-        <div className="px-4 pb-4 mt-auto">
-          <motion.a
-            href={badge.badgeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block w-full px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View Badge
-          </motion.a>
-        </div>
-      )}
-    </motion.div>
-  );
-};
-
-// Certificate Card Component
-const CertificateCard = ({ cert }) => {
-  const handleCompanyClick = (e) => {
-    e.stopPropagation();
-    if (cert.companyUrl) {
-      window.open(cert.companyUrl, '_blank', 'noopener,noreferrer');
-    }
-  };
-
-  return (
-    <motion.div
-      className="relative bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 flex flex-col h-full"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.4 }}
-    >
-      <div className="flex items-start gap-3 p-4">
-        <img
-          src={cert.thumbnail}
-          alt={cert.title}
-          loading="lazy"
-          className="w-22 h-16 md:w-24 md:h-18 object-cover bg-white rounded-lg flex-shrink-0"
-        />
-        
-        <div className="flex-grow min-w-0">
-          <div className="flex items-start justify-between gap-2 mb-2">
-            <div className="relative group flex-grow min-w-0">
-              <h3 className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2">
-                {cert.title}
-              </h3>
-              
-              <div className="hidden md:block absolute top-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-xs whitespace-normal w-60 mt-1">
-                {cert.title}
-                <div className="absolute bottom-full left-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
-              </div>
-            </div>
-            
-            <span className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0">
-              {cert.date}
-            </span>
-          </div>
-
-          {cert.company && (
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
-              {cert.companyUrl ? (
-                <motion.button
-                  onClick={handleCompanyClick}
-                  className="text-xs md:text-sm text-blue-800 font-medium transition-colors duration-200 flex items-center gap-1 group focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded px-1 py-0.5"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {cert.company}
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                </motion.button>
-              ) : (
-                <span className="text-xs md:text-sm text-blue-800 font-medium">{cert.company}</span>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <p className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow">
-        {cert.description}
-      </p>
-
-      {cert.certificateUrl && (
-        <div className="px-4 pb-4 mt-auto">
-          <motion.a
-            href={cert.certificateUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block w-full px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View Certificate
-          </motion.a>
-        </div>
-      )}
-    </motion.div>
-  );
-};
+// Lazy Loading heavy components
+const SkillsSection = React.lazy(() => import('../SkillsSection'));
+const CertificatesSection = React.lazy(() => import('../CertificatesSection'));
 
 export const About = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState('certificates');
-  const itemsPerPage = 6;
-
-  // Handle responsive
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 800);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
   // Refs for sections
   const heroRef = useRef(null);
-  const skillsRef = useRef(null);
   const educationRef = useRef(null);
-  const certificatesRef = useRef(null);
 
-  // Simple in-view detection with better thresholds
+  // In-view detection
   const heroInView = useInView(heroRef, { once: true, amount: 0.1 });
-  const skillsInView = useInView(skillsRef, { once: true, amount: 0.1 });
   const educationInView = useInView(educationRef, { once: true, amount: 0.1 });
-  const certificatesInView = useInView(certificatesRef, { once: true, amount: 0.05 });
 
   const images = [
     { id: 1, img: profileImageHover },
   ];
 
-  const skillImages = [
-    html, css, php, git, javascript, react, nodejs, expressjs,
-    mongodb, tailwindcss, bootstrap, figma, photoshop, kotlin,
-    vite, postman, mysql, java,
-  ];
-
-  const skillCategories = [
-    {
-      category: 'Frontend',
-      items: ['HTML', 'CSS', 'JavaScript', 'React', 'TypeScript', 'Tailwind CSS', 'Bootstrap'],
-    },
-    {
-      category: 'Backend',
-      items: ['Node.js', 'Express', 'PHP', 'Java', 'Kotlin'],
-    },
-    {
-      category: 'Database',
-      items: ['MongoDB', 'MySQL'],
-    },
-    {
-      category: 'Tools & Workflow',
-      items: ['Git', 'Vite', 'Postman', 'Expo'],
-    },
-    {
-      category: 'Design',
-      items: ['Figma', 'Photoshop'],
-    },
-  ];
-
-  const filteredData = useMemo(() => {
-    const data = activeTab === 'certificates' ? CertificateData : BadgesData;
-    
-    if (!searchQuery.trim()) {
-      return data.sort((a, b) => b.id - a.id);
-    }
-
-    const query = searchQuery.toLowerCase();
-    return data
-      .filter(item => {
-        const searchableText = `${item.title} ${item.description} ${item.company || item.issuer || ''}`.toLowerCase();
-        return searchableText.includes(query);
-      })
-      .sort((a, b) => b.id - a.id);
-  }, [activeTab, searchQuery]);
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = filteredData.slice(startIndex, endIndex);
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    setCurrentPage(1);
-    setSearchQuery('');
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const handleLoadMore = () => {
-    setCurrentPage(prev => prev + 1);
-  };
-
-  // Simplified animation variants
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" }
-    }
-  };
-
+  // Animation variants
   const staggerContainer = {
     hidden: { opacity: 1 },
     visible: {
@@ -441,70 +156,12 @@ export const About = () => {
           </motion.div>
         </motion.div>
 
-        {/* Skills Section */}
-        <motion.div 
-          ref={skillsRef}
-          className="mb-6 md:mb-0 mt-0 md:mt-24 mx-6 md:ml-8 md:mr-10"
-          initial="hidden"
-          animate={skillsInView ? "visible" : "hidden"}
-          variants={staggerContainer}
-        >
-          <motion.h2 
-            className="text-xl md:text-3xl font-bold mb-8 md:mb-12 flex items-center gap-3 text-center sm:text-left justify-start sm:justify-start"
-            variants={staggerItem}
-          >
-            <BookOpenIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
-            <span className="text-blue-800">Technical Skills</span>
-          </motion.h2>
-          
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
-            <motion.div 
-              className="space-y-8 flex-1"
-              variants={staggerContainer}
-            >
-              {skillCategories.map((skillSet, index) => (
-                <motion.div 
-                  key={skillSet.category} 
-                  className="group"
-                  variants={staggerItem}
-                >
-                  <h3 className="text-lg md:text-xl font-medium text-blue-800 mb-3">
-                    {skillSet.category}
-                  </h3>
-                  
-                  <div className="flex flex-wrap gap-4">
-                    {skillSet.items.map((skill) => (
-                      <motion.span
-                        key={skill}
-                        className="text-white/80 text-sm md:text-base font-regular tracking-wide cursor-default relative"
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        {skill}
-                        <motion.span
-                          className="absolute -bottom-1 left-1/4 right-1/4 h-px bg-blue-800"
-                          initial={{ scaleX: 0 }}
-                          whileHover={{ scaleX: 1 }}
-                          transition={{ duration: 0.3 }}
-                        />
-                      </motion.span>
-                    ))}
-                  </div>
-                  
-                  <div className="h-px bg-blue-800/40 mt-3" />
-                </motion.div>
-              ))}
-            </motion.div>
+        {/* Skills Section - Lazy Loaded */}
+        <Suspense fallback={<div className="h-96 flex items-center justify-center text-blue-800">Loading Skills...</div>}>
+          <SkillsSection />
+        </Suspense>
 
-            <motion.div 
-              className="hidden lg:flex lg:w-[600px] lg:h-[600px] flex-shrink-0 items-center justify-center"
-              variants={staggerItem}
-            >
-              <IconCloud images={skillImages} />
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* Education Section */}
+        {/* Education Section (Kept lightweight) */}
         <motion.div 
           ref={educationRef}
           className="mt-12 md:mt-24 mb-12 mx-6"
@@ -567,106 +224,10 @@ export const About = () => {
           </div>
         </motion.div>
 
-        {/* Certificates and Badges Section */}
-        <motion.div
-          ref={certificatesRef}
-          className="mt-20 mb-20 mx-6 md:ml-10 md:mr-10"
-          initial="hidden"
-          animate={certificatesInView ? "visible" : "hidden"}
-          variants={staggerContainer}
-        >
-          <motion.h2
-            className="text-xl md:text-3xl font-bold mb-6 flex items-center gap-3 text-center sm:text-left justify-start"
-            variants={staggerItem}
-          >
-            <AwardIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
-            <span className="text-blue-800">Certifications and Badges</span>
-          </motion.h2>
-
-          <motion.div 
-            className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 md:mb-10 pt-4"
-            variants={staggerItem}
-          >
-            <div className="flex gap-3 md:gap-4 pl-0 md:pl-2">
-              <button
-                onClick={() => handleTabChange('certificates')}
-                className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 ${
-                  activeTab === 'certificates'
-                    ? 'bg-blue-800 text-white'
-                    : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'
-                }`}
-              >
-                Certificates
-              </button>
-              <button
-                onClick={() => handleTabChange('badges')}
-                className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 ${
-                  activeTab === 'badges'
-                    ? 'bg-blue-800 text-white'
-                    : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'
-                }`}
-              >
-                Badges
-              </button>
-            </div>
-
-            <div className="relative w-full md:w-64">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                className="w-full pl-10 pr-4 py-2 bg-gray-900/50 border border-white/10 rounded-lg text-sm text-white placeholder-gray-400 focus:outline-none focus:border-blue-800/50 transition-all duration-300"
-              />
-            </div>
-          </motion.div>
-
-          {filteredData.length === 0 ? (
-            <motion.div 
-              className="text-center py-12"
-              variants={staggerItem}
-            >
-              <p className="text-gray-400 text-lg">No results found for "{searchQuery}"</p>
-            </motion.div>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                {currentItems.map((item) =>
-                  activeTab === 'certificates' ? (
-                    <CertificateCard key={item.id} cert={item} />
-                  ) : (
-                    <BadgeCard key={item.id} badge={item} />
-                  )
-                )}
-              </div>
-
-              {currentPage < totalPages && (
-                <motion.div 
-                  className="flex justify-center mt-10"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <motion.button
-                    onClick={handleLoadMore}
-                    className="group relative px-6 py-3 bg-blue-800/40 hover:bg-blue-800 rounded-lg transition-all duration-300 flex items-center gap-3"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <span className="text-sm text-gray-200 group-hover:text-white font-medium">
-                      Load More {activeTab === 'certificates' ? 'Certificates' : 'Badges'}
-                    </span>
-                    <span className="text-xs bg-blue-700/50 group-hover:bg-blue-700 px-2.5 py-1 rounded-full text-gray-200 group-hover:text-white transition-all duration-300">
-                      {currentPage} / {totalPages}
-                    </span>
-                  </motion.button>
-                </motion.div>
-              )}
-            </>
-          )}
-        </motion.div>
+        {/* Certificates and Badges Section - Lazy Loaded */}
+        <Suspense fallback={<div className="h-96 flex items-center justify-center text-blue-800">Loading Certificates...</div>}>
+          <CertificatesSection />
+        </Suspense>
       </div>
 
       <style>
