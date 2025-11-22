@@ -4,11 +4,6 @@ import ScrollVelocity from '../ScrollVelocity/ScrollVelocity';
 import GlareHover from '../GlareHover/GlareHover';
 import LightRays from '../LightRays/LightRays';
 
-// Featured projects images
-import vehicleService from '../../assets/projects/vehicleService.png';
-import portfolio from '../../assets/projects/portfolio.png'
-import homekeep from '../../assets/projects/homekeep.png'
-
 import {
   ArrowDown,
   GithubIcon,
