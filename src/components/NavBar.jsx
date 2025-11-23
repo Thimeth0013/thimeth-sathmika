@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { Terminal } from "lucide-react";
 
-export const NavBar = ({ menuOpen, setMenuOpen }) => {
+export const NavBar = ({ menuOpen, setMenuOpen, onOpenTerminal }) => {
     const [isVisible, setIsVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
     const [isScrolled, setIsScrolled] = useState(false);
@@ -26,7 +27,6 @@ export const NavBar = ({ menuOpen, setMenuOpen }) => {
             
             setLastScrollY(currentScrollY);
 
-            // Detect active section
             const sections = ["home", "about", "project", "contact"];
             const scrollPosition = currentScrollY + 100;
 
@@ -45,7 +45,6 @@ export const NavBar = ({ menuOpen, setMenuOpen }) => {
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
-        
         return () => window.removeEventListener('scroll', handleScroll);
     }, [lastScrollY]);
 
@@ -72,12 +71,17 @@ export const NavBar = ({ menuOpen, setMenuOpen }) => {
                     </motion.a>
                     
                     <motion.div 
-                        className="w-7 h-6 relative cursor-pointer z-50 md:hidden text-base" 
+                        className="w-7 h-6 relative cursor-pointer z-50 md:hidden text-white" 
                         onClick={() => setMenuOpen((prev) => !prev)}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                     >
-                        &#9776;
+                        {/* Simple Hamburger Icon */}
+                        <div className="space-y-1.5">
+                            <span className="block h-0.5 w-7 bg-current"></span>
+                            <span className="block h-0.5 w-7 bg-current"></span>
+                            <span className="block h-0.5 w-7 bg-current"></span>
+                        </div>
                     </motion.div>
 
                     <div className="hidden md:flex items-center space-x-10">
@@ -100,14 +104,12 @@ export const NavBar = ({ menuOpen, setMenuOpen }) => {
                                     }}
                                     className="flex flex-col"
                                 >
-                                    {/* Original text that moves up */}
                                     <span className={`font-bold block ${
                                         activeSection === item.id ? 'text-blue-500' : 'text-gray-300'
                                     }`}>
                                         {item.name}
                                     </span>
                                     
-                                    {/* Duplicate text that comes from below */}
                                     <span className={`font-bold block mt-0.5 ${
                                         activeSection === item.id ? 'text-blue-500' : 'text-gray-300'
                                     }`}>
@@ -116,6 +118,15 @@ export const NavBar = ({ menuOpen, setMenuOpen }) => {
                                 </motion.div>
                             </motion.a>
                         ))}
+
+                        {/* Terminal Button */}
+                        <motion.button
+                            onClick={onOpenTerminal}
+                            className="flex items-center gap-2 px-3 py-1.5 bg-gray-900 border-1 border-green-500/20 text-green-400/30 rounded-md shadow-[0_0_10px_rgba(34,197,94,0.1)] hover:shadow-[0_0_15px_rgba(34,197,94,0.3)] hover:border-green-500 hover:text-green-500 transition-all"
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <Terminal size={16} />
+                        </motion.button>
                     </div>
                 </div>
             </div>
