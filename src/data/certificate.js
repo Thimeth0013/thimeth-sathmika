@@ -66,5 +66,4 @@ const CertificateData = [
   }
 ];
 
-
 export default CertificateData;
