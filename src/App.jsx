@@ -6,11 +6,13 @@ import { Home } from './components/sections/Home';
 import { About } from './components/sections/About';
 import { Project } from './components/sections/Project';
 import { Contact } from './components/sections/Contact';
+import Terminal from './components/TerminalModal';
 import "./index.css";
 
 const App = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isTerminalOpen, setIsTerminalOpen] = useState(false);
 
   return (
     <>
@@ -19,12 +21,16 @@ const App = () => {
         className={`min-h-screen transition-opacity duration-700 ${
           isLoaded ? "opacity-100" : "opacity-0"
         } bg-black text-gray-100`}>
-          <NavBar menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
+          <NavBar menuOpen={menuOpen} setMenuOpen={setMenuOpen} onOpenTerminal={() => setIsTerminalOpen(true)}/>
           <MobileMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
           <Home/>
           <About/>
           <Project/>
           <Contact/>
+          <Terminal 
+            isOpen={isTerminalOpen} 
+            onClose={() => setIsTerminalOpen(false)} 
+          />
       </div> 
     </>
   )
