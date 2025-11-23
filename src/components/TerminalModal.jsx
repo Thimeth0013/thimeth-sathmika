@@ -288,7 +288,7 @@ const TerminalModal = ({ isOpen = true, onClose = () => {} }) => {
                                 {project.keyFeatures.map((f, i) => <li key={i}>{f}</li>)}
                             </ul>
                         </div>
-                      )}http://localhost:5173/thimeth-sathmika#about
+                      )}
                   </div>
 
                   <div className="flex gap-4 text-sm mt-4 border-t border-gray-700 pt-3">
