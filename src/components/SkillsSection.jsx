@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { BookOpenIcon } from "lucide-react";
 import { IconCloud } from "./IconCloud";
@@ -29,6 +29,28 @@ const skillImages = [
   vite, postman, mysql, java,
 ];
 
+// Mapping skill names to their index in skillImages array
+const skillToIconIndex = {
+  'HTML': 0,
+  'CSS': 1,
+  'PHP': 2,
+  'Git': 3,
+  'JavaScript': 4,
+  'React': 5,
+  'Node.js': 6,
+  'Express': 7,
+  'MongoDB': 8,
+  'Tailwind CSS': 9,
+  'Bootstrap': 10,
+  'Figma': 11,
+  'Photoshop': 12,
+  'Kotlin': 13,
+  'Vite': 14,
+  'Postman': 15,
+  'MySQL': 16,
+  'Java': 17,
+};
+
 const skillCategories = [
   {
     category: 'Frontend',
@@ -55,6 +77,18 @@ const skillCategories = [
 const SkillsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
+  const [rotateToIcon, setRotateToIcon] = useState(null);
+
+  const handleSkillHover = (skillName) => {
+    const iconIndex = skillToIconIndex[skillName];
+    if (iconIndex !== undefined) {
+      setRotateToIcon(iconIndex);
+    }
+  };
+
+  const handleSkillLeave = () => {
+    setRotateToIcon(null);
+  };
 
   const staggerContainer = {
     hidden: { opacity: 1 },
@@ -111,8 +145,10 @@ const SkillsSection = () => {
                 {skillSet.items.map((skill) => (
                   <motion.span
                     key={skill}
-                    className="text-white/80 text-sm md:text-base font-regular tracking-wide cursor-default relative"
+                    className="text-white/80 text-sm md:text-base font-regular tracking-wide cursor-pointer relative"
                     whileHover={{ scale: 1.05 }}
+                    onMouseEnter={() => handleSkillHover(skill)}
+                    onMouseLeave={handleSkillLeave}
                   >
                     {skill}
                     <motion.span
@@ -134,7 +170,7 @@ const SkillsSection = () => {
           className="hidden lg:flex lg:w-[600px] lg:h-[600px] flex-shrink-0 items-center justify-center"
           variants={staggerItem}
         >
-          <IconCloud images={skillImages} />
+          <IconCloud images={skillImages} rotateToIconIndex={rotateToIcon} />
         </motion.div>
       </div>
     </motion.div>

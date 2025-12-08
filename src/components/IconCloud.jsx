@@ -4,7 +4,7 @@ function easeOutCubic(t) {
   return 1 - Math.pow(1 - t, 3)
 }
 
-export function IconCloud({ images }) {
+export function IconCloud({ images, rotateToIconIndex }) {
   const canvasRef = useRef(null)
   const [iconPositions, setIconPositions] = useState([])
   const [isDragging, setIsDragging] = useState(false)
@@ -30,13 +30,10 @@ export function IconCloud({ images }) {
 
       if (offCtx) {
         const img = new Image()
-        // No need for crossOrigin when loading local assets
         img.src = imgSrc
         img.onload = () => {
           offCtx.clearRect(0, 0, offscreen.width, offscreen.height)
           
-          // Draw image without circular clipping for better visibility
-          // Center the image with some padding
           const padding = 5
           const size = 40
           offCtx.drawImage(img, padding, padding, size, size)
@@ -56,7 +53,7 @@ export function IconCloud({ images }) {
   useEffect(() => {
     const newIcons = []
     const numIcons = images?.length || 20
-    const sphereRadius = 150 // Increased from 100 to 150 for larger canvas
+    const sphereRadius = 150
 
     const offset = 2 / numIcons
     const increment = Math.PI * (3 - Math.sqrt(5))
@@ -80,6 +77,38 @@ export function IconCloud({ images }) {
     }
     setIconPositions(newIcons)
   }, [images])
+
+  // Handle external rotation trigger from skill hover
+  useEffect(() => {
+    if (rotateToIconIndex !== null && iconPositions.length > 0) {
+      const icon = iconPositions[rotateToIconIndex]
+      if (!icon) return
+
+      const targetX = -Math.atan2(
+        icon.y,
+        Math.sqrt(icon.x * icon.x + icon.z * icon.z)
+      )
+      const targetY = Math.atan2(icon.x, icon.z)
+
+      const currentX = rotationRef.current.x
+      const currentY = rotationRef.current.y
+      const distance = Math.sqrt(
+        Math.pow(targetX - currentX, 2) + Math.pow(targetY - currentY, 2)
+      )
+
+      const duration = Math.min(1500, Math.max(600, distance * 800))
+
+      setTargetRotation({
+        x: targetX,
+        y: targetY,
+        startX: currentX,
+        startY: currentY,
+        distance,
+        startTime: performance.now(),
+        duration,
+      })
+    }
+  }, [rotateToIconIndex, iconPositions])
 
   const handleMouseDown = (e) => {
     const rect = canvasRef.current?.getBoundingClientRect()
@@ -217,7 +246,7 @@ export function IconCloud({ images }) {
         const rotatedZ = icon.x * sinY + icon.z * cosY
         const rotatedY = icon.y * cosX + rotatedZ * sinX
 
-        const scale = (rotatedZ + 300) / 450 // Adjusted for larger sphere
+        const scale = (rotatedZ + 300) / 450
         const opacity = Math.max(0.2, Math.min(1, (rotatedZ + 200) / 300))
 
         ctx.save()
