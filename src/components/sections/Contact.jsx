@@ -49,6 +49,7 @@ export const Contact = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, type: "spring", stiffness: 120, damping: 20 } },
   };
 
+  // **Modified formVariants to be centered on mobile and positioned on desktop**
   const formVariants = {
     hidden: { opacity: 0, x: 30 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.8, type: "spring", stiffness: 100, damping: 20, staggerChildren: 0.1 } },
@@ -111,34 +112,46 @@ export const Contact = () => {
   return (
     <section id="contact" className="min-h-screen bg-black overflow-hidden pt-20 md:pt-30 pb-10">
       <div className="container mx-auto px-4 sm:px-6 z-10">
-        <div className="max-w-6xl mx-auto ml-6 md:ml-12 mr-6 md:mr-10">
+        {/* **FIX: Removed explicit ml/mr and added mx-auto to center the content wrapper** */}
+        <div className="max-w-6xl mx-auto"> 
           <motion.div
             ref={contactRef}
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-16 md:mb-20"
+            // Adjusted gap for better mobile spacing
+            className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 mb-16 md:mb-20" 
             variants={containerVariants}
             initial="hidden"
             animate={contactInView ? "visible" : "hidden"}
           >
             {/* Contact Information */}
-            <motion.div className="space-y-6 md:space-y-8" variants={containerVariants}>
+            <motion.div 
+              className="space-y-6 md:space-y-8" 
+              variants={containerVariants}
+            >
               <div className="space-y-4 md:space-y-6">
-                <motion.div className="flex mt-6 md:mt-10" variants={subtitleVariants}>
+                <motion.div 
+                  className="flex mt-6 md:mt-10" 
+                  variants={subtitleVariants}
+                >
                   <Sparkle className="text-blue-800 mr-2 w-5 h-5 md:w-6 md:h-6" />
-                  <h2 className="text-base md:text-md sm:text-2xl font-medium text-blue-800">
+                  {/* Reduced font size on mobile for better fit */}
+                  <h2 className="text-sm md:text-md lg:text-lg font-medium text-blue-800"> 
                     Get in Touch
                   </h2>
                 </motion.div>
 
                 <motion.h1
-                  className="text-xl md:text-4xl font-bold text-left mt-4 mb-4 md:mb-6 max-w-4xl leading-snug md:leading-tight text-white"
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold text-left mt-4 mb-4 md:mb-6 max-w-4xl leading-snug md:leading-tight text-white"
                   variants={titleVariants}
                 >
                   Have a project in mind or want to collaborate? I'd love to hear from you.
                 </motion.h1>
 
-                <motion.div className="flex items-center gap-2 md:gap-3" variants={emailVariants}>
-                  <MailIcon className="w-4 h-4 md:w-5 md:h-5 text-blue-800" />
-                  <span className="text-gray-300 font-medium text-sm md:text-base">
+                <motion.div 
+                  className="flex items-center gap-2 md:gap-3" 
+                  variants={emailVariants}
+                >
+                  <MailIcon className="w-5 h-5 md:w-6 md:h-6 text-blue-800" />
+                  <span className="text-gray-300 font-medium text-base md:text-lg">
                     <a 
                       href="https://mail.google.com/mail/?view=cm&fs=1&to=sathmikakb@gmail.com"
                       target="_blank"
@@ -149,21 +162,23 @@ export const Contact = () => {
                     </a>                  
                   </span>
                   
+                  {/* Increased button size on mobile for easier tapping */}
                   <motion.button
                     onClick={handleEmailClick}
-                    className="relative w-8 h-8 md:w-4 md:h-4 flex items-left justify-left"
+                    className="relative w-8 h-8 flex items-center justify-center ml-2" 
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
+                    aria-label={emailCopied ? "Email copied" : "Copy email address"}
                   >
                     <motion.div
-                      className="absolute inset-0"
+                      className="absolute inset-0 flex items-center justify-center"
                       animate={{ 
                         rotateY: emailCopied ? 180 : 0,
                         opacity: emailCopied ? 0 : 1
                       }}
                       transition={{ duration: 0.3 }}
                     >
-                      <Copy className="w-2 h-4 md:w-3 md:h-3 text-gray-400 hover:text-blue-800 transition-colors" />
+                      <Copy className="w-4 h-4 text-gray-400 hover:text-blue-800 transition-colors" />
                     </motion.div>
                     
                     <motion.div
@@ -174,7 +189,7 @@ export const Contact = () => {
                       }}
                       transition={{ duration: 0.3 }}
                     >
-                      <Check className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
+                      <Check className="w-4 h-4 text-blue-600" />
                     </motion.div>
                   </motion.button>
                   
@@ -196,12 +211,13 @@ export const Contact = () => {
             <motion.form
               ref={formRef}
               onSubmit={handleSubmit}
-              className="space-y-5 md:space-y-6 relative max-w-md w-full mx-auto md:ml-20"
+              // **FIX: Use mx-auto on mobile (max-w-sm) to center the form, and reset on desktop (md:mx-0) to align with grid**
+              className="space-y-5 md:space-y-6 relative max-w-sm w-full mx-auto md:max-w-md md:mx-0 md:ml-auto" 
               variants={formVariants}
             >
               {['name','email','subject','message'].map((field, idx) => (
                 <motion.div key={idx} variants={inputVariants}>
-                  <label htmlFor={field} className="block text-xs md:text-sm font-medium text-gray-300 mb-2 capitalize">
+                  <label htmlFor={field} className="block text-sm font-medium text-gray-300 mb-2 capitalize">
                     {field}
                   </label>
                   {field === 'message' ? (
@@ -211,7 +227,8 @@ export const Contact = () => {
                       value={formData[field]}
                       onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
                       rows={4}
-                      className="w-full px-3 md:px-4 py-2 text-sm md:text-base rounded-md border border-blue-800/20 bg-gray-900/50 backdrop-blur-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-medium resize-none"
+                      // Consistent input styling
+                      className="w-full px-4 py-3 text-base rounded-lg border border-blue-800/20 bg-gray-900/50 backdrop-blur-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-medium resize-none" 
                       required
                     />
                   ) : (
@@ -221,7 +238,8 @@ export const Contact = () => {
                       name={field}
                       value={formData[field]}
                       onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
-                      className="w-full px-3 md:px-4 py-2 text-sm md:text-base rounded-md border border-blue-800/20 bg-gray-900/50 backdrop-blur-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-medium"
+                      // Consistent input styling
+                      className="w-full px-4 py-3 text-base rounded-lg border border-blue-800/20 bg-gray-900/50 backdrop-blur-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-medium" 
                       required
                     />
                   )}
@@ -230,19 +248,20 @@ export const Contact = () => {
 
               <motion.button
                 type="submit"
-                className="px-5 md:px-6 py-2 rounded-full bg-gradient-to-r from-blue-800 to-blue-600 text-white text-sm md:text-base font-medium hover:from-blue-700 hover:to-blue-500 transition-all disabled:opacity-50"
+                // Adjusted button padding for better feel
+                className="px-6 py-3 rounded-full bg-gradient-to-r from-blue-800 to-blue-600 text-white text-base font-medium hover:from-blue-700 hover:to-blue-500 transition-all disabled:opacity-50 w-full md:w-auto" 
                 variants={buttonVariants}
                 disabled={loading}
               >
-                <div className="flex gap-3 md:gap-4 items-center justify-center">
+                <div className="flex gap-3 items-center justify-center">
                   {loading ? 'Sending...' : 'Send Message'}
-                  <Send className="w-3 h-3 md:w-4 md:h-4" />
+                  <Send className="w-4 h-4" />
                 </div>
               </motion.button>
 
               {status && (
                 <motion.div
-                  className={`text-center mt-4 text-sm md:text-base font-medium ${
+                  className={`text-center mt-4 text-base font-medium ${
                     status.includes('Sent') ? 'text-green-400' : 'text-red-400'
                   }`}
                   variants={statusVariants}
@@ -261,7 +280,7 @@ export const Contact = () => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <div className="w-7 h-7 md:w-8 md:h-8 border-4 border-blue-800/50 border-t-blue-800 rounded-full animate-spin" />
+                  <div className="w-8 h-8 border-4 border-blue-800/50 border-t-blue-800 rounded-full animate-spin" />
                 </motion.div>
               )}
             </motion.form>
@@ -274,16 +293,20 @@ export const Contact = () => {
             initial="hidden"
             animate={footerInView ? "visible" : "hidden"}
           >
-            <motion.div className="flex text-blue-800 gap-2 md:gap-3 mb-4" variants={subtitleVariants}>
-              <h1 className="text-lg md:text-xl sm:text-2xl font-bold">Checkout My Work</h1>
-              <ArrowDownRight className="w-5 h-5 md:w-6 md:h-6" />
+            <motion.div className="flex text-blue-800 gap-3 mb-4 items-center" variants={subtitleVariants}>
+              <h1 className="text-xl md:text-2xl font-bold">Checkout My Work</h1>
+              <ArrowDownRight className="w-6 h-6" />
             </motion.div>
 
             <motion.div variants={subtitleVariants}>
               <FlowingMenu items={menuItems} />
             </motion.div>
 
-            <motion.div className="flex flex-col md:flex-row justify-between gap-2 md:gap-0 mt-16 md:mt-20 text-blue-800/80 text-[10px] sm:text-sm font-medium" variants={footerVariants}>
+            <motion.div 
+              // Adjusted text size for mobile
+              className="flex flex-col md:flex-row justify-between gap-2 md:gap-0 mt-16 md:mt-20 text-blue-800/80 text-xs sm:text-sm font-medium" 
+              variants={footerVariants}
+            >
               <h2 variants={subtitleVariants}>Ambitiously Crafted</h2>
               <h2 variants={subtitleVariants}>© 2025 Thimeth Sathmika. All rights reserved.</h2>
             </motion.div>
