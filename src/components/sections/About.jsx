@@ -119,40 +119,41 @@ export const About = () => {
           </motion.div>
 
           <motion.div
-            className="w-full sm:w-1/2 flex justify-center sm:justify-end mx-auto sm:mr-20 mt-5 relative px-4 sm:px-0"
+            className="w-full sm:w-1/2 flex justify-center sm:justify-end mx-auto sm:mr-20 mt-5 px-0"
             variants={staggerItem}
-            style={{ minHeight: "500px" }}
           >
-            <Stack
-              randomRotation={true}
-              sensitivity={180}
-              sendToBackOnClick={false}
-              cardDimensions={{ width: 360, height: 500 }}
-              cardsData={images}
-            />
-            <motion.div
-              className="hidden sm:block absolute left-1/2 -translate-x-1/2 sm:left-[40px] sm:translate-x-0 top-[440px] transform -translate-y-1/2 z-20 w-32 h-32 sm:w-40 sm:h-40"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              <div className="relative w-full h-full">
-                <CircularText
-                  text="LETS TALK * LETS TALK * "
-                  spinDuration={20}
-                  onHover="speedUp"
-                  className="text-white font-medium h-full w-full align-middle justify-center text-center bg-black/50 rounded-full"
-                />
-                <a href="#contact" className="absolute inset-0 flex items-center justify-center">
-                  <motion.div
-                    className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-800/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-blue-800 transition-all duration-300"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Send className="w-6 h-6 mr-1 mt-1 sm:w-8 sm:h-8 text-white" />
-                  </motion.div>
-                </a>
-              </div>
-            </motion.div>
+            <div className="relative inline-block">
+              <Stack
+                randomRotation={true}
+                sensitivity={180}
+                sendToBackOnClick={false}
+                cardDimensions={{ width: 360, height: 500 }}
+                cardsData={images}
+              />
+              <motion.div
+                className="hidden sm:block absolute bottom-8 -left-8 md:bottom-12 md:-left-12 lg:bottom-0 lg:-left-16 z-20 w-32 h-32 md:w-36 md:h-36 lg:w-40 lg:h-40"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              >
+                <div className="relative w-full h-full">
+                  <CircularText
+                    text="LETS TALK * LETS TALK * "
+                    spinDuration={20}
+                    onHover="speedUp"
+                    className="text-white font-medium h-full w-full align-middle justify-center text-center bg-black/50 rounded-full"
+                  />
+                  <a href="#contact" className="absolute inset-0 flex items-center justify-center">
+                    <motion.div
+                      className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-blue-800/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-blue-800 transition-all duration-300"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Send className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 mr-1 mt-1 text-white" />
+                    </motion.div>
+                  </a>
+                </div>
+              </motion.div>
+            </div>
           </motion.div>
         </motion.div>
 
@@ -164,7 +165,7 @@ export const About = () => {
         {/* Education Section (Kept lightweight) */}
         <motion.div 
           ref={educationRef}
-          className="mt-12 md:mt-24 mb-12 mx-6"
+          className="mt-24 mb-12 mx-6"
           initial="hidden"
           animate={educationInView ? "visible" : "hidden"}
           variants={staggerContainer}
