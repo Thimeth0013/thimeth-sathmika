@@ -11,6 +11,8 @@ const TerminalModal = ({ isOpen = true, onClose = () => {} }) => {
   const [output, setOutput] = useState([]);
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [suggestions, setSuggestions] = useState([]);
+  const [selectedSuggestion, setSelectedSuggestion] = useState(0);
   
   // File System State
   const [currentPath, setCurrentPath] = useState('~');
@@ -38,13 +40,58 @@ const TerminalModal = ({ isOpen = true, onClose = () => {} }) => {
 
   const toggleMaximize = () => setIsMaximized(!isMaximized);
 
+    // Generate suggestions based on input
+    const generateSuggestions = (inputValue) => {
+      const args = inputValue.trim().toLowerCase().split(' ');
+      const cmd = args[0];
+      const partial = args[args.length - 1];
+
+      if ((cmd === 'cat' || cmd === 'open' || cmd === 'view') && partial.length > 0) {
+        let matches = [];
+        
+        if (currentPath === '~/projects') {
+          matches = projectsData
+            .map(p => getProjectFileName(p.title))
+            .filter(name => name.startsWith(partial));
+        } else if (currentPath === '~/certificates') {
+          matches = certificatesData
+            .map(c => getCertificateFileName(c.title))
+            .filter(name => name.startsWith(partial));
+        } else if (currentPath === '~/badges') {
+          matches = badgesData
+            .map(b => getBadgeFileName(b.title))
+            .filter(name => name.startsWith(partial));
+        }
+        
+        return matches.slice(0, 5); // Limit to 5 suggestions
+      }
+      
+      return [];
+    };
+
+    // Update suggestions when input changes
+    useEffect(() => {
+      const newSuggestions = generateSuggestions(input);
+      setSuggestions(newSuggestions);
+      setSelectedSuggestion(0);
+    }, [input, currentPath]);
+
   // Helper: Format titles to "filename"
   const getProjectFileName = (title) => title.toLowerCase().replace(/\s+/g, '-');
   const getCertificateFileName = (title) => title.toLowerCase().replace(/\s+/g, '-');
   const getBadgeFileName = (title) => title.toLowerCase().replace(/\s+/g, '-');
 
-  const handleCommand = (e) => {
+const handleCommand = (e) => {
     if (e.key === 'Enter') {
+      // If there are suggestions and user presses Enter, use the selected suggestion
+      if (suggestions.length > 0 && selectedSuggestion >= 0) {
+        const args = input.trim().split(' ');
+        const prefix = args.slice(0, args.length - 1).join(' ');
+        setInput((prefix ? prefix + ' ' : '') + suggestions[selectedSuggestion]);
+        setSuggestions([]);
+        return;
+      }
+      
       const rawInput = input.trim();
       const args = rawInput.split(' ');
       const cmd = args[0].toLowerCase();
@@ -398,14 +445,20 @@ const TerminalModal = ({ isOpen = true, onClose = () => {} }) => {
       setInput('');
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      if (history.length > 0 && historyIndex < history.length - 1) {
+      // If suggestions are showing, navigate through them
+      if (suggestions.length > 0) {
+        setSelectedSuggestion((prev) => (prev > 0 ? prev - 1 : suggestions.length - 1));
+      } else if (history.length > 0 && historyIndex < history.length - 1) {
         const newIndex = historyIndex + 1;
         setHistoryIndex(newIndex);
         setInput(history[history.length - 1 - newIndex]);
       }
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
-      if (historyIndex > 0) {
+      // If suggestions are showing, navigate through them
+      if (suggestions.length > 0) {
+        setSelectedSuggestion((prev) => (prev < suggestions.length - 1 ? prev + 1 : 0));
+      } else if (historyIndex > 0) {
         const newIndex = historyIndex - 1;
         setHistoryIndex(newIndex);
         setInput(history[history.length - 1 - newIndex]);
@@ -413,6 +466,8 @@ const TerminalModal = ({ isOpen = true, onClose = () => {} }) => {
         setHistoryIndex(-1);
         setInput('');
       }
+    } else if (e.key === 'Escape') {
+      setSuggestions([]);
     } else if (e.key === 'Tab') {
       e.preventDefault();
       const rawInput = input.trim().toLowerCase();
@@ -502,7 +557,7 @@ const TerminalModal = ({ isOpen = true, onClose = () => {} }) => {
         {/* Terminal Body */}
         {!isMinimized && (
             <div 
-              className="flex-1 p-4 overflow-y-auto custom-scrollbar"
+              className="flex-1 p-4 overflow-y-auto custom-scrollbar pb-40"
               onClick={() => inputRef.current?.focus()}
             >
               <div className="mb-6 text-gray-400 text-sm">
@@ -547,6 +602,34 @@ const TerminalModal = ({ isOpen = true, onClose = () => {} }) => {
                     className="absolute top-0 h-5 w-2.5 bg-gray-400 opacity-50 animate-pulse pointer-events-none"
                     style={{ left: `${input.length}ch` }}
                   ></div>
+                  
+                  {/* Auto-suggestions dropdown */}
+                  {suggestions.length > 0 && (
+                    <div className="absolute left-0 top-full mt-1 bg-gray-800 border border-gray-600 rounded shadow-lg min-w-[300px] max-w-[800px]">
+                      <div className="px-3 py-1.5 text-[10px] text-gray-300 border-b border-gray-700">
+                        ↑↓ to navigate, Enter to select, Esc to close:
+                      </div>
+                      {suggestions.map((suggestion, i) => (
+                        <div
+                          key={i}
+                          className={`px-3 py-2 text-sm cursor-pointer transition-colors ${
+                            i === selectedSuggestion
+                              ? 'bg-blue-600 text-white'
+                              : 'text-gray-300 hover:bg-gray-700'
+                          }`}
+                          onClick={() => {
+                            const args = input.trim().split(' ');
+                            const prefix = args.slice(0, args.length - 1).join(' ');
+                            setInput((prefix ? prefix + ' ' : '') + suggestion);
+                            setSuggestions([]);
+                            inputRef.current?.focus();
+                          }}
+                        >
+                          <span className="font-mono">{suggestion}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
               <div ref={bottomRef} />
