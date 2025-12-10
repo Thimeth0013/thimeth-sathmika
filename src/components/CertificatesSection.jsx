@@ -236,13 +236,13 @@ const CertificatesSection = () => {
   return (
     <motion.div
       ref={ref}
-      className="mt-20 mb-20 mx-6 md:ml-10 md:mr-10"
+      className="mt-20 mb-20 mx-6 md:ml-6 md:mr-10"
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={staggerContainer}
     >
       <motion.h2
-        className="text-xl md:text-3xl font-bold mb-6 flex items-center gap-3 text-center sm:text-left justify-start"
+        className="text-xl md:text-3xl font-bold mb-6 flex items-center gap-3 text-left justify-start"
         variants={staggerItem}
       >
         <AwardIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
