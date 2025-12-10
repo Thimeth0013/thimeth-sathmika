@@ -236,7 +236,7 @@ const CertificatesSection = () => {
   return (
     <motion.div
       ref={ref}
-      className="mt-20 mb-20 mx-6 md:ml-6 md:mr-10"
+      className="mt-20 mb-20 mx-6 md:ml-6 md:mr-6"
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={staggerContainer}

@@ -134,7 +134,7 @@ export const Contact = () => {
                 >
                   <Sparkle className="text-blue-800 mr-2 w-5 h-5 md:w-6 md:h-6" />
                   {/* Reduced font size on mobile for better fit */}
-                  <h2 className="text-md md:text-xl font-medium text-blue-800"> 
+                  <h2 className="text-sm md:text-xl font-medium text-blue-800"> 
                     Get in Touch
                   </h2>
                 </motion.div>
