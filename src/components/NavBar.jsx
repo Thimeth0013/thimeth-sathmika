@@ -83,7 +83,7 @@ export const NavBar = ({ menuOpen, setMenuOpen, onOpenTerminal }) => {
                         T<span className="text-blue-500">S</span>
                     </motion.a>
                     
-                    {/* Modern Animated Hamburger Icon */}
+                    {/* Modern Static Hamburger Icon */}
                     <motion.button
                         className="w-8 h-8 relative cursor-pointer z-50 md:hidden text-white flex items-center justify-center" 
                         onClick={() => setMenuOpen((prev) => !prev)}
@@ -91,33 +91,36 @@ export const NavBar = ({ menuOpen, setMenuOpen, onOpenTerminal }) => {
                         whileTap={{ scale: 0.9 }}
                         aria-label={menuOpen ? "Close menu" : "Open menu"}
                     >
-                        <motion.div
-                            initial={false}
-                            animate={menuOpen ? "open" : "closed"}
+                        <div
+                            // Removed motion, initial, and animate props
                             className="w-full h-full relative"
                         >
-                            <motion.span
-                                className={`absolute block h-0.5 w-7 bg-current rounded-full transition-transform duration-300`}
-                                variants={{
-                                    closed: { rotate: 0, top: '25%', translateY: 0 },
-                                    open: { rotate: 45, top: '50%', translateY: '-50%' }
-                                }}
+                            {/* Top Line */}
+                            <span
+                                // Used Tailwind classes for static open/close states
+                                className={`absolute block h-0.5 w-7 bg-current rounded-full transition-all duration-300 ${
+                                    menuOpen 
+                                    ? 'rotate-45 top-1/2 -translate-y-1/2' 
+                                    : 'top-[25%]'
+                                }`}
                             />
-                            <motion.span
-                                className={`absolute block h-0.5 w-7 bg-current rounded-full transition-opacity duration-300`}
-                                variants={{
-                                    closed: { opacity: 1, top: '50%', translateY: '-50%' },
-                                    open: { opacity: 0 }
-                                }}
+                            {/* Middle Line */}
+                            <span
+                                // Used Tailwind classes for static open/close states
+                                className={`absolute block h-0.5 w-7 bg-current rounded-full transition-all duration-300 top-1/2 -translate-y-1/2 ${
+                                    menuOpen ? 'opacity-0' : 'opacity-100'
+                                }`}
                             />
-                            <motion.span
-                                className={`absolute block h-0.5 w-7 bg-current rounded-full transition-transform duration-300`}
-                                variants={{
-                                    closed: { rotate: 0, top: '75%', translateY: 0 },
-                                    open: { rotate: -45, top: '50%', translateY: '-50%' }
-                                }}
+                            {/* Bottom Line */}
+                            <span
+                                // Used Tailwind classes for static open/close states
+                                className={`absolute block h-0.5 w-7 bg-current rounded-full transition-all duration-300 ${
+                                    menuOpen 
+                                    ? '-rotate-45 top-1/2 -translate-y-1/2' 
+                                    : 'top-[75%]'
+                                }`}
                             />
-                        </motion.div>
+                        </div>
                     </motion.button>
 
                     <div className="hidden md:flex items-center space-x-10">
