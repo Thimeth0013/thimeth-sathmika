@@ -110,7 +110,7 @@ export const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="min-h-screen bg-black overflow-hidden pt-20 md:pt-30 pb-10">
+    <section id="contact" className="min-h-screen bg-black overflow-hidden px-6 pt-20 md:pt-30 pb-10">
       <div className="container mx-auto px-4 sm:px-6 z-10">
         {/* **FIX: Removed explicit ml/mr and added mx-auto to center the content wrapper** */}
         <div className="max-w-6xl mx-auto"> 
@@ -134,13 +134,13 @@ export const Contact = () => {
                 >
                   <Sparkle className="text-blue-800 mr-2 w-5 h-5 md:w-6 md:h-6" />
                   {/* Reduced font size on mobile for better fit */}
-                  <h2 className="text-sm md:text-md lg:text-lg font-medium text-blue-800"> 
+                  <h2 className="text-sm md:text-xl font-medium text-blue-800"> 
                     Get in Touch
                   </h2>
                 </motion.div>
 
                 <motion.h1
-                  className="text-3xl sm:text-4xl md:text-5xl font-bold text-left mt-4 mb-4 md:mb-6 max-w-4xl leading-snug md:leading-tight text-white"
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold text-left mt-0 mb-4 md:mb-6 max-w-4xl leading-snug md:leading-tight text-white"
                   variants={titleVariants}
                 >
                   Have a project in mind or want to collaborate? I'd love to hear from you.

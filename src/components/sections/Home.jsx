@@ -58,7 +58,7 @@ export const Home = () => {
   return (
     <div className="w-full" id="home">
       {/* Hero Section */}
-      <section className="relative w-full min-h-[80vh] md:min-h-[90vh] flex items-center overflow-hidden bg-black">
+      <section className="relative w-full min-h-[60vh] md:min-h-[90vh] flex items-center overflow-hidden bg-black">
         {/* Light Rays - Desktop only */}
         <div className="hidden md:block absolute inset-0 z-0">
           <LightRays

@@ -165,7 +165,7 @@ export const About = () => {
         {/* Education Section (Kept lightweight) */}
         <motion.div 
           ref={educationRef}
-          className="mt-24 mb-12 mx-6"
+          className="mt-24 md:mt-0 mb-12 mx-6"
           initial="hidden"
           animate={educationInView ? "visible" : "hidden"}
           variants={staggerContainer}

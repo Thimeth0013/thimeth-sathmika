@@ -104,19 +104,19 @@ export const Project = () => {
           </div>
         </div>
 
-        <div className="relative container mx-auto px-4 sm:px-6 z-10">
+        <div className="relative container mx-auto px-4 sm:px-0 z-10">
           {/* Title */}
           <motion.div
-            className="flex items-center pt-10 sm:pt-20 ml-2 md:ml-12"
+            className="flex items-center px-2 md:px-0 pt-10 sm:pt-20 ml-2 md:ml-12"
             variants={titleVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
           >
-            <Sparkle className="text-blue-800 mr-2 w-5 h-5 md:w-6 md:h-6" />
+            <Sparkle className="text-blue-800  mr-2 w-5 h-5 md:w-6 md:h-6" />
             <h1 className="text-base md:text-2xl sm:text-xl font-medium text-blue-800">My work</h1>
           </motion.div>
           <motion.h1
-            className="text-xl md:text-5xl sm:text-5xl font-bold mt-4 ml-2 md:ml-12 mb-8 md:mb-12"
+            className="text-xl md:text-5xl sm:text-5xl font-bold mt-4 ml-2 md:ml-12 mb-8 md:mb-12 px-2  md:px-0"
             variants={titleVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
@@ -192,7 +192,7 @@ export const Project = () => {
                         src={project.image}
                         alt={project.title}
                         loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-110 rounded-xl p-1 transition-transform duration-500"
                       />
 
                       {/* Tags */}
