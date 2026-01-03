@@ -137,7 +137,7 @@ const SkillsSection = () => {
               className="group"
               variants={staggerItem}
             >
-              <h3 className="text-lg md:text-xl font-medium text-blue-800 mb-3">
+              <h3 className="text-lg md:text-xl font-medium text-blue-700 mb-3">
                 {skillSet.category}
               </h3>
               

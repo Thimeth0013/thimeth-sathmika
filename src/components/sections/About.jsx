@@ -190,7 +190,7 @@ export const About = () => {
               <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-0">
                   <div className="flex-1">
-                    <h3 className="text-base md:text-lg font-bold text-blue-800 mb-1">
+                    <h3 className="text-base md:text-lg font-bold text-white mb-1">
                       BSc (Hons) in Information Technology Specialising in Software Engineering
                     </h3>
                     <p className="text-gray-400 text-xs md:text-sm">Sri Lanka Institute of Information Technology</p>
@@ -211,7 +211,7 @@ export const About = () => {
               <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-0">
                   <div className="flex-1">
-                    <h3 className="text-base md:text-lg font-bold text-blue-800 mb-1">
+                    <h3 className="text-base md:text-lg font-bold text-white mb-1">
                       GCE O/L & A/L (Engineering Technology)
                     </h3>
                     <p className="text-gray-400 text-xs md:text-sm">Swarna Jayanthi College, Kegalle</p>

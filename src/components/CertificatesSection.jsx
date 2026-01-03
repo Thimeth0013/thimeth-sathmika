@@ -90,8 +90,8 @@ const CertificatesSection = () => {
     <div className="mt-20 mb-20 max-w-7xl mx-auto px-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div className="flex items-center gap-3">
-          <AwardIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-500" />
-          <h2 className="text-xl md:text-3xl font-bold text-white">
+          <AwardIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
+          <h2 className="text-xl md:text-3xl font-bold text-blue-800">
             Certifications & Badges
           </h2>
         </div>
