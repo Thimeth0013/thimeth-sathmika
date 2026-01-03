@@ -1,338 +1,137 @@
-import React, { useState, useMemo, useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { AwardIcon, Search, ExternalLink } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { AwardIcon, Search, ExternalLink, ChevronDown } from "lucide-react";
 import CertificateData from '../data/certificate';
 import BadgesData from '../data/badges';
 
-// Badge Card Component
-const BadgeCard = ({ badge }) => {
-  return (
-    <motion.div
-      className="relative bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 flex flex-col h-full"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.4 }}
-    >
-      <div className="flex items-start gap-3 p-4 pb-0">
-        <img
-          src={badge.image}
-          alt={badge.title}
-          className="w-16 h-16 md:w-18 md:h-18 object-contain bg-white rounded-lg p-1 flex-shrink-0"
-        />
-        <div className="flex-grow min-w-0">
-          <div className="flex items-start justify-between gap-2 mb-2">
-            <div className="relative group flex-grow min-w-0">
-              <h3 className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2">
-                {badge.title}
-              </h3>
-              <div className="hidden md:block absolute top-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-xs whitespace-normal w-60 mt-1">
-                {badge.title}
-                <div className="absolute bottom-full left-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
-              </div>
-            </div>
-            <span className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0">
-              {badge.dateEarned}
-            </span>
-          </div>
-
-          {badge.issuer && (
-            <div className="mb-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
-              {badge.issuerUrl ? (
-                <motion.a
-                  href={badge.issuerUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs md:text-sm text-blue-800 font-medium transition-colors duration-200 flex items-center gap-1 group focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded px-1 py-0.5"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {badge.issuer}
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                </motion.a>
-              ) : (
-                <span className="text-xs md:text-sm text-blue-800 font-medium">{badge.issuer}</span>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <p className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow">
-        {badge.description}
-      </p>
-
-      {badge.badgeUrl && (
-        <div className="px-4 pb-4 mt-auto">
-          <motion.a
-            href={badge.badgeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block w-full px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View Badge
-          </motion.a>
-        </div>
-      )}
-    </motion.div>
-  );
-};
-
-// Certificate Card Component
-const CertificateCard = ({ cert }) => {
-  const handleCompanyClick = (e) => {
-    e.stopPropagation();
-    if (cert.companyUrl) {
-      window.open(cert.companyUrl, '_blank', 'noopener,noreferrer');
-    }
-  };
+const CredentialCard = ({ item, type }) => {
+  const isCert = type === 'certificate';
+  const title = item.title;
+  const image = isCert ? item.thumbnail : item.image;
+  const rawDate = isCert ? item.date : item.dateEarned;
+  const issuer = isCert ? item.company : item.issuer;
+  const issuerUrl = isCert ? item.companyUrl : item.issuerUrl;
+  const mainUrl = isCert ? item.certificateUrl : item.badgeUrl;
 
   return (
-    <motion.div
-      className="relative bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:border-blue-800/50 transition-all duration-300 flex flex-col h-full"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.4 }}
-    >
-      <div className="flex items-start gap-3 p-4">
-        <img
-          src={cert.thumbnail}
-          alt={cert.title}
-          loading="lazy"
-          className="w-22 h-16 md:w-24 md:h-18 object-cover bg-white rounded-lg flex-shrink-0"
-        />
-        
-        <div className="flex-grow min-w-0">
-          <div className="flex items-start justify-between gap-2 mb-2">
-            <div className="relative group flex-grow min-w-0">
-              <h3 className="text-sm md:text-base font-semibold text-white cursor-help line-clamp-2">
-                {cert.title}
-              </h3>
-              
-              <div className="hidden md:block absolute top-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-xs whitespace-normal w-60 mt-1">
-                {cert.title}
-                <div className="absolute bottom-full left-4 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
-              </div>
-            </div>
-            
-            <span className="bg-blue-800/80 text-white text-xs px-2 py-1 rounded-full flex-shrink-0">
-              {cert.date}
-            </span>
+    <div className="relative flex flex-col h-full bg-gray-900/40 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden shadow-xl">
+      <div className="p-6 flex flex-col h-full">
+        <div className="flex items-start gap-4 mb-5">
+          <div className="relative p-2 bg-white rounded-xl shadow-lg flex-shrink-0 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
+            <img src={image} alt={title} className="max-w-full max-h-full object-contain" />
           </div>
 
-          {cert.company && (
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-blue-800 rounded-full"></span>
-              {cert.companyUrl ? (
-                <motion.button
-                  onClick={handleCompanyClick}
-                  className="text-xs md:text-sm text-blue-800 font-medium transition-colors duration-200 flex items-center gap-1 group focus:outline-none focus:ring-2 focus:ring-blue-500/30 rounded px-1 py-0.5"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+          <div className="flex-grow min-w-0">
+            <h3 className="text-sm md:text-base font-bold text-white leading-snug line-clamp-2">
+              {title}
+            </h3>
+            <p className="text-[11px] font-medium text-blue-500/80 mt-1">
+              {rawDate}
+            </p>
+          </div>
+        </div>
+
+        <p className="text-xs md:text-sm text-gray-400 leading-relaxed line-clamp-4 mb-2">
+          {item.description}
+        </p>
+
+        <div className="mt-auto flex flex-col gap-4">
+          <div className="flex items-center justify-between border-t border-white/5 pt-2 group">
+              {issuer && (
+                <a 
+                  href={issuerUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-[11px] font-semibold text-gray-500 hover:text-white flex items-center gap-1.5 transition-colors"
                 >
-                  {cert.company}
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                </motion.button>
-              ) : (
-                <span className="text-xs md:text-sm text-blue-800 font-medium">{cert.company}</span>
+                  <span className="w-1 h-1 bg-blue-600 rounded-full" />
+                  {issuer}
+                  <ExternalLink className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 inline-block" />
+                </a>
               )}
             </div>
-          )}
+          
+          <a href={mainUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-xs md:text-sm font-bold transition-colors">
+            Verify Credential
+          </a>
         </div>
       </div>
-
-      <p className="px-4 pb-3 text-xs md:text-sm text-gray-400 leading-relaxed flex-grow">
-        {cert.description}
-      </p>
-
-      {cert.certificateUrl && (
-        <div className="px-4 pb-4 mt-auto">
-          <motion.a
-            href={cert.certificateUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block w-full px-4 py-2 text-center bg-blue-800 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300"
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View Certificate
-          </motion.a>
-        </div>
-      )}
-    </motion.div>
+    </div>
   );
 };
 
 const CertificatesSection = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState('certificates');
-  const itemsPerPage = 6;
-  
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.05 });
+  const [visibleCount, setVisibleCount] = useState(6);
 
-  const filteredData = useMemo(() => {
-    const data = activeTab === 'certificates' ? CertificateData : BadgesData;
-    
-    if (!searchQuery.trim()) {
-      return data.sort((a, b) => b.id - a.id);
-    }
+  const sortedAndFilteredData = useMemo(() => {
+    const certs = CertificateData.map(c => ({ ...c, _type: 'certificate' }));
+    const badges = BadgesData.map(b => ({ ...b, _type: 'badge' }));
+    const combined = [...certs, ...badges];
+
+    // Sorting logic: Parses "Month Year" strings into dates to compare them
+    combined.sort((a, b) => {
+      const dateA = new Date(a.date || a.dateEarned);
+      const dateB = new Date(b.date || b.dateEarned);
+      return dateB - dateA; // Sorts descending (Latest first)
+    });
+
+    if (!searchQuery.trim()) return combined;
 
     const query = searchQuery.toLowerCase();
-    return data
-      .filter(item => {
-        const searchableText = `${item.title} ${item.description} ${item.company || item.issuer || ''}`.toLowerCase();
-        return searchableText.includes(query);
-      })
-      .sort((a, b) => b.id - a.id);
-  }, [activeTab, searchQuery]);
+    return combined.filter(item => {
+      const searchableText = `${item.title} ${item.description} ${item.company || item.issuer || ''}`.toLowerCase();
+      return searchableText.includes(query);
+    });
+  }, [searchQuery]);
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = filteredData.slice(startIndex, endIndex);
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    setCurrentPage(1);
-    setSearchQuery('');
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const handleLoadMore = () => {
-    setCurrentPage(prev => prev + 1);
-  };
-
-  // Animation variants
-  const staggerContainer = {
-    hidden: { opacity: 1 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1
-      }
-    }
-  };
-
-  const staggerItem = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.4 }
-    }
-  };
+  const currentItems = sortedAndFilteredData.slice(0, visibleCount);
 
   return (
-    <motion.div
-      ref={ref}
-      className="mt-20 mb-20 mx-6 md:ml-6 md:mr-6"
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={staggerContainer}
-    >
-      <motion.h2
-        className="text-xl md:text-3xl font-bold mb-6 flex items-center gap-3 text-left justify-start"
-        variants={staggerItem}
-      >
-        <AwardIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
-        <span className="text-blue-800">Certifications and Badges</span>
-      </motion.h2>
-
-      <motion.div 
-        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 md:mb-10 pt-4"
-        variants={staggerItem}
-      >
-        <div className="flex gap-3 md:gap-4 pl-0 md:pl-2">
-          <button
-            onClick={() => handleTabChange('certificates')}
-            className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 ${
-              activeTab === 'certificates'
-                ? 'bg-blue-800 text-white'
-                : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'
-            }`}
-          >
-            Certificates
-          </button>
-          <button
-            onClick={() => handleTabChange('badges')}
-            className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 ${
-              activeTab === 'badges'
-                ? 'bg-blue-800 text-white'
-                : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'
-            }`}
-          >
-            Badges
-          </button>
+    <div className="mt-20 mb-20 max-w-7xl mx-auto px-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+        <div className="flex items-center gap-3">
+          <AwardIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-500" />
+          <h2 className="text-xl md:text-3xl font-bold text-white">
+            Certifications & Badges
+          </h2>
         </div>
 
-        <div className="relative w-full md:w-64">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <div className="relative w-full md:w-80">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Search credentials..."
             value={searchQuery}
-            onChange={handleSearchChange}
-            className="w-full pl-10 pr-4 py-2 bg-gray-900/50 border border-white/10 rounded-lg text-sm text-white placeholder-gray-400 focus:outline-none focus:border-blue-800/50 transition-all duration-300"
+            onChange={(e) => { 
+              setSearchQuery(e.target.value); 
+              setVisibleCount(6); 
+            }}
+            className="w-full pl-10 pr-4 py-2.5 bg-gray-900/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500 transition-all"
           />
         </div>
-      </motion.div>
+      </div>
 
-      {filteredData.length === 0 ? (
-        <motion.div 
-          className="text-center py-12"
-          variants={staggerItem}
-        >
-          <p className="text-gray-400 text-lg">No results found for "{searchQuery}"</p>
-        </motion.div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {currentItems.map((item) =>
-              activeTab === 'certificates' ? (
-                <CertificateCard key={item.id} cert={item} />
-              ) : (
-                <BadgeCard key={item.id} badge={item} />
-              )
-            )}
-          </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {currentItems.map((item) => (
+          <CredentialCard 
+            key={`${item._type}-${item.id || item.title}`} 
+            item={item} 
+            type={item._type} 
+          />
+        ))}
+      </div>
 
-          {currentPage < totalPages && (
-            <motion.div 
-              className="flex justify-center mt-10"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              <motion.button
-                onClick={handleLoadMore}
-                className="group relative px-6 py-3 bg-blue-800/40 hover:bg-blue-800 rounded-lg transition-all duration-300 flex items-center gap-3"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <span className="text-sm text-gray-200 group-hover:text-white font-medium">
-                  Load More {activeTab === 'certificates' ? 'Certificates' : 'Badges'}
-                </span>
-                <span className="text-xs bg-blue-700/50 group-hover:bg-blue-700 px-2.5 py-1 rounded-full text-gray-200 group-hover:text-white transition-all duration-300">
-                  {currentPage} / {totalPages}
-                </span>
-              </motion.button>
-            </motion.div>
-          )}
-        </>
+      {visibleCount < sortedAndFilteredData.length && (
+        <div className="flex justify-center mt-12">
+          <button
+            onClick={() => setVisibleCount(prev => prev + 6)}
+            className="flex items-center gap-2 px-8 py-3 bg-blue-500/10 hover:bg-blue-800 border border-blue-500/50 text-white rounded-xl text-sm font-medium transition-colors"
+          >
+            Show More <ChevronDown className="w-4 h-4" />
+          </button>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
