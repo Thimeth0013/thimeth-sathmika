@@ -1,5 +1,15 @@
 const BadgesData = [
   {
+    id: 5,
+    title: "Introduction to Vertex AI Studio",
+    description: "This introduces prototyping and deploying generative AI applications. It covers Gemini multimodal integration, prompt engineering, and model tuning.",
+    image: "https://cdn.qwiklabs.com/Sx1H%2BLHjcQxuDa6wW8nGLKM8LaPZLD%2BJFHPnNIgypo4%3D",
+    badgeUrl: "https://cdn.qwiklabs.com/TNNnXDTZ8g4iwDeKv6a7GhJotXylDmILzsYNrsCg56o%3D",
+    issuer: "Google Skills",
+    issuerUrl: "https://www.skills.google/",
+    dateEarned: "January 2026",
+  },
+  {
     id: 4,
     title: "LFS101: Introduction to Linux",
     description: "Introduction to Linux badge have gained the skills to effectively navigate and manage configurations across major Linux distributions utilizing both the graphical interface and command line proficiently.",

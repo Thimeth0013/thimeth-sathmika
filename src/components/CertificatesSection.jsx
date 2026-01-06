@@ -13,49 +13,58 @@ const CredentialCard = ({ item, type }) => {
   const mainUrl = isCert ? item.certificateUrl : item.badgeUrl;
 
   return (
-    <div className="relative flex flex-col h-full bg-gray-900/40 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden shadow-xl">
-      <div className="p-6 flex flex-col h-full">
-        <div className="flex items-start gap-4 mb-5">
-          <div className="relative p-2 bg-white rounded-xl shadow-lg flex-shrink-0 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
-            <img src={image} alt={title} className="max-w-full max-h-full object-contain" />
-          </div>
-
-          <div className="flex-grow min-w-0">
-            <h3 className="text-sm md:text-base font-bold text-white leading-snug line-clamp-2">
-              {title}
-            </h3>
-            <p className="text-[11px] font-medium text-blue-500/80 mt-1">
-              {rawDate}
-            </p>
-          </div>
+    <div className="relative group flex flex-col h-full bg-gray-900/40 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden shadow-xl">
+    <div className="p-6 flex flex-col h-full">
+      <div className="flex items-start gap-4 mb-5">
+        <div className="relative p-2 bg-white rounded-xl shadow-lg flex-shrink-0 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center overflow-hidden">
+          <img
+            src={image}
+            alt={title}
+            className="max-w-full max-h-full object-contain transition-transform duration-300 ease-out group-hover:scale-112"
+          />
         </div>
 
-        <p className="text-xs md:text-sm text-gray-400 leading-relaxed line-clamp-4 mb-2">
-          {item.description}
-        </p>
-
-        <div className="mt-auto flex flex-col gap-4">
-          <div className="flex items-center justify-between border-t border-white/5 pt-2 group">
-              {issuer && (
-                <a 
-                  href={issuerUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-[11px] font-semibold text-gray-500 hover:text-white flex items-center gap-1.5 transition-colors"
-                >
-                  <span className="w-1 h-1 bg-blue-600 rounded-full" />
-                  {issuer}
-                  <ExternalLink className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 inline-block" />
-                </a>
-              )}
-            </div>
-          
-          <a href={mainUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-xs md:text-sm font-bold transition-colors">
-            Verify Credential
-          </a>
+        <div className="flex-grow min-w-0">
+          <h3 className="text-sm md:text-base font-bold text-white leading-snug line-clamp-2">
+            {title}
+          </h3>
+          <p className="text-[11px] font-medium text-blue-500/80 mt-1">
+            {rawDate}
+          </p>
         </div>
       </div>
+
+      <p className="text-xs md:text-sm text-gray-400 leading-relaxed line-clamp-4 mb-2">
+        {item.description}
+      </p>
+
+      <div className="mt-auto flex flex-col gap-4">
+        <div className="flex items-center justify-between border-t border-white/5 pt-2 group">
+          {issuer && (
+            <a
+              href={issuerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] font-semibold text-gray-500 hover:text-white flex items-center gap-1.5 transition-colors"
+            >
+              <span className="w-1 h-1 bg-blue-600 rounded-full" />
+              {issuer}
+              <ExternalLink className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 inline-block" />
+            </a>
+          )}
+        </div>
+
+        <a
+          href={mainUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 w-full py-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-xs md:text-sm font-bold transition-colors"
+        >
+          Verify Credential
+        </a>
+      </div>
     </div>
+  </div>
   );
 };
 
