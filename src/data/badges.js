@@ -4,7 +4,7 @@ const BadgesData = [
     title: "Introduction to Vertex AI Studio",
     description: "This introduces prototyping and deploying generative AI applications. It covers Gemini multimodal integration, prompt engineering, and model tuning.",
     image: "https://cdn.qwiklabs.com/Sx1H%2BLHjcQxuDa6wW8nGLKM8LaPZLD%2BJFHPnNIgypo4%3D",
-    badgeUrl: "https://cdn.qwiklabs.com/TNNnXDTZ8g4iwDeKv6a7GhJotXylDmILzsYNrsCg56o%3D",
+    badgeUrl: "https://www.skills.google/public_profiles/fef3b14b-8f49-4c11-8b42-c6043b7ba536/badges/21372717",
     issuer: "Google Skills",
     issuerUrl: "https://www.skills.google/",
     dateEarned: "January 2026",
