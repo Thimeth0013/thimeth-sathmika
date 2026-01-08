@@ -1,5 +1,15 @@
 const BadgesData = [
   {
+    id: 6,
+    title: "Gemini for Application Developers",
+    description: "This explores using Gemini to accelerate the software development lifecycle within an IDE. It covers code generation, explaining complex logic, and deploying applications with AI assistance.",
+    image: "https://cdn.qwiklabs.com/mkdm%2BgBAjNifUkBRYiF0o%2BprE7C3LvFpTEe%2B39dP7rU%3D",
+    badgeUrl: "https://www.skills.google/public_profiles/fef3b14b-8f49-4c11-8b42-c6043b7ba536/badges/21385084",
+    issuer: "Google Skills",
+    issuerUrl: "https://www.skills.google/",
+    dateEarned: "January 2026",
+  },
+  {
     id: 5,
     title: "Introduction to Vertex AI Studio",
     description: "This introduces prototyping and deploying generative AI applications. It covers Gemini multimodal integration, prompt engineering, and model tuning.",

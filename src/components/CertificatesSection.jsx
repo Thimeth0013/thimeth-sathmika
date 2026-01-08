@@ -1,8 +1,12 @@
 import React, { useState, useMemo } from "react";
-import { AwardIcon, Search, ExternalLink, ChevronDown } from "lucide-react";
+import { AwardIcon, Search, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import CertificateData from '../data/certificate';
 import BadgesData from '../data/badges';
 
+/**
+ * Individual Credential Card Component
+ */
 const CredentialCard = ({ item, type }) => {
   const isCert = type === 'certificate';
   const title = item.title;
@@ -14,74 +18,78 @@ const CredentialCard = ({ item, type }) => {
 
   return (
     <div className="relative group flex flex-col h-full bg-gray-900/40 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden shadow-xl">
-    <div className="p-6 flex flex-col h-full">
-      <div className="flex items-start gap-4 mb-5">
-        <div className="relative p-2 bg-white rounded-xl shadow-lg flex-shrink-0 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center overflow-hidden">
-          <img
-            src={image}
-            alt={title}
-            className="max-w-full max-h-full object-contain transition-transform duration-300 ease-out group-hover:scale-112"
-          />
+      <div className="p-6 flex flex-col h-full">
+        <div className="flex items-start gap-4 mb-5">
+          <div className="relative p-2 bg-white rounded-xl shadow-lg flex-shrink-0 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center overflow-hidden">
+            <img
+              src={image}
+              alt={title}
+              className="max-w-full max-h-full object-contain transition-transform duration-300 ease-out group-hover:scale-110"
+            />
+          </div>
+
+          <div className="flex-grow min-w-0">
+            <h3 className="text-sm md:text-base font-bold text-white leading-snug line-clamp-2">
+              {title}
+            </h3>
+            <p className="text-[11px] font-medium text-blue-500/80 mt-1">
+              {rawDate}
+            </p>
+          </div>
         </div>
 
-        <div className="flex-grow min-w-0">
-          <h3 className="text-sm md:text-base font-bold text-white leading-snug line-clamp-2">
-            {title}
-          </h3>
-          <p className="text-[11px] font-medium text-blue-500/80 mt-1">
-            {rawDate}
-          </p>
+        <p className="text-xs md:text-sm text-gray-400 leading-relaxed line-clamp-4 mb-4">
+          {item.description}
+        </p>
+
+        <div className="mt-auto flex flex-col gap-4">
+          <div className="flex items-center justify-between border-t border-white/5 pt-2 group">
+            {issuer && (
+              <a
+                href={issuerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-semibold text-gray-500 hover:text-white flex items-center gap-1.5 transition-colors"
+              >
+                <span className="w-1 h-1 bg-blue-600 rounded-full" />
+                {issuer}
+                <ExternalLink className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 inline-block" />
+              </a>
+            )}
+          </div>
+
+          <a
+            href={mainUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full py-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-xs md:text-sm font-bold transition-all active:scale-95"
+          >
+            Verify Credential
+          </a>
         </div>
-      </div>
-
-      <p className="text-xs md:text-sm text-gray-400 leading-relaxed line-clamp-4 mb-2">
-        {item.description}
-      </p>
-
-      <div className="mt-auto flex flex-col gap-4">
-        <div className="flex items-center justify-between border-t border-white/5 pt-2 group">
-          {issuer && (
-            <a
-              href={issuerUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[11px] font-semibold text-gray-500 hover:text-white flex items-center gap-1.5 transition-colors"
-            >
-              <span className="w-1 h-1 bg-blue-600 rounded-full" />
-              {issuer}
-              <ExternalLink className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 inline-block" />
-            </a>
-          )}
-        </div>
-
-        <a
-          href={mainUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full py-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-xs md:text-sm font-bold transition-colors"
-        >
-          Verify Credential
-        </a>
       </div>
     </div>
-  </div>
   );
 };
 
+/**
+ * Main Certificates Section Component
+ */
 const CertificatesSection = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [visibleCount, setVisibleCount] = useState(6);
+  const ITEMS_PER_PAGE = 6;
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
+  // Combine, Sort, and Filter Data
   const sortedAndFilteredData = useMemo(() => {
     const certs = CertificateData.map(c => ({ ...c, _type: 'certificate' }));
     const badges = BadgesData.map(b => ({ ...b, _type: 'badge' }));
     const combined = [...certs, ...badges];
 
-    // Sorting logic: Parses "Month Year" strings into dates to compare them
     combined.sort((a, b) => {
       const dateA = new Date(a.date || a.dateEarned);
       const dateB = new Date(b.date || b.dateEarned);
-      return dateB - dateA; // Sorts descending (Latest first)
+      return dateB - dateA;
     });
 
     if (!searchQuery.trim()) return combined;
@@ -94,9 +102,22 @@ const CertificatesSection = () => {
   }, [searchQuery]);
 
   const currentItems = sortedAndFilteredData.slice(0, visibleCount);
+  const isAllShown = visibleCount >= sortedAndFilteredData.length;
+  const remainingCount = sortedAndFilteredData.length - visibleCount;
+
+  const toggleVisibleCount = () => {
+    if (isAllShown) {
+      setVisibleCount(ITEMS_PER_PAGE);
+      // Optional: Scroll back to top of section when closing
+      window.scrollTo({ top: document.getElementById('certs-grid')?.offsetTop - 100, behavior: 'smooth' });
+    } else {
+      setVisibleCount(prev => prev + ITEMS_PER_PAGE);
+    }
+  };
 
   return (
-    <div className="mt-20 mb-20 max-w-7xl mx-auto px-6">
+    <div className="mt-20 mb-20 max-w-7xl mx-auto px-6" id="certs-grid">
+      {/* Header & Search */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div className="flex items-center gap-3">
           <AwardIcon className="w-7 h-7 md:w-8 md:h-8 text-blue-800" />
@@ -113,31 +134,59 @@ const CertificatesSection = () => {
             value={searchQuery}
             onChange={(e) => { 
               setSearchQuery(e.target.value); 
-              setVisibleCount(6); 
+              setVisibleCount(ITEMS_PER_PAGE); 
             }}
             className="w-full pl-10 pr-4 py-2.5 bg-gray-900/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500 transition-all"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {currentItems.map((item) => (
-          <CredentialCard 
-            key={`${item._type}-${item.id || item.title}`} 
-            item={item} 
-            type={item._type} 
-          />
-        ))}
-      </div>
+      {/* Grid with Framer Motion */}
+      <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <AnimatePresence mode="popLayout">
+          {currentItems.map((item, index) => (
+            <motion.div
+              key={`${item._type}-${item.id || item.title}`}
+              layout
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ 
+                duration: 0.3, 
+                delay: (index % ITEMS_PER_PAGE) * 0.05 
+              }}
+            >
+              <CredentialCard item={item} type={item._type} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </motion.div>
 
-      {visibleCount < sortedAndFilteredData.length && (
+      {/* Action Button */}
+      {sortedAndFilteredData.length > ITEMS_PER_PAGE && (
         <div className="flex justify-center mt-12">
           <button
-            onClick={() => setVisibleCount(prev => prev + 6)}
-            className="flex items-center gap-2 px-8 py-3 bg-blue-500/10 hover:bg-blue-800 border border-blue-500/50 text-white rounded-xl text-sm font-medium transition-colors"
+            onClick={toggleVisibleCount}
+            className="group flex items-center gap-2 px-8 py-3 bg-blue-500/10 hover:bg-blue-600 border border-blue-500/50 text-white rounded-xl text-sm font-medium transition-all active:scale-95 shadow-lg shadow-blue-900/20"
           >
-            Show More <ChevronDown className="w-4 h-4" />
+            {isAllShown ? (
+              <>
+                Show Less <ChevronUp className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" />
+              </>
+            ) : (
+              <>
+                Show More ({remainingCount}/{sortedAndFilteredData.length}) 
+                <ChevronDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
+              </>
+            )}
           </button>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {sortedAndFilteredData.length === 0 && (
+        <div className="text-center py-20">
+          <p className="text-gray-500 italic">No credentials found matching your search.</p>
         </div>
       )}
     </div>
