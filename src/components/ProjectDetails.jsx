@@ -155,7 +155,7 @@ export const ProjectDetailModal = ({ project, isOpen, onClose }) => {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover mask-image-gradient"
+                    className="w-full h-full object-cover mask-image-gradient rounded-3xl p-2"
                   />
                 </div>
 
