@@ -24,6 +24,19 @@ const TerminalModal = ({ isOpen = true, onClose = () => {} }) => {
   const inputRef = useRef(null);
   const bottomRef = useRef(null);
 
+  useEffect(() => {
+    if (isOpen && !isMinimized) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    // Cleanup function: ensures scroll returns if component unmounts
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, isMinimized]);
+
   // Auto-scroll
   useEffect(() => {
     if (bottomRef.current && !isMinimized) {
@@ -557,6 +570,7 @@ const handleCommand = (e) => {
         {/* Terminal Body */}
         {!isMinimized && (
             <div 
+              data-lenis-prevent
               className="flex-1 p-4 overflow-y-auto custom-scrollbar pb-40"
               onClick={() => inputRef.current?.focus()}
             >
