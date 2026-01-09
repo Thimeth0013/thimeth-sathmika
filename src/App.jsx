@@ -1,3 +1,4 @@
+import { ReactLenis } from 'lenis/react';
 import { useState } from 'react';
 import { LoadingScreen } from './components/LoadingScreen';
 import { NavBar } from './components/NavBar';
@@ -15,7 +16,7 @@ const App = () => {
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
 
   return (
-    <>
+    <ReactLenis root options={{ lerp: 0.1, duration: 1.5, syncTouch: true, syncTouchLerp: 0.075}}>
       {!isLoaded && <LoadingScreen onComplete={() => setIsLoaded(true)}/>}
       <div
         className={`min-h-screen transition-opacity duration-700 ${
@@ -32,7 +33,7 @@ const App = () => {
             onClose={() => setIsTerminalOpen(false)} 
           />
       </div> 
-    </>
+    </ReactLenis>
   )
 }
 
