@@ -16,7 +16,7 @@ const App = () => {
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
 
   return (
-    <ReactLenis root options={{ lerp: 0.1, duration: 1.5, syncTouch: true, syncTouchLerp: 0.075}}>
+    <ReactLenis root options={{ lerp: 0.1, duration: 1.5 }}>
       {!isLoaded && <LoadingScreen onComplete={() => setIsLoaded(true)}/>}
       <div
         className={`min-h-screen transition-opacity duration-700 ${
