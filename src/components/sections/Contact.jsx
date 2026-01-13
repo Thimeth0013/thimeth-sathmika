@@ -49,7 +49,7 @@ export const Contact = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, type: "spring", stiffness: 120, damping: 20 } },
   };
 
-  // **Modified formVariants to be centered on mobile and positioned on desktop**
+  // Modified formVariants to be centered on mobile and positioned on desktop
   const formVariants = {
     hidden: { opacity: 0, x: 30 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.8, type: "spring", stiffness: 100, damping: 20, staggerChildren: 0.1 } },
@@ -106,8 +106,7 @@ export const Contact = () => {
   const menuItems = [
     { link: 'https://github.com/Thimeth0013', text: 'Github', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjENU3VsugWOBpkJNrAoHbmHmkpffGC94KJA&s', target: "_blank" },
     { link: 'https://www.behance.net/thimethsathmika', text: 'Behance', image: 'https://www.logo.wine/a/logo/Behance/Behance-Logo.wine.svg', target: "_blank" },
-    { link: 'https://www.linkedin.com/in/thimeth-sathmika/', text: 'LinkedIn', image: 'https://logowik.com/content/uploads/images/linkedin-black9283.jpg', target: "_blank" },
-    { link: 'https://medium.com/@sathmikakb', text: 'Medium', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVPwbEBVQbP6Joe6kg1c_UKIUSGQ9wqZjAPA&s', target: "_blank" },    
+    { link: 'https://www.linkedin.com/in/thimeth-sathmika/', text: 'LinkedIn', image: 'https://logowik.com/content/uploads/images/linkedin-black9283.jpg', target: "_blank" }
   ];
 
   return (
@@ -212,7 +211,7 @@ export const Contact = () => {
             <motion.form
               ref={formRef}
               onSubmit={handleSubmit}
-              // **FIX: Use mx-auto on mobile (max-w-sm) to center the form, and reset on desktop (md:mx-0) to align with grid**
+              // FIX: Use mx-auto on mobile (max-w-sm) to center the form, and reset on desktop (md:mx-0) to align with grid
               className="space-y-5 md:space-y-6 relative max-w-sm w-full mx-auto md:max-w-md md:mx-0 md:ml-auto" 
               variants={formVariants}
             >
