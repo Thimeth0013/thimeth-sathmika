@@ -106,7 +106,8 @@ export const Contact = () => {
   const menuItems = [
     { link: 'https://github.com/Thimeth0013', text: 'Github', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjENU3VsugWOBpkJNrAoHbmHmkpffGC94KJA&s', target: "_blank" },
     { link: 'https://www.behance.net/thimethsathmika', text: 'Behance', image: 'https://www.logo.wine/a/logo/Behance/Behance-Logo.wine.svg', target: "_blank" },
-    { link: 'https://www.linkedin.com/in/thimeth-sathmika/', text: 'LinkedIn', image: 'https://logowik.com/content/uploads/images/linkedin-black9283.jpg', target: "_blank" }
+    { link: 'https://www.linkedin.com/in/thimeth-sathmika/', text: 'LinkedIn', image: 'https://logowik.com/content/uploads/images/linkedin-black9283.jpg', target: "_blank" },
+    { link: 'https://medium.com/@sathmikakb', text: 'Medium', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVPwbEBVQbP6Joe6kg1c_UKIUSGQ9wqZjAPA&s', target: "_blank" }    
   ];
 
   return (
