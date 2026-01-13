@@ -128,6 +128,7 @@ export const ProjectDetailModal = ({ project, isOpen, onClose }) => {
           <div 
             className="fixed inset-0 z-50 overflow-y-auto"
             onClick={onClose}
+            data-lenis-prevent
           >
             <div className="min-h-full flex items-center justify-center p-4 sm:p-6">
               <motion.div

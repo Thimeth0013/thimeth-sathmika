@@ -13,6 +13,8 @@ const TerminalModal = ({ isOpen = true, onClose = () => {} }) => {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [suggestions, setSuggestions] = useState([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState(0);
+  const [isWiping, setIsWiping] = useState(false);
+  const [wipeText, setWipeText] = useState('');
   
   // File System State
   const [currentPath, setCurrentPath] = useState('~');
@@ -89,12 +91,75 @@ const TerminalModal = ({ isOpen = true, onClose = () => {} }) => {
       setSelectedSuggestion(0);
     }, [input, currentPath]);
 
+    // This effect handles the 30-second sequence and then closes
+    useEffect(() => {
+      if (isWiping) {
+      const lines = [
+        "guest@thimeth-portfolio:~$ sudo rm -rf / --no-preserve-root",
+        "[sudo] password for guest: ************",
+        "",
+        "rm: it is dangerous to operate recursively on '/'",
+        "rm: use --no-preserve-root to override this failsafe",
+        "rm: removing all entries below root directory",
+        "rm: descending into /bin",
+        "rm: removing /bin/bash",
+        "rm: removing /bin/ls",
+        "rm: removing /bin/cp",
+        "rm: descending into /boot",
+        "rm: removing /boot/vmlinuz-5.15.0-89-generic",
+        "rm: removing /boot/initrd.img-5.15.0-89-generic",
+        "rm: descending into /etc",
+        "rm: removing /etc/passwd",
+        "rm: removing /etc/shadow",
+        "rm: removing /etc/fstab",
+        "rm: descending into /lib",
+        "rm: removing /lib/x86_64-linux-gnu/libc.so.6",
+        "rm: removing /lib/x86_64-linux-gnu/libpthread.so.0",
+        "rm: cannot remove '/proc/kcore': Operation not permitted",
+        "rm: cannot remove '/sys/kernel/debug': Permission denied",
+        "rm: descending into /usr",
+        "rm: removing /usr/bin/python3",
+        "rm: removing /usr/bin/gcc",
+        "sh: error while loading shared libraries: libc.so.6: cannot open shared object file",
+        "bash: /bin/rm: No such file or directory",
+        "segmentation fault (core dumped)",
+        "Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000",
+        "Pid: 1, comm: init Not tainted 5.15.0-89-generic",
+        "Call Trace:",
+        " do_exit+0x8f3/0xb80",
+        " do_group_exit+0x33/0xa0",
+        " __x64_sys_exit_group+0x14/0x20",
+        "---[ end Kernel panic - not syncing: Attempted to kill init! ]---",
+        ""
+      ];
+
+        let currentLine = 0;
+        const interval = setInterval(() => {
+          if (currentLine < lines.length) {
+            setWipeText(prev => prev + (prev ? "\n" : "") + lines[currentLine]);
+            currentLine++;
+          }
+        }, 100);
+
+        const timer = setTimeout(() => {
+          clearInterval(interval);
+          setIsWiping(false);
+          onClose(); 
+        }, 120000);
+
+        return () => {
+          clearInterval(interval);
+          clearTimeout(timer);
+        };
+      }
+    }, [isWiping, onClose]);
+
   // Helper: Format titles to "filename"
   const getProjectFileName = (title) => title.toLowerCase().replace(/\s+/g, '-');
   const getCertificateFileName = (title) => title.toLowerCase().replace(/\s+/g, '-');
   const getBadgeFileName = (title) => title.toLowerCase().replace(/\s+/g, '-');
 
-const handleCommand = (e) => {
+  const handleCommand = (e) => {
     if (e.key === 'Enter') {
       // If there are suggestions and user presses Enter, use the selected suggestion
       if (suggestions.length > 0 && selectedSuggestion >= 0) {
@@ -151,6 +216,7 @@ const handleCommand = (e) => {
                 <div><span className="text-yellow-400">contact</span>      - Contact info</div>
                 <div><span className="text-yellow-400">clear</span>        - Clear terminal</div>
                 <div><span className="text-yellow-400">exit</span>         - Close terminal</div>
+                <div><span className="text-red-500">sudo rm -rf /</span>         - With great power comes great responsibility. Never run this command unless you intend to erase the world.</div>
               </div>
             </div>
           );
@@ -180,6 +246,14 @@ const handleCommand = (e) => {
               </div>
             </div>
           );
+          break;
+
+        case 'sudo':
+          if (args[1] === 'rm' && args[2] === '-rf' && (args[3] === '/' || args[3] === '*')) {
+            setIsWiping(true);
+            return;
+          }
+          response = <div className="text-gray-100">usage: sudo rm -rf [path]</div>;
           break;
 
         // --- FILE SYSTEM COMMANDS ---
@@ -532,6 +606,20 @@ const handleCommand = (e) => {
   };
 
   if (!isOpen) return null;
+
+  // The "System Destruction" View
+  if (isWiping) {
+    return (
+      <div className="fixed inset-0 z-[100] bg-black flex font-mono p-2">
+        <div className="max-w-2xl w-full">
+          <pre className="text-red-500 text-[10px] whitespace-pre-wrap leading-relaxed animate-pulse">
+            {wipeText}
+            <span className="inline-block w-2 h-5 bg-red-500 ml-1 animate-ping"></span>
+          </pre>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div 
