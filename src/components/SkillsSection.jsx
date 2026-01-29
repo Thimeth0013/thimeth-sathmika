@@ -9,6 +9,7 @@ import css from '../assets/skills/css.svg';
 import php from '../assets/skills/php.svg';
 import git from '../assets/skills/git.svg';
 import javascript from '../assets/skills/javascript.svg';
+import typescript from '../assets/skills/typescript.svg';
 import react from '../assets/skills/react.svg';
 import nodejs from '../assets/skills/nodejs.svg';
 import expressjs from '../assets/skills/expressjs.svg';
@@ -22,11 +23,12 @@ import vite from '../assets/skills/vite.svg';
 import postman from '../assets/skills/postman.svg';
 import mysql from '../assets/skills/mysql.svg';
 import java from '../assets/skills/java.svg';
+import expo from '../assets/skills/expo.svg'
 
 const skillImages = [
   html, css, php, git, javascript, react, nodejs, expressjs,
-  mongodb, tailwindcss, bootstrap, figma, photoshop, kotlin,
-  vite, postman, mysql, java,
+  mongodb, tailwindcss, bootstrap, figma, photoshop, typescript,
+  vite, postman, mysql, java, kotlin, expo
 ];
 
 // Mapping skill names to their index in skillImages array
@@ -44,11 +46,13 @@ const skillToIconIndex = {
   'Bootstrap': 10,
   'Figma': 11,
   'Photoshop': 12,
-  'Kotlin': 13,
+  'TypeScript': 13,
   'Vite': 14,
   'Postman': 15,
   'MySQL': 16,
   'Java': 17,
+  'Kotlin': 18,
+  'Expo': 19,
 };
 
 const skillCategories = [
