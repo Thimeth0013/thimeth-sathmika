@@ -25,7 +25,7 @@ function CardRotate({ children, onSendToBack, sensitivity }) {
       style={{ x, y, rotateX, rotateY }}
       drag
       dragConstraints={{ top: 0, right: 0, bottom: 0, left: 0 }}
-      dragElastic={0.6}
+      dragElastic={0.1}
       whileTap={{ cursor: "grabbing" }}
       onDragEnd={handleDragEnd}
     >

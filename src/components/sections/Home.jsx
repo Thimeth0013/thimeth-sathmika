@@ -186,9 +186,9 @@ export const Home = () => {
               key={i}
               glareColor="#ffffff"
               glareOpacity={0.2}
-              glareAngle={-35}
-              glareSize={200}
-              transitionDuration={600}
+              glareAngle={-45}
+              glareSize={250}
+              transitionDuration={650}
               playOnce={false}
               className="rounded-xl border border-white/20 md:bg-white/20 bg-gray-800/20 backdrop-blur-md shadow-lg hover:bg-white/20 md:hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-300 ease-in-out"
               style={{ 

@@ -61,7 +61,7 @@ function MenuItem({ link, text, image, target }) {
   const repeatedMarqueeContent = Array.from({ length: 4 }).map((_, idx) => (
     <React.Fragment key={idx}>
       <div
-        className="w-[200px] h-[7vh] my-[4em] mx-[2vw] p-[1em_0] bg-cover bg-center"
+        className="w-[200px] h-[6vh] my-[4em] mx-[2vw] p-[1em_0] bg-cover bg-center"
         style={{ backgroundImage: `url(${image})` }}
       />
     </React.Fragment>

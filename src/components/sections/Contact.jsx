@@ -281,7 +281,7 @@ export const Contact = () => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <div className="w-8 h-8 border-4 border-blue-800/50 border-t-blue-800 rounded-full animate-spin" />
+                  <div className="w-8 h-8 border-4 border-blue-800/50 rounded-full animate-spin" />
                 </motion.div>
               )}
             </motion.form>
@@ -309,7 +309,7 @@ export const Contact = () => {
               variants={footerVariants}
             >
               <h2 variants={subtitleVariants}>Ambitiously Crafted</h2>
-              <h2 variants={subtitleVariants}>© 2025 Thimeth Sathmika. All rights reserved.</h2>
+              <h2 variants={subtitleVariants}>© {new Date().getFullYear()} Thimeth Sathmika. All rights reserved.</h2>
             </motion.div>
           </motion.div>
         </div>
