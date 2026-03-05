@@ -6,7 +6,8 @@ import LetterboxdSpotifyCard from '../LetterboxdSpotifyCard';
 import { 
   Sparkle, 
   GraduationCapIcon,
-  Send
+  Send,
+  LaptopMinimal
 } from "lucide-react";
 import profileImageHover from '../../assets/profile2.webp';
 
@@ -161,6 +162,48 @@ export const About = () => {
         <Suspense fallback={<div className="h-96 flex items-center justify-center text-blue-800">Loading Skills...</div>}>
           <SkillsSection />
         </Suspense>
+
+        {/* Work Section (Kept lightweight) */}
+        <motion.div 
+          ref={educationRef}
+          className="mt-24 md:mt-0 mb-12 mx-6"
+          initial="hidden"
+          animate={educationInView ? "visible" : "hidden"}
+          variants={staggerContainer}
+        >
+          <motion.h2 
+            className="text-xl md:text-3xl font-bold mb-6 md:mb-8 flex items-center gap-3 text-center sm:text-left justify-start"
+            variants={staggerItem}
+          >
+            <LaptopMinimal className="w-6 h-6 md:w-7 md:h-7 text-blue-800" />
+            <span className="text-blue-800">Professional Experience</span>
+          </motion.h2>
+          
+          <div className="relative">
+            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-800/0 via-blue-600 to-transparent"></div>
+            
+            <motion.div 
+              className="relative pl-12 pb-8"
+              variants={staggerItem}
+            >
+              <div className="absolute left-2.5 top-8 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
+              
+              <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-0">
+                  <div className="flex-1">
+                    <h3 className="text-base md:text-lg font-bold text-white mb-1">
+                      Software Engineering Intern
+                    </h3>
+                    <p className="text-gray-400 text-xs md:text-sm">HP Innovations</p>
+                  </div>
+                  <div className="bg-blue-800/20 px-3 py-1 rounded-full border border-blue-800/30 self-start">
+                    <span className="text-blue-300 text-xs font-medium whitespace-nowrap">2026 - Present</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
 
         {/* Education Section (Kept lightweight) */}
         <motion.div 
