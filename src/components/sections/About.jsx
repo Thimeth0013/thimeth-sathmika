@@ -50,8 +50,8 @@ export const About = () => {
   };
 
   return (
-    <section id="about" className="min-h-screen bg-black text-white py-10 md:py-15 pl-0 md:pl-10">
-      <div className="container mx-auto px-4 sm:px-6 z-10">
+    <section id="about" className="min-h-screen bg-black text-white py-16 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 z-10">
         {/* Hero Section */}
         <motion.div 
           ref={heroRef}
@@ -61,7 +61,7 @@ export const About = () => {
           variants={staggerContainer}
         >
           <motion.div
-            className="w-full sm:w-3/5 text-left ml-4 sm:ml-6 flex flex-col justify-start"
+            className="w-full sm:w-3/5 text-left flex flex-col justify-start"
             variants={staggerItem}
           >
             <div className="flex gap-3 mt-10 sm:mt-15">
@@ -166,7 +166,7 @@ export const About = () => {
         {/* Work Section (Kept lightweight) */}
         <motion.div 
           ref={educationRef}
-          className="mt-24 md:mt-0 mb-12 mx-6"
+          className="mt-16 md:mt-20 mb-12"
           initial="hidden"
           animate={educationInView ? "visible" : "hidden"}
           variants={staggerContainer}
@@ -208,7 +208,7 @@ export const About = () => {
         {/* Education Section (Kept lightweight) */}
         <motion.div 
           ref={educationRef}
-          className="mt-24 md:mt-0 mb-12 mx-6"
+          className="mt-16 md:mt-20 mb-12"
           initial="hidden"
           animate={educationInView ? "visible" : "hidden"}
           variants={staggerContainer}

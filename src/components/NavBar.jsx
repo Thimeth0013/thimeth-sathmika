@@ -73,7 +73,7 @@ export const NavBar = ({ menuOpen, setMenuOpen, onOpenTerminal }) => {
                 isScrolled ? 'bg-black/80 shadow-2xl' : 'bg-black/0'
             }`}
         >
-            <div className="max-w-6xl mx-auto px-6 sm:px-0">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
                 <div className="flex justify-between items-center h-16">
                     <motion.a 
                         href="#home" 

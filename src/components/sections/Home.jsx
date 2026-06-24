@@ -58,7 +58,7 @@ export const Home = () => {
   return (
     <div className="w-full" id="home">
       {/* Hero Section */}
-      <section className="relative w-full min-h-[60vh] md:min-h-[90vh] flex items-center overflow-hidden bg-black">
+      <section className="relative w-full h-screen flex items-center overflow-hidden bg-black">
         {/* Light Rays - Desktop only */}
         <div className="hidden md:block absolute inset-0 z-0">
           <LightRays
@@ -77,9 +77,9 @@ export const Home = () => {
 
         <div className="absolute inset-0 z-10 pointer-events-none transition-all duration-500 group-hover:backdrop-blur-[6px] group-hover:bg-white/10"></div>
 
-        <div className="container mx-auto mt-0 md:mt-22 px-6 md:px-4 sm:px-6 z-20 mb-0 md:mb-20 group relative">
+        <div className="max-w-7xl mx-auto mt-0 md:mt-22 px-4 sm:px-6 z-20 mb-0 md:mb-20 group relative">
           {/* Desktop Layout */}
-          <div className="hidden md:block max-w-6xl mx-auto space-y-8 mb-20">
+          <div className="hidden md:block space-y-8 mb-20">
             <h1 className="text-md md:text-xl text-white mt-30 font-medium">
               <div className="flex">
                 <Hand className="text-blue-800 animate-wave mr-4" />
@@ -160,7 +160,7 @@ export const Home = () => {
       </section>
 
       {/* Scroll Velocity Text - Desktop only */}
-      <div className="hidden md:block mt-[-40px] z-70">
+      <div className="hidden md:block mt-0 z-70">
         <ScrollVelocity
           texts={['Design', 'Development']}
           velocity={60}
@@ -178,7 +178,7 @@ export const Home = () => {
       {/* Info Cards with GlareHover */}
       <div
         ref={ref}
-        className="relative mt-0 md:mt-30 mb-2 md:mb-20 text-left max-w-6xl mx-auto px-6 md:px-4 sm:px-6"
+        className="relative mt-0 md:mt-30 mb-2 md:mb-20 text-left max-w-7xl mx-auto px-4 sm:px-6"
       >
         <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 z-20">
           {infoCards.map((card, i) => (

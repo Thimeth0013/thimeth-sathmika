@@ -339,7 +339,7 @@ export const projectsData = [
     tags: ['Node.js', 'React', 'MongoDB', 'Express'],
     designLink: 'https://www.behance.net/gallery/238751997/LAUNCH-WINDOW',
     githubLink: 'https://github.com/Thimeth0013/launch-window',
-    liveLink: 'https://launch-window-ochre.vercel.app/',
+    liveLink: 'https://launch-window-v3.vercel.app/',
     status: 'ongoing',
     
     keyFeatures: [

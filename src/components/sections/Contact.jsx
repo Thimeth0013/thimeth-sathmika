@@ -111,10 +111,10 @@ export const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="min-h-screen bg-black overflow-hidden px-6 pt-20 md:pt-30 pb-10">
-      <div className="container mx-auto px-2 sm:px-6 z-10">
+    <section id="contact" className="min-h-screen bg-black overflow-hidden pt-20 md:pt-28 pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 z-10">
         {/* **FIX: Removed explicit ml/mr and added mx-auto to center the content wrapper** */}
-        <div className="max-w-6xl mx-auto"> 
+        <div className="max-w-7xl mx-auto">
           <motion.div
             ref={contactRef}
             // Adjusted gap for better mobile spacing

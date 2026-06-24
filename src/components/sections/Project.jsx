@@ -96,7 +96,7 @@ export const Project = () => {
 
   return (
     <div className="w-full" id="project">
-      <section className="min-h-screen relative py-10 bg-black overflow-hidden">
+      <section className="min-h-screen relative py-16 md:py-24 bg-black overflow-hidden">
         {/* Background Grid */}
         <div className="absolute inset-0 z-0 transform scale-y-[-1]">
           <div className="relative h-full w-full bg-black">
@@ -104,10 +104,10 @@ export const Project = () => {
           </div>
         </div>
 
-        <div className="relative container mx-auto px-4 sm:px-0 z-10">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 z-10">
           {/* Title */}
           <motion.div
-            className="flex items-center px-2 md:px-0 pt-10 sm:pt-20 ml-2 md:ml-12"
+            className="flex items-center pt-0 sm:pt-4"
             variants={titleVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
@@ -116,7 +116,7 @@ export const Project = () => {
             <h1 className="text-base md:text-2xl sm:text-xl font-medium text-blue-800">My work</h1>
           </motion.div>
           <motion.h1
-            className="text-xl md:text-5xl sm:text-5xl font-bold mt-4 ml-2 md:ml-12 mb-8 md:mb-12 px-2  md:px-0"
+            className="text-xl md:text-5xl sm:text-5xl font-bold mt-4 mb-8 md:mb-12"
             variants={titleVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
@@ -126,7 +126,7 @@ export const Project = () => {
 
           {/* Tabs */}
           <motion.div
-            className="flex gap-2 md:gap-4 mb-10 md:mb-14 justify-center sm:justify-start ml-2 md:ml-12 flex-wrap"
+            className="flex gap-2 md:gap-4 mb-10 md:mb-14 justify-center sm:justify-start flex-wrap"
             variants={tabVariants}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
@@ -167,7 +167,7 @@ export const Project = () => {
           </motion.div>
 
           {/* Projects Grid */}
-          <div className="mt-12 mx-6 md:ml-6 md:mr-10" ref={ref}>
+          <div className="mt-12" ref={ref}>
             <motion.div className="flex flex-wrap justify-center gap-6 md:gap-8 sm:gap-12" key={activeTab}>
               {displayedProjects.length > 0 ? (
                 displayedProjects.map((project, index) => (

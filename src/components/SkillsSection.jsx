@@ -117,7 +117,7 @@ const SkillsSection = () => {
   return (
     <motion.div 
       ref={ref}
-      className="mb-6 md:mb-0 mt-0 md:mt-24 mx-6 md:ml-8 md:mr-10"
+      className="mt-8 md:mt-12 mb-16 md:mb-20"
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={staggerContainer}
