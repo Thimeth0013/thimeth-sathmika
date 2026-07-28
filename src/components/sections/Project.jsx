@@ -9,7 +9,7 @@ export const Project = () => {
   const [displayCount, setDisplayCount] = useState(6);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   const allProjects = [...projectsData].reverse();
 
   const getFilteredProjects = () => {
@@ -168,14 +168,13 @@ export const Project = () => {
 
           {/* Projects Grid */}
           <div className="mt-12" ref={ref}>
-            <motion.div className="flex flex-wrap justify-center gap-6 md:gap-8 sm:gap-12" key={activeTab}>
+            <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-12 w-full" key={activeTab}>
               {displayedProjects.length > 0 ? (
                 displayedProjects.map((project, index) => (
                   <motion.div
                     key={`${activeTab}-${project.id}`}
-                    className="relative w-full sm:w-[45%] lg:w-[30%] rounded-xl overflow-hidden shadow-lg border hover:border-blue-800/30 border-gray-200/20 backdrop-blur-lg bg-gray-900/50 cursor-pointer group"
+                    className="relative cursor-pointer group flex flex-col"
                     style={{
-                      transform: window.innerWidth >= 640 ? `translateX(${index % 2 === 0 ? '10%' : '-10%'})` : 'none',
                       y: window.innerWidth >= 640 ? parallaxY : 0,
                     }}
                     variants={cardVariants(index)}
@@ -187,12 +186,12 @@ export const Project = () => {
                     whileTap={{ scale: 0.98 }}
                   >
                     {/* Image */}
-                    <div className="relative h-38 md:h-42 overflow-hidden rounded-xl">
+                    <div className="relative w-full aspect-video overflow-hidden rounded-xl">
                       <img
                         src={project.image}
                         alt={project.title}
                         loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-110 rounded-xl p-1 transition-transform duration-500"
+                        className="w-full h-full object-cover"
                       />
 
                       {/* Tags */}
@@ -209,14 +208,14 @@ export const Project = () => {
                     </div>
 
                     {/* Detail Section */}
-                    <div className="p-4 bg-[#080b14]">
+                    <div className="pt-4 flex flex-col flex-grow">
                       <h3 className="text-sm md:text-md font-bold text-white mb-2">{project.title}</h3>
                       <p className="text-gray-300 text-xs md:text-sm leading-relaxed mb-3 line-clamp-2">{project.description}</p>
-                      <div className="flex items-center flex-wrap gap-3 md:gap-4 mt-4">
+                      <div className="flex items-center flex-wrap gap-3 md:gap-4 mt-auto">
                         {project.designLink && (
-                          <a 
-                            href={project.designLink} 
-                            target="_blank" 
+                          <a
+                            href={project.designLink}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-1 text-xs md:text-sm font-medium text-blue-500 hover:underline"
                             onClick={(e) => e.stopPropagation()}
@@ -225,24 +224,24 @@ export const Project = () => {
                           </a>
                         )}
                         {project.githubLink && (
-                          <a 
-                            href={project.githubLink} 
-                            target="_blank" 
+                          <a
+                            href={project.githubLink}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="group flex items-center gap-1 text-xs md:text-sm font-medium text-gray-300 hover:underline"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <Github className="w-3 h-3 md:w-4 md:h-4" /> 
+                            <Github className="w-3 h-3 md:w-4 md:h-4" />
                             Code
                             {project.status === 'ongoing' && (
                               <span className="text-lime-400 text-xs md:text-sm"> (Ongoing)</span>
-                            )}               
+                            )}
                           </a>
                         )}
                         {project.liveLink && (
-                          <a 
-                            href={project.liveLink} 
-                            target="_blank" 
+                          <a
+                            href={project.liveLink}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-1 text-xs md:text-sm font-medium text-green-500 hover:underline"
                             onClick={(e) => e.stopPropagation()}
@@ -284,7 +283,7 @@ export const Project = () => {
       </section>
 
       {/* Project Detail Modal */}
-      <ProjectDetailModal 
+      <ProjectDetailModal
         project={selectedProject}
         isOpen={isModalOpen}
         onClose={handleCloseModal}

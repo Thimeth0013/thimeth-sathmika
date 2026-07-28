@@ -6,6 +6,8 @@ import smartSpend from '../assets/projects/smartSpend.webp';
 import ceylonTrails from '../assets/projects/ceylonTrails.webp';
 import safeCert from '../assets/projects/safecert.webp';
 import launchWindow from '../assets/projects/launchWindow.webp';
+import moneyMentor from '../assets/projects/moneyMentor.webp';
+import healthCare from '../assets/projects/healthCare.webp';
 
 export const projectsData = [
   {
@@ -18,7 +20,7 @@ export const projectsData = [
     githubLink: '',
     liveLink: '',
     status: 'completed',
-    
+
     keyFeatures: [
       'Intelligent maintenance scheduling',
       'Service provider directory',
@@ -333,49 +335,149 @@ export const projectsData = [
   },
   {
     id: 8,
-    title: 'Launch Window',
-    description: 'A centralized platform for discovering rocket launches, Launch Window automatically aggregates live streams from YouTube, creating a single hub for space enthusiasts.',
+    title: 'Launch Window V3',
+    description: 'A comprehensive, next-generation spaceflight tracking and mission telemetry platform offering real-time updates on rocket launches, 3D satellite tracking, and spaceflight news.',
     image: launchWindow,
-    tags: ['Node.js', 'React', 'MongoDB', 'Express'],
+    tags: ['Next.js', 'React 19', 'Three.js', 'GSAP', 'MongoDB'],
     designLink: 'https://www.behance.net/gallery/238751997/LAUNCH-WINDOW',
     githubLink: 'https://github.com/Thimeth0013/launch-window',
     liveLink: 'https://launch-window-v3.vercel.app/',
-    status: 'ongoing',
-    
+    status: 'completed',
+
     keyFeatures: [
-      'Real-time launch countdown and tracking',
-      'Automatic YouTube live stream aggregation',
-      'Mission details and rocket specifications',
-      'Launch success probability indicators',
+      'Real-Time Launch Tracking with interactive timeline engine',
+      'Interactive 3D Satellite Tracking rendered with Three.js',
+      'Automated background Scrub Detection',
+      'Aggregated Spaceflight News Feed',
+      'Direct YouTube Live Streams Integration',
+      'Advanced server-side Caching Architecture',
+      'Premium UI with GSAP scroll-driven animations'
     ],
-    
-    problem: 'Space enthusiasts struggle to find live streams and accurate information about rocket launches across multiple sources. Information is scattered across various websites, social media, and YouTube channels, making it difficult to stay updated on upcoming launches.',
-    
-    impact: 'Launch Window consolidates all launch information in one place, providing real-time updates and automatic stream detection. Users can now easily track launches, watch live streams, and access comprehensive mission data without searching multiple platforms.',
-    
+
+    problem: 'Space enthusiasts lack a unified, high-performance platform that seamlessly combines real-time launch telemetry and aggregated news into a premium interface.',
+
+    impact: 'Launch Window V3 centralizes all mission data in a buttery-smooth, visually stunning experience. Advanced caching ensures fast interactions and real-time accuracy without hitting public API rate limits.',
+
     architecture: [
       {
         label: 'Frontend',
-        value: 'React with TailwindCSS'
+        value: 'Next.js 16, React 19, Tailwind CSS v4'
       },
       {
-        label: 'Backend',
-        value: 'Node.js & Express'
+        label: 'Animations & 3D',
+        value: 'GSAP, Lenis, Three.js & OGL'
       },
       {
-        label: 'Database',
-        value: 'MongoDB for launch data and user preferences'
+        label: 'Backend & Database',
+        value: 'Next.js API Routes, MongoDB (Mongoose 9)'
+      },
+      {
+        label: 'Data Fetching',
+        value: 'Axios, Automated Background Schedulers'
       },
       {
         label: 'External APIs',
-        value: 'YouTube Data API, Launch Library 2'
-      },
-      {
-        label: 'Deployment',
-        value: 'Vercel (Frontend) + Railway (Backend)'
+        value: 'The Space Devs, N2YO, Spaceflight News, NASA, YouTube'
       }
     ]
   },
+  {
+    id: 9,
+    title: 'AI-Enabled Smart Healthcare Platform',
+    description: 'A fully containerized, cloud-native healthcare platform built with a robust Microservices Architecture consisting of 8 independent services to facilitate doctor appointments, video consultations, and AI-based health triage.',
+    image: healthCare,
+    tags: ['Microservices', 'RabbitMQ', 'Docker', 'Kubernetes'],
+    designLink: 'https://stitch.withgoogle.com/projects/4366701402330493736',
+    githubLink: 'https://github.com/Y3S2-SE/smart-healthcare-platform',
+    liveLink: '',
+    status: 'completed',
+
+    keyFeatures: [
+      '8 Independent Microservices (Auth, Patient, Doctor, Appointment, Telemedicine, Payment, AI Triage, API Gateway)',
+      'Auth Service: Role-based access control (RBAC) using JWT',
+      'Patient & Doctor Services: Profiles, medical reports, and registration verification',
+      'Appointment & Payment Services: Real-time scheduling and Stripe/PayHere integration',
+      'Telemedicine Service: Secure video session token generation',
+      'AI Symptom Checker: NLP-based triage service for health suggestions',
+      'Centralized API Gateway routing for an asynchronous React dashboard'
+    ],
+
+    problem: 'Traditional healthcare platforms often rely on monolithic architectures that are hard to scale and lack a centralized solution combining appointments, video consultations, and intelligent triage systems.',
+
+    impact: 'The platform utilizes a highly scalable and resilient microservices architecture, isolating distinct business domains. This ensures zero-downtime scalability for individual services and streamlines the healthcare experience for all users.',
+
+    architecture: [
+      {
+        label: 'System Design',
+        value: 'Microservices Architecture (8 distributed services)'
+      },
+      {
+        label: 'Backend',
+        value: 'Node.js (Express), Python (Flask for AI)'
+      },
+      {
+        label: 'Frontend',
+        value: 'React.js'
+      },
+      {
+        label: 'Databases',
+        value: 'MongoDB & PostgreSQL'
+      },
+      {
+        label: 'Containerization',
+        value: 'Docker & Kubernetes (K8s)'
+      },
+      {
+        label: 'Communication',
+        value: 'RESTful APIs & Asynchronous Messaging'
+      }
+    ]
+  },
+  {
+    id: 10,
+    title: 'Gamified Savings Coach for Low-Income Youth',
+    description: 'A full-stack web application designed to provide gamified financial literacy coaching specifically for low-income youth, helping them develop healthy savings habits.',
+    image: moneyMentor,
+    tags: ['React', 'Node.js', 'MongoDB', 'Express'],
+    designLink: '',
+    githubLink: 'https://github.com/Y3S2-SE/money-mentor.git',
+    liveLink: 'https://money-mentor-v1.vercel.app/',
+    status: 'completed',
+
+    keyFeatures: [
+      'Income & expense tracker with real-time currency conversion',
+      'Gamification engine with XP-based leveling, daily streaks, and badges',
+      'Knowledge Hub with finance courses, quizzes, and an AI financial advisor',
+      'Groups & chat feature for community collaboration and messaging'
+    ],
+
+    problem: 'Low-income youth often lack engaging tools and foundational knowledge to develop healthy saving habits and financial literacy.',
+
+    impact: 'MoneyMentor transforms financial education into an interactive, gamified experience, motivating users to achieve savings goals through structured courses, AI-driven advice, and peer support.',
+
+    architecture: [
+      {
+        label: 'Frontend',
+        value: 'React v19, Tailwind CSS v4, Mantine, Redux Toolkit'
+      },
+      {
+        label: 'Backend',
+        value: 'Node.js, Express.js v5'
+      },
+      {
+        label: 'Database',
+        value: 'MongoDB with Mongoose'
+      },
+      {
+        label: 'Authentication',
+        value: 'JWT, bcryptjs'
+      },
+      {
+        label: 'Real-time & AI',
+        value: 'WebSocket (ws), Google Generative AI (Gemini)'
+      }
+    ]
+  }
 ];
 
 export default projectsData;
