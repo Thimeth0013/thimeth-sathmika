@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Star, StarHalf, Music2, ExternalLink, Dot, RefreshCw } from 'lucide-react';
+import { Play, Star, StarHalf, Music2, ExternalLink, Dot } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+const LETTERBOXD_ENDPOINT = 'https://spotify-api-lyart-iota.vercel.app/api/letterboxd';
+const FETCH_TIMEOUT_MS = 8000;
 
 const LetterboxdSpotifyCard = () => {
   // Flip default to true so Movie shows first
@@ -15,50 +18,52 @@ const LetterboxdSpotifyCard = () => {
   const [spotifyLoading, setSpotifyLoading] = useState(true);
 
   useEffect(() => {
-    const fetchLastMovie = async (retryCount = 0) => {
-      const maxRetries = 3;
-      setLoading(true);
-      setLetterboxdError(false);
-      
+    let cancelled = false;
+    const inFlight = new Set();
+
+    // The endpoint already returns parsed JSON, so there is no XML handling here.
+    // Each attempt is hard-capped by an AbortController — a hanging request must
+    // never leave the card spinning, which is what the old CORS proxy did.
+    const fetchLastMovie = async (attempt = 0) => {
+      const maxAttempts = 2;
+      const controller = new AbortController();
+      inFlight.add(controller);
+      const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
       try {
-        const proxyUrl = 'https://api.allorigins.win/raw?url=';
-        const rssUrl = encodeURIComponent('https://letterboxd.com/thimeth/rss/');
-        const response = await fetch(proxyUrl + rssUrl);
-        
+        const response = await fetch(LETTERBOXD_ENDPOINT, { signal: controller.signal });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        
-        const text = await response.text();
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(text, 'text/xml');
-        const firstItem = xml.querySelector('item');
-        
-        if (firstItem) {
-          const title = firstItem.querySelector('letterboxd\\:filmTitle, filmTitle')?.textContent || 'Unknown';
-          const year = firstItem.querySelector('letterboxd\\:filmYear, filmYear')?.textContent || '';
-          const rating = firstItem.querySelector('letterboxd\\:memberRating, memberRating')?.textContent || null;
-          const watchedDate = firstItem.querySelector('letterboxd\\:watchedDate, watchedDate')?.textContent || '';
-          const rewatch = firstItem.querySelector('letterboxd\\:rewatch, rewatch')?.textContent || 'No';
-          const description = firstItem.querySelector('description')?.textContent || '';
-          const posterMatch = description.match(/src="([^"]+)"/);
-          
-          setLastMovie({
-            title, year, rating: rating ? parseFloat(rating) : null,
-            watchedDate, rewatch, posterUrl: posterMatch ? posterMatch[1] : null
-          });
-          setLoading(false);
-        } else {
-          throw new Error('No items found');
+
+        const movie = await response.json();
+        if (cancelled) return;
+        if (!movie?.title) throw new Error('No film entry in response');
+
+        setLastMovie(movie);
+        setLoading(false);
+      } catch {
+        if (cancelled) return;
+
+        if (attempt + 1 < maxAttempts) {
+          fetchLastMovie(attempt + 1);
+          return;
         }
-      } catch (error) {
-        if (retryCount < maxRetries) {
-          setTimeout(() => fetchLastMovie(retryCount + 1), (retryCount + 1) * 1000);
-        } else {
-          setLetterboxdError(true);
-          setLoading(false);
-        }
+
+        // Nothing to show on the movie side, so reveal the music panel
+        // rather than leaving an empty card behind.
+        setLetterboxdError(true);
+        setShowLetterboxd(false);
+        setLoading(false);
+      } finally {
+        clearTimeout(timer);
+        inFlight.delete(controller);
       }
     };
+
     fetchLastMovie();
+    return () => {
+      cancelled = true;
+      inFlight.forEach((controller) => controller.abort());
+    };
   }, []);
 
   useEffect(() => {
@@ -89,7 +94,7 @@ const LetterboxdSpotifyCard = () => {
     if (Math.abs(diff) > 80) {
       // If showing Movie (true) and drag left (negative), switch to Music (false)
       // If showing Music (false) and drag right (positive), switch to Movie (true)
-      setShowLetterboxd(diff > 0);
+      setShowLetterboxd(diff > 0 && !letterboxdError);
     }
   };
 
@@ -98,7 +103,7 @@ const LetterboxdSpotifyCard = () => {
     setCurrentX(e.touches[0].clientX);
     const diff = e.touches[0].clientX - dragStartX;
     if (Math.abs(diff) > 80) {
-      setShowLetterboxd(diff > 0);
+      setShowLetterboxd(diff > 0 && !letterboxdError);
     }
   };
 
@@ -195,9 +200,11 @@ const LetterboxdSpotifyCard = () => {
           </div>
         </div>
 
-        {/* Indicators */}
+        {/* Indicators — the movie dot is dropped when there is no movie to swipe back to */}
         <div className="absolute bottom-1 left-0 right-0 flex justify-center md:justify-end md:pr-3 items-center gap-1">
-          <Dot className={`transition-all duration-300 ${showLetterboxd ? 'w-3 h-3 text-blue-600' : 'w-2 h-2 text-gray-500'}`} />
+          {!letterboxdError && (
+            <Dot className={`transition-all duration-300 ${showLetterboxd ? 'w-3 h-3 text-blue-600' : 'w-2 h-2 text-gray-500'}`} />
+          )}
           <Dot className={`transition-all duration-300 ${!showLetterboxd ? 'w-3 h-3 text-blue-600' : 'w-2 h-2 text-gray-500'}`} />
         </div>
       </div>
