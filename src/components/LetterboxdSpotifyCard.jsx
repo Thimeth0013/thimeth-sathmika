@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Play, Star, StarHalf, Music2, ExternalLink, Dot } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const LETTERBOXD_ENDPOINT = 'https://spotify-api-lyart-iota.vercel.app/api/letterboxd';
+const LETTERBOXD_ENDPOINT = 'https://spotify-letterboxd-api.vercel.app/api/letterboxd';
 const FETCH_TIMEOUT_MS = 8000;
 
 const LetterboxdSpotifyCard = () => {
@@ -69,7 +69,7 @@ const LetterboxdSpotifyCard = () => {
   useEffect(() => {
     const fetchSpotify = async () => {
       try {
-        const res = await fetch('https://spotify-api-lyart-iota.vercel.app/api/spotify');
+        const res = await fetch('https://spotify-letterboxd-api.vercel.app/api/spotify');
         const data = await res.json();
         setSpotifyData(data);
       } catch (error) {
