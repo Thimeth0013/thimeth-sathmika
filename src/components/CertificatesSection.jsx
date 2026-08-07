@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { AwardIcon, Search, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CertificateData from '../data/certificate';
@@ -66,13 +66,36 @@ const CredentialCard = ({ item, type }) => {
   );
 };
 
+// Page size follows the project's mobile/desktop split (Tailwind `md`)
+const MOBILE_QUERY = '(max-width: 767px)';
+const PAGE_SIZE_MOBILE = 3;
+const PAGE_SIZE_DESKTOP = 6;
+
 /**
  * Main Certificates Section Component
  */
 const CertificatesSection = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const ITEMS_PER_PAGE = 6;
+
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(MOBILE_QUERY).matches
+  );
+
+  useEffect(() => {
+    const mql = window.matchMedia(MOBILE_QUERY);
+    const onChange = (e) => setIsMobile(e.matches);
+    setIsMobile(mql.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
+  const ITEMS_PER_PAGE = isMobile ? PAGE_SIZE_MOBILE : PAGE_SIZE_DESKTOP;
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+
+  // Crossing the breakpoint changes the page size, so re-baseline the count
+  useEffect(() => {
+    setVisibleCount(ITEMS_PER_PAGE);
+  }, [ITEMS_PER_PAGE]);
 
   // Combine, Sort, and Filter Data
   const sortedAndFilteredData = useMemo(() => {
@@ -102,8 +125,11 @@ const CertificatesSection = () => {
   const toggleVisibleCount = () => {
     if (isAllShown) {
       setVisibleCount(ITEMS_PER_PAGE);
-      // Optional: Scroll back to top of section when closing
-      window.scrollTo({ top: document.getElementById('certs-grid')?.offsetTop - 100, behavior: 'smooth' });
+      // Scroll back to the top of the section when collapsing
+      const section = document.getElementById('certs-grid');
+      if (section) {
+        window.scrollTo({ top: section.offsetTop - 100, behavior: 'smooth' });
+      }
     } else {
       setVisibleCount(prev => prev + ITEMS_PER_PAGE);
     }

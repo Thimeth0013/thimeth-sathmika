@@ -1,12 +1,14 @@
 import React, { useRef, useState } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { Sparkle, Github, ExternalLink, Lightbulb, ChevronDown } from 'lucide-react';
+import { Sparkle, Github, ExternalLink, Lightbulb, ChevronDown, ChevronUp } from 'lucide-react';
 import { projectsData } from '../../data/projects';
 import { ProjectDetailModal } from '../ProjectDetails';
 
+const PROJECTS_PER_PAGE = 6;
+
 export const Project = () => {
   const [activeTab, setActiveTab] = useState('all');
-  const [displayCount, setDisplayCount] = useState(6);
+  const [displayCount, setDisplayCount] = useState(PROJECTS_PER_PAGE);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -30,14 +32,24 @@ export const Project = () => {
   const filteredProjects = getFilteredProjects();
   const displayedProjects = filteredProjects.slice(0, displayCount);
   const hasMore = displayCount < filteredProjects.length;
+  const isExpanded = displayCount > PROJECTS_PER_PAGE;
+  const remainingCount = filteredProjects.length - displayCount;
 
   const handleLoadMore = () => {
-    setDisplayCount(prev => prev + 6);
+    setDisplayCount(prev => prev + PROJECTS_PER_PAGE);
+  };
+
+  const handleShowLess = () => {
+    setDisplayCount(PROJECTS_PER_PAGE);
+    const section = document.getElementById('project');
+    if (section) {
+      window.scrollTo({ top: section.offsetTop - 100, behavior: 'smooth' });
+    }
   };
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
-    setDisplayCount(6);
+    setDisplayCount(PROJECTS_PER_PAGE);
   };
 
   const handleProjectClick = (project) => {
@@ -260,22 +272,37 @@ export const Project = () => {
               )}
             </motion.div>
 
-            {/* Load More Button */}
-            {hasMore && (
+            {/* Load More / Show Less */}
+            {(hasMore || isExpanded) && (
               <motion.div
-                className="flex justify-center mt-4 mb-4"
+                className="flex flex-wrap justify-center gap-3 mt-4 mb-4"
                 initial={{ opacity: 0, y: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <motion.button
-                  onClick={handleLoadMore}
-                  className="group relative px-4 py-3 bg-blue-800/40 hover:bg-blue-800 rounded-lg transition-all duration-300 flex items-center gap-2"
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <span className="text-sm text-gray-200 hover:text-white font-medium">Load More Projects</span>
-                  <ChevronDown className="w-5 h-5 group-hover:animate-bounce" />
-                </motion.button>
+                {hasMore && (
+                  <motion.button
+                    onClick={handleLoadMore}
+                    className="group relative px-4 py-3 bg-blue-800/40 hover:bg-blue-800 rounded-lg transition-all duration-300 flex items-center gap-2"
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <span className="text-sm text-gray-200 group-hover:text-white font-medium">
+                      Load More ({remainingCount}/{filteredProjects.length})
+                    </span>
+                    <ChevronDown className="w-5 h-5 group-hover:animate-bounce" />
+                  </motion.button>
+                )}
+
+                {isExpanded && (
+                  <motion.button
+                    onClick={handleShowLess}
+                    className="group relative px-4 py-3 bg-blue-800/10 hover:bg-blue-800/40 border border-blue-800/40 rounded-lg transition-all duration-300 flex items-center gap-2"
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <span className="text-sm text-gray-200 group-hover:text-white font-medium">Show Less</span>
+                    <ChevronUp className="w-5 h-5 transition-transform group-hover:-translate-y-0.5" />
+                  </motion.button>
+                )}
               </motion.div>
             )}
           </div>

@@ -18,29 +18,40 @@ const CertificatesSection = React.lazy(() => import('../CertificatesSection'));
 
 // Shared timeline used by both the Professional Experience and Education
 // sections — the cards come straight from src/data/about.js
+const PeriodPill = ({ period, className = "" }) => (
+  <span
+    className={`bg-blue-800/20 border border-blue-800/30 rounded-full px-2.5 py-0.5 md:px-3 md:py-1 text-blue-300 text-[11px] md:text-xs font-medium whitespace-nowrap ${className}`}
+  >
+    {period}
+  </span>
+);
+
 const Timeline = ({ items, itemVariants }) => (
   <div className="relative">
-    <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-800/0 via-blue-600 to-transparent"></div>
+    {/* Rail sits tighter to the edge on mobile so cards keep their width */}
+    <div className="absolute left-1.5 md:left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-800/0 via-blue-600 to-transparent"></div>
 
     {items.map((item, index) => (
       <motion.div
         key={item.id}
-        className={`relative pl-12 ${index === items.length - 1 ? "" : "pb-8"}`}
+        className={`relative pl-6 md:pl-12 ${index === items.length - 1 ? "" : "pb-5 md:pb-8"}`}
         variants={itemVariants}
       >
-        <div className="absolute left-2.5 top-8 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
+        <div className="absolute left-0 md:left-2.5 top-5 md:top-8 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
 
-        <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-0">
-            <div className="flex-1">
-              <h3 className="text-base md:text-lg font-bold text-white mb-1">
+        <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:border-blue-800/50 transition-all duration-300">
+          {/* Mobile keeps the period on the organisation row; md+ pushes it to the right */}
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-1 md:gap-4">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-[0.95rem] md:text-lg font-bold text-white mb-1 leading-snug">
                 {item.title}
               </h3>
-              <p className="text-gray-400 text-xs md:text-sm">{item.organization}</p>
+              <div className="flex items-start justify-between gap-3">
+                <p className="text-gray-400 text-xs md:text-sm">{item.organization}</p>
+                <PeriodPill period={item.period} className="md:hidden shrink-0" />
+              </div>
             </div>
-            <div className="bg-blue-800/20 px-3 py-1 rounded-full border border-blue-800/30 self-start">
-              <span className="text-blue-300 text-xs font-medium whitespace-nowrap">{item.period}</span>
-            </div>
+            <PeriodPill period={item.period} className="hidden md:inline-block self-start" />
           </div>
         </div>
       </motion.div>
@@ -104,17 +115,17 @@ export const About = () => {
               <h1 className="text-xl sm:text-2xl font-medium text-left text-blue-800">About Me</h1>
             </div>
 
-            <div className="pr-4 sm:pr-0">
-              <motion.h1 
-                className="text-base sm:text-2xl font-bold mb-12 mt-6 leading-snug"
+            <div className="pr-0 sm:pr-0">
+              <motion.h1
+                className="text-base sm:text-2xl font-semibold sm:font-bold mb-8 sm:mb-12 mt-5 sm:mt-6 leading-relaxed sm:leading-snug"
                 variants={staggerItem}
               >
-                Software Engineering undergrad from Colombo, Sri Lanka, specializing in full-stack development with a strong focus on frontend engineering. 
-                <br />Over 3 years of experience working with modern web technologies, creating{" "}
+                Software Engineering undergrad from Colombo, Sri Lanka, specializing in full-stack development with a strong focus on frontend engineering.{" "}
+                <br className="hidden sm:block" />Over 3 years of experience working with modern web technologies, creating{" "}
                 <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
                   *interactive
                   <motion.div
-                    className="hidden hover-display absolute text-sm bottom-[-60px] left-0 sm:bottom-[-180px] sm:left-[660px] w-56 sm:w-64 p-3 sm:p-4 bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
+                    className="hidden hover-display absolute text-sm bottom-[-60px] left-0 sm:bottom-[-200px] sm:left-[920px] w-56 sm:w-64 p-3 sm:p-4 bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3 }}
@@ -124,11 +135,11 @@ export const About = () => {
                     </p>
                   </motion.div>
                 </span>{" "}
-                and<br/>
+                and{" "}<br className="hidden sm:block" />
                 <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
                   *detail-oriented
                   <motion.div
-                    className="hidden hover-display absolute text-sm bottom-[-80px] left-0 sm:bottom-[-40px] sm:left-[620px] w-56 sm:w-64 p-3 sm:p-4 bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
+                    className="hidden hover-display absolute text-sm bottom-[-180px] left-0 sm:bottom-[-0px] sm:left-[820px] w-56 sm:w-64 p-3 sm:p-4 bg-black/70 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 z-50"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3 }}
