@@ -77,7 +77,7 @@ export const Home = () => {
 
         <div className="absolute inset-0 z-10 pointer-events-none transition-all duration-500 group-hover:backdrop-blur-[6px] group-hover:bg-white/10"></div>
 
-        <div className="max-w-7xl mx-auto mt-0 md:mt-22 px-4 sm:px-6 z-20 mb-0 md:mb-20 group relative">
+        <div className="max-w-[1600px] mx-auto mt-0 md:mt-22 px-4 sm:px-6 lg:px-10 z-20 mb-0 md:mb-20 group relative">
           {/* Desktop Layout */}
           <div className="hidden md:block space-y-8 mb-20">
             <h1 className="text-md md:text-xl text-white mt-30 font-medium">
@@ -178,7 +178,7 @@ export const Home = () => {
       {/* Info Cards with GlareHover */}
       <div
         ref={ref}
-        className="relative mt-0 md:mt-30 mb-2 md:mb-20 text-left max-w-7xl mx-auto px-4 sm:px-6"
+        className="relative mt-0 md:mt-30 mb-2 md:mb-20 text-left max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-16"
       >
         <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 z-20">
           {infoCards.map((card, i) => (

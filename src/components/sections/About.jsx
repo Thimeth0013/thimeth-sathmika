@@ -10,18 +10,53 @@ import {
   LaptopMinimal
 } from "lucide-react";
 import profileImageHover from '../../assets/profile2.webp';
+import { experienceData, educationData } from '../../data/about';
 
 // Lazy Loading heavy components
 const SkillsSection = React.lazy(() => import('../SkillsSection'));
 const CertificatesSection = React.lazy(() => import('../CertificatesSection'));
 
+// Shared timeline used by both the Professional Experience and Education
+// sections — the cards come straight from src/data/about.js
+const Timeline = ({ items, itemVariants }) => (
+  <div className="relative">
+    <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-800/0 via-blue-600 to-transparent"></div>
+
+    {items.map((item, index) => (
+      <motion.div
+        key={item.id}
+        className={`relative pl-12 ${index === items.length - 1 ? "" : "pb-8"}`}
+        variants={itemVariants}
+      >
+        <div className="absolute left-2.5 top-8 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
+
+        <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-0">
+            <div className="flex-1">
+              <h3 className="text-base md:text-lg font-bold text-white mb-1">
+                {item.title}
+              </h3>
+              <p className="text-gray-400 text-xs md:text-sm">{item.organization}</p>
+            </div>
+            <div className="bg-blue-800/20 px-3 py-1 rounded-full border border-blue-800/30 self-start">
+              <span className="text-blue-300 text-xs font-medium whitespace-nowrap">{item.period}</span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    ))}
+  </div>
+);
+
 export const About = () => {
   // Refs for sections
   const heroRef = useRef(null);
+  const experienceRef = useRef(null);
   const educationRef = useRef(null);
 
   // In-view detection
   const heroInView = useInView(heroRef, { once: true, amount: 0.1 });
+  const experienceInView = useInView(experienceRef, { once: true, amount: 0.1 });
   const educationInView = useInView(educationRef, { once: true, amount: 0.1 });
 
   const images = [
@@ -51,7 +86,7 @@ export const About = () => {
 
   return (
     <section id="about" className="min-h-screen bg-black text-white py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 z-10">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 z-10">
         {/* Hero Section */}
         <motion.div 
           ref={heroRef}
@@ -163,109 +198,42 @@ export const About = () => {
           <SkillsSection />
         </Suspense>
 
-        {/* Work Section (Kept lightweight) */}
-        <motion.div 
-          ref={educationRef}
+        {/* Professional Experience Section (Kept lightweight) */}
+        <motion.div
+          ref={experienceRef}
           className="mt-16 md:mt-20 mb-12"
           initial="hidden"
-          animate={educationInView ? "visible" : "hidden"}
+          animate={experienceInView ? "visible" : "hidden"}
           variants={staggerContainer}
         >
-          <motion.h2 
+          <motion.h2
             className="text-xl md:text-3xl font-bold mb-6 md:mb-8 flex items-center gap-3 text-center sm:text-left justify-start"
             variants={staggerItem}
           >
             <LaptopMinimal className="w-6 h-6 md:w-7 md:h-7 text-blue-800" />
             <span className="text-blue-800">Professional Experience</span>
           </motion.h2>
-          
-          <div className="relative">
-            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-800/0 via-blue-600 to-transparent"></div>
-            
-            <motion.div 
-              className="relative pl-12 pb-8"
-              variants={staggerItem}
-            >
-              <div className="absolute left-2.5 top-8 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
-              
-              <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-0">
-                  <div className="flex-1">
-                    <h3 className="text-base md:text-lg font-bold text-white mb-1">
-                      Software Engineering Intern
-                    </h3>
-                    <p className="text-gray-400 text-xs md:text-sm">HP Innovations</p>
-                  </div>
-                  <div className="bg-blue-800/20 px-3 py-1 rounded-full border border-blue-800/30 self-start">
-                    <span className="text-blue-300 text-xs font-medium whitespace-nowrap">2026 - Present</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+
+          <Timeline items={experienceData} itemVariants={staggerItem} />
         </motion.div>
 
         {/* Education Section (Kept lightweight) */}
-        <motion.div 
+        <motion.div
           ref={educationRef}
           className="mt-16 md:mt-20 mb-12"
           initial="hidden"
           animate={educationInView ? "visible" : "hidden"}
           variants={staggerContainer}
         >
-          <motion.h2 
+          <motion.h2
             className="text-xl md:text-3xl font-bold mb-6 md:mb-8 flex items-center gap-3 text-center sm:text-left justify-start"
             variants={staggerItem}
           >
             <GraduationCapIcon className="w-6 h-6 md:w-7 md:h-7 text-blue-800" />
             <span className="text-blue-800">Education</span>
           </motion.h2>
-          
-          <div className="relative">
-            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-800/0 via-blue-600 to-transparent"></div>
-            
-            <motion.div 
-              className="relative pl-12 pb-8"
-              variants={staggerItem}
-            >
-              <div className="absolute left-2.5 top-8 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
-              
-              <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-0">
-                  <div className="flex-1">
-                    <h3 className="text-base md:text-lg font-bold text-white mb-1">
-                      BSc (Hons) in Information Technology Specialising in Software Engineering
-                    </h3>
-                    <p className="text-gray-400 text-xs md:text-sm">Sri Lanka Institute of Information Technology</p>
-                  </div>
-                  <div className="bg-blue-800/20 px-3 py-1 rounded-full border border-blue-800/30 self-start">
-                    <span className="text-blue-300 text-xs font-medium whitespace-nowrap">2023 - Present</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
 
-            <motion.div 
-              className="relative pl-12"
-              variants={staggerItem}
-            >
-              <div className="absolute left-2.5 top-9 w-3 h-3 bg-blue-800 rounded-full border-2 border-gray-900 shadow-lg"></div>
-              
-              <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-lg p-3 md:p-4 hover:border-blue-800/50 transition-all duration-300">
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-0">
-                  <div className="flex-1">
-                    <h3 className="text-base md:text-lg font-bold text-white mb-1">
-                      GCE O/L & A/L (Engineering Technology)
-                    </h3>
-                    <p className="text-gray-400 text-xs md:text-sm">Swarna Jayanthi College, Kegalle</p>
-                  </div>
-                  <div className="bg-blue-600/20 px-3 py-1 rounded-full border border-blue-600/30 self-start">
-                    <span className="text-blue-300 text-xs font-medium whitespace-nowrap">2015 - 2022</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+          <Timeline items={educationData} itemVariants={staggerItem} />
         </motion.div>
 
         {/* Certificates and Badges Section - Lazy Loaded */}

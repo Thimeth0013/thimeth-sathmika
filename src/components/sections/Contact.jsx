@@ -112,9 +112,9 @@ export const Contact = () => {
 
   return (
     <section id="contact" className="min-h-screen bg-black overflow-hidden pt-20 md:pt-28 pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 z-10">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 z-10">
         {/* **FIX: Removed explicit ml/mr and added mx-auto to center the content wrapper** */}
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1600px] mx-auto">
           <motion.div
             ref={contactRef}
             // Adjusted gap for better mobile spacing
@@ -213,7 +213,7 @@ export const Contact = () => {
               ref={formRef}
               onSubmit={handleSubmit}
               // FIX: Use mx-auto on mobile (max-w-sm) to center the form, and reset on desktop (md:mx-0) to align with grid
-              className="space-y-5 md:space-y-6 relative max-w-sm w-full mx-auto md:max-w-md md:mx-0 md:ml-auto" 
+              className="space-y-5 md:space-y-6 relative max-w-sm w-full mx-auto md:max-w-xl md:mx-0 md:ml-auto" 
               variants={formVariants}
             >
               {['name','email','subject','message'].map((field, idx) => (

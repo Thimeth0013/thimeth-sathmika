@@ -665,7 +665,7 @@ const TerminalModal = ({ isOpen = true, onClose = () => {} }) => {
               <div className="mb-6 text-gray-400 text-sm">
                 <div className="mb-2">Welcome to Thimeth's Interactive Terminal v1.0.6</div>
                 <div className="mb-6 text-gray-400 text-sm">
-                  <div className="mb-4">(c) 2025 Thimeth Sathmika. All rights reserved.</div>
+                  <div className="mb-4">(c) {new Date().getFullYear()} Thimeth Sathmika. All rights reserved.</div>
 <pre className="text-green-400 text-xs md:text-sm leading-tight font-bold mb-0 opacity-75 hidden sm:block">
     {`
 ████████╗██╗  ██╗██╗███╗   ███╗███████╗████████╗██╗  ██╗

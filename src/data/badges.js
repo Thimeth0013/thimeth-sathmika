@@ -1,4 +1,13 @@
 const BadgesData = [
+    {
+    id: 7,
+    title: "Introduction to Cloud 101",
+    description: "This explores the fundamentals of cloud computing and its core services. It covers building simple cloud applications and understanding the technical roles required for cloud success.",
+    badgeUrl: "https://www.credly.com/earner/earned/badge/eacfbf62-1447-4484-b7e4-97ace63fc57c",
+    issuer: "Amazon Web Services Training and Certification",
+    issuerUrl: "https://www.credly.com/organizations/amazon-web-services/badges",
+    dateEarned: "August 2026",
+  },
   {
     id: 6,
     title: "Gemini for Application Developers",
@@ -20,7 +29,7 @@ const BadgesData = [
   {
     id: 4,
     title: "LFS101: Introduction to Linux",
-    description: "Introduction to Linux badge have gained the skills to effectively navigate and manage configurations across major Linux distributions utilizing both the graphical interface and command line proficiently.",
+    description: "This course introduces skills to effectively navigate and manage configurations across major Linux distributions utilizing both the graphical interface and command line proficiently.",
     badgeUrl: "https://www.credly.com/badges/bb9a5afb-65f2-4a3f-928d-511f5f92f501/public_url",
     issuer: "The Linux Foundation",
     issuerUrl: "https://www.linuxfoundation.org/",

@@ -104,7 +104,7 @@ export const Project = () => {
           </div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 z-10">
+        <div className="relative max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 z-10">
           {/* Title */}
           <motion.div
             className="flex items-center pt-0 sm:pt-4"

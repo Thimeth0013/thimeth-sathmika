@@ -24,53 +24,72 @@ import postman from '../assets/skills/postman.svg';
 import mysql from '../assets/skills/mysql.svg';
 import java from '../assets/skills/java.svg';
 import expo from '../assets/skills/expo.svg'
+import docker from '../assets/skills/docker.svg';
+import nginx from '../assets/skills/nginx.svg';
+import gsap from '../assets/skills/gsap.svg';
+import motions from '../assets/skills/motion.svg';
+import swagger from '../assets/skills/swagger.svg';
+import postgress from '../assets/skills/postgress.svg';
+import rabbitmq from '../assets/skills/rabbitmq.svg';
+import nest from '../assets/skills/nest.svg';
 
-const skillImages = [
-  html, css, php, git, javascript, react, nodejs, expressjs,
-  mongodb, tailwindcss, bootstrap, figma, photoshop, typescript,
-  vite, postman, mysql, java, kotlin, expo
-];
 
-// Mapping skill names to their index in skillImages array
-const skillToIconIndex = {
-  'HTML': 0,
-  'CSS': 1,
-  'PHP': 2,
-  'Git': 3,
-  'JavaScript': 4,
-  'React': 5,
-  'Node.js': 6,
-  'Express': 7,
-  'MongoDB': 8,
-  'Tailwind CSS': 9,
-  'Bootstrap': 10,
-  'Figma': 11,
-  'Photoshop': 12,
-  'TypeScript': 13,
-  'Vite': 14,
-  'Postman': 15,
-  'MySQL': 16,
-  'Java': 17,
-  'Kotlin': 18,
-  'Expo': 19,
+// Single source of truth for the IconCloud: skill name -> icon.
+// Declaration order is the order icons appear in the cloud.
+const skillIcons = {
+  'HTML': html,
+  'CSS': css,
+  'PHP': php,
+  'Git': git,
+  'JavaScript': javascript,
+  'React': react,
+  'Node.js': nodejs,
+  'Express': expressjs,
+  'MongoDB': mongodb,
+  'Tailwind CSS': tailwindcss,
+  'Bootstrap': bootstrap,
+  'Figma': figma,
+  'Photoshop': photoshop,
+  'TypeScript': typescript,
+  'Vite': vite,
+  'Postman': postman,
+  'MySQL': mysql,
+  'Java': java,
+  'Kotlin': kotlin,
+  'Expo': expo,
+  'Docker': docker,
+  'Nginx': nginx,
+  'GSAP': gsap,
+  'Motion': motions,
+  'Swagger': swagger,
+  'PostgreSQL': postgress,
+  'RabbitMQ': rabbitmq,
+  'Nest.js': nest,
 };
+
+const skillImages = Object.values(skillIcons);
+
+// Skill name -> index in skillImages, derived so the two can never drift apart
+const skillToIconIndex = Object.fromEntries(
+  Object.keys(skillIcons).map((name, index) => [name, index])
+);
 
 const skillCategories = [
   {
-    category: 'Frontend',
-    items: ['HTML', 'CSS', 'JavaScript', 'React', 'TypeScript', 'Tailwind CSS', 'Bootstrap'],
+    category: 'Frontend & Mobile',
+    items: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'React Native', 'Expo', 'Kotlin', 'Tailwind CSS', 'Bootstrap', 'Motion', 'GSAP'],
   },
   {
-    category: 'Backend',
-    items: ['Node.js', 'Express', 'PHP', 'Java', 'Kotlin'],
+    category: 'Backend & APIs',
+    items: ['Node.js', 'Express', 'Nest.js', 'PHP', 'Java'],
   },
   {
-    category: 'Database',
-    items: ['MongoDB', 'MySQL'],
+    category: 'Databases',
+    items: ['MongoDB', 'MySQL', 'PostgreSQL'],
   },
   {
-    category: 'Tools & Workflow',
-    items: ['Git', 'Vite', 'Postman', 'Expo'],
+    category: 'DevOps & Tooling',
+    items: ['Docker', 'Nginx', 'Git', 'Vite', 'RabbitMQ', 'Swagger', 'Postman'],
   },
   {
     category: 'Design',
@@ -171,7 +190,7 @@ const SkillsSection = () => {
         </motion.div>
 
         <motion.div 
-          className="hidden lg:flex lg:w-[600px] lg:h-[600px] flex-shrink-0 items-center justify-center"
+          className="hidden lg:flex lg:w-[600px] lg:h-auto flex-shrink-0 items-center justify-center"
           variants={staggerItem}
         >
           <IconCloud images={skillImages} rotateToIconIndex={rotateToIcon} />
