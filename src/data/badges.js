@@ -3,9 +3,9 @@ const BadgesData = [
     id: 7,
     title: "Introduction to Cloud 101",
     description: "This explores the fundamentals of cloud computing and its core services. It covers building simple cloud applications and understanding the technical roles required for cloud success.",
-    badgeUrl: "https://www.credly.com/earner/earned/badge/eacfbf62-1447-4484-b7e4-97ace63fc57c",
-    issuer: "Amazon Web Services Training and Certification",
-    issuerUrl: "https://www.credly.com/organizations/amazon-web-services/badges",
+    badgeUrl: "https://www.credly.com/badges/eacfbf62-1447-4484-b7e4-97ace63fc57c/public_url",
+    issuer: "AWS Educate",
+    issuerUrl: "https://aws.amazon.com/education/awseducate/",
     dateEarned: "August 2026",
   },
   {
