@@ -74,8 +74,8 @@ export const WorkScene = ({ headingRef, cardRef }) => (
           data-y={y}
           data-my={MOBILE_Y[i]}
           data-h={h}
-          style={{ '--x': x, '--h': `${h * 100}svh`, visibility: 'hidden' }}
-          className={`pointer-events-auto absolute top-0 z-10 aspect-video h-[23svh] max-w-[94vw] left-1/2 -translate-x-1/2 md:aspect-auto md:max-w-none md:translate-x-0 md:h-[var(--h)] md:left-[var(--x)] md:w-[min(34vw,520px)] will-change-transform`}
+          style={{ '--x': x, '--h': `${h * 100}lvh`, visibility: 'hidden' }}
+          className={`pointer-events-auto absolute top-0 z-10 aspect-video h-[23lvh] max-w-[94vw] left-1/2 -translate-x-1/2 md:aspect-auto md:max-w-none md:translate-x-0 md:h-[var(--h)] md:left-[var(--x)] md:w-[min(34vw,520px)] will-change-transform`}
         >
           <Card project={project} />
         </div>

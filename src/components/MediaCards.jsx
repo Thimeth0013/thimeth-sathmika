@@ -20,6 +20,7 @@ async function getJSON(url, signal) {
   }
 }
 
+
 const stars = (rating) => '★'.repeat(Math.floor(rating)) + (rating % 1 ? '½' : '');
 
 const daysAgo = (dateString) => {
@@ -116,18 +117,14 @@ const ago = (when) => {
   return hours < 24 ? `${hours}h ago` : daysAgo(new Date(t).toISOString());
 };
 
-const card =
-  'block bg-cream p-3 text-forest shadow-[0_1px_2px_rgb(20_83_45/0.08),0_18px_40px_-18px_rgb(10_40_22/0.45)] transition-transform duration-300 hover:-translate-y-1';
-const label = 'font-mono text-[10.5px] uppercase tracking-[0.06em] text-forest/55';
-
-// The phone versions: the image fills a small card SQUARE px tall (square for the music, a narrower
-// poster for the film, POSTER wide), with the label and title over a soft dark gradient at the bottom.
-// The About scene scales them with `zoom`.
+// The cards (desktop and phones): the image fills a small card SQUARE px tall (square for the music, a
+// narrower poster for the film, POSTER wide), with the label and title over a soft dark gradient at the
+// bottom. The About scene scales them with `zoom`.
 const SQUARE = 150;
 export const POSTER = 104; // ≈ 2:3, like a film poster
 const squareCard =
   'relative block overflow-hidden bg-forest bg-cover bg-center text-white shadow-[0_1px_2px_rgb(20_83_45/0.08),0_18px_40px_-18px_rgb(10_40_22/0.55)]';
-const Square = ({ href, image, imageLabel, label: top, title, className, width = SQUARE, children }) => (
+const Square = ({ href, image, imageLabel, label: top, title, sub, className, width = SQUARE, children }) => (
   <a
     href={href}
     target="_blank"
@@ -136,115 +133,63 @@ const Square = ({ href, image, imageLabel, label: top, title, className, width =
     style={{ width, height: SQUARE, ...(image ? { backgroundImage: `url("${image}")` } : {}) }}
   >
     <span role="img" aria-label={imageLabel} className="absolute inset-0" />
-    <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(to_top,rgb(10_30_18/0.85),rgb(10_30_18/0.2)_55%,transparent_75%)]" />
+    <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(to_top,rgb(10_30_18/0.9),rgb(10_30_18/0.55)_40%,rgb(10_30_18/0.15)_62%,transparent_80%)]" />
     <span className="absolute inset-x-0 bottom-0 p-2.5">
-      <span className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.06em] text-white/75">
+      {/* With a sub line (the desktop poster, drawn bigger) the label and title are set smaller. */}
+      <span className={`flex items-center gap-1.5 font-mono uppercase tracking-[0.06em] text-white/75 ${sub ? 'text-[6.5px]' : 'text-[9px]'}`}>
         {children}
         {top}
       </span>
-      <span className="mt-0.5 block truncate font-grotezk text-[14px] font-medium leading-tight">{title}</span>
+      <span className={`mt-0.5 block truncate font-grotezk font-medium leading-tight ${sub ? 'text-[11px]' : 'text-[14px]'}`}>{title}</span>
+      {sub && <span className="mt-0.5 block truncate text-[8px] text-white/70">{sub}</span>}
     </span>
   </a>
 );
 
-/** The last film logged on Letterboxd: poster, title, year and rating. `square`: the phone version. */
-export const MovieCard = ({ className = '', square = false }) => {
+/** The last film logged on Letterboxd, as a poster with its title; `details` adds its year and rating
+ * (desktop, where the poster is drawn bigger). */
+export const MovieCard = ({ className = '', details = false }) => {
   const { film, failed } = useFilm();
-  if (square)
-    return (
-      <Square
-        href={film?.link ?? 'https://letterboxd.com/thimeth/'}
-        image={film?.posterUrl}
-        imageLabel={film ? `Poster of ${film.title}` : 'Film poster'}
-        label={film ? `Watched ${daysAgo(film.watchedDate)}`.trim() : 'Watched'}
-        title={film?.title ?? (failed ? 'Letterboxd' : 'Loading…')}
-        className={className}
-        width={POSTER}
-      />
-    );
+  const sub = details && film && (
+    <>
+      {film.year}
+      {film.rating ? <span className="text-[#8FBBFF]"> · {stars(film.rating)}</span> : null}
+    </>
+  );
   return (
-    <a
+    <Square
       href={film?.link ?? 'https://letterboxd.com/thimeth/'}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`${card} w-[210px] ${className}`}
-    >
-      <span
-        className="block aspect-[4/5] w-full bg-forest/10 bg-cover bg-center"
-        style={film?.posterUrl ? { backgroundImage: `url("${film.posterUrl}")` } : undefined}
-        role="img"
-        aria-label={film ? `Poster of ${film.title}` : 'Film poster'}
-      />
-      <span className={`${label} mt-3 block`}>{film ? `Watched ${daysAgo(film.watchedDate)}`.trim() : 'Watched'}</span>
-      <span className="mt-1 block truncate font-grotezk text-[17px] font-medium leading-tight">
-        {film?.title ?? (failed ? 'Letterboxd' : 'Loading…')}
-      </span>
-      {film && (
-        <span className="mt-0.5 block text-[13px] text-forest/60">
-          {film.year}
-          {film.rating ? <span className="text-sky"> · {stars(film.rating)}</span> : null}
-        </span>
-      )}
-    </a>
+      image={film?.posterUrl}
+      imageLabel={film ? `Poster of ${film.title}` : 'Film poster'}
+      label={film ? `Watched ${daysAgo(film.watchedDate)}`.trim() : 'Watched'}
+      title={film?.title ?? (failed ? 'Letterboxd' : 'Loading…')}
+      sub={sub}
+      className={className}
+      width={POSTER}
+    />
   );
 };
 
-/** The track playing now (or last played) on Spotify. `square`: the phone version. */
-export const MusicCard = ({ className = '', square = false }) => {
+/** The track playing now (or last played) on Spotify, as its cover with the title. */
+export const MusicCard = ({ className = '' }) => {
   const { track, failed } = useTrack();
   const when = track && !track.isPlaying ? ago(track.lastPlayed ?? track.playedAt ?? track.seenAt) : '';
-  if (square)
-    return (
-      <Square
-        href={track?.spotifyUrl ?? 'https://open.spotify.com/'}
-        image={track?.albumArt}
-        imageLabel={track ? `Cover of ${track.title}` : 'Album cover'}
-        label={track?.isPlaying ? 'Now playing' : `Played${when ? ` ${when}` : ''}`}
-        title={track?.title ?? (failed ? 'Spotify' : 'Loading…')}
-        className={className}
-      >
-        {track?.isPlaying && (
-          <span aria-hidden="true" className="eq-bars flex h-2 items-end gap-[2px]">
-            <span className="h-full w-[2px] bg-sky" />
-            <span className="h-full w-[2px] bg-sky" />
-            <span className="h-full w-[2px] bg-sky" />
-          </span>
-        )}
-      </Square>
-    );
   return (
-    <a
+    <Square
       href={track?.spotifyUrl ?? 'https://open.spotify.com/'}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`${card} flex w-[290px] items-center gap-3.5 ${className}`}
+      image={track?.albumArt}
+      imageLabel={track ? `Cover of ${track.title}` : 'Album cover'}
+      label={track?.isPlaying ? 'Now playing' : `Played${when ? ` ${when}` : ''}`}
+      title={track?.title ?? (failed ? 'Spotify' : 'Loading…')}
+      className={className}
     >
-      <span
-        className="block size-16 shrink-0 bg-forest/10 bg-cover bg-center"
-        style={track?.albumArt ? { backgroundImage: `url("${track.albumArt}")` } : undefined}
-        role="img"
-        aria-label={track ? `Cover of ${track.title}` : 'Album cover'}
-      />
-      <span className="min-w-0">
-        <span className={`${label} flex items-center gap-1.5`}>
-          {track?.isPlaying && (
-            <span aria-hidden="true" className="eq-bars flex h-2.5 items-end gap-[2px]">
-              <span className="h-full w-[2px] bg-sky" />
-              <span className="h-full w-[2px] bg-sky" />
-              <span className="h-full w-[2px] bg-sky" />
-            </span>
-          )}
-          {track?.isPlaying ? 'Now playing' : `Played${when ? ` ${when}` : ''}`}
+      {track?.isPlaying && (
+        <span aria-hidden="true" className="eq-bars flex h-2 items-end gap-[2px]">
+          <span className="h-full w-[2px] bg-sky" />
+          <span className="h-full w-[2px] bg-sky" />
+          <span className="h-full w-[2px] bg-sky" />
         </span>
-        <span className="mt-1 block truncate font-grotezk text-[17px] font-medium leading-tight">
-          {track?.title ?? (failed ? 'Spotify' : 'Loading…')}
-        </span>
-        {(track?.artist || (failed && !track)) && (
-          <span className="mt-0.5 block truncate text-[13px] text-forest/60">
-            {track?.artist ?? 'Can’t reach Spotify right now'}
-          </span>
-        )}
-      </span>
-    </a>
+      )}
+    </Square>
   );
 };

@@ -26,8 +26,10 @@ const StickerPeel = lazy(() => import('./StickerPeel/StickerPeel'));
 // it runs into are shoved out of its way and drift back once it has passed.
 const CARDS = [
   { key: 'photo', from: 'top', left: '57%', top: '7%', rot: 5 },
-  { key: 'movie', from: 'right', left: '77%', top: '41%', rot: -6 },
-  { key: 'music', from: 'right', left: '77%', top: '14%', rot: 4 },
+  // The film poster (with its year and rating) and the music square (MediaCards), drawn bigger than on
+  // phones (zoom): the music small, top right; the poster bigger, at the bottom right.
+  { key: 'movie', from: 'right', left: '79%', top: '53%', rot: -6, zoom: 1.85 },
+  { key: 'music', from: 'right', left: '80%', top: '12%', rot: 4, zoom: 1.2 },
   { key: 'socials', from: 'bottom', left: '47%', top: '66%', rot: -2 },
   // A small terminal window (MiniTerminal, desktop only) between the paper and the photo: opens the terminal.
   { key: 'terminal', from: 'top', left: '44%', top: '27%', rot: -4 },
@@ -36,7 +38,7 @@ const PAPER = { x: -0.25, y: -0.03, rot: -2.5 };
 // Phones (useMobile), after the owner's sketch, laid out from the screen's size (layoutM): the paper
 // across the top, as wide as PaperCrumple allows (the screen less 48px), so the bio is readable; the
 // photo overlapping its bottom right corner; the folder below on the left; the film and the music as two
-// cards side by side at the bottom (MovieCard / MusicCard `square`: a narrow poster and a square).
+// cards side by side at the bottom (MovieCard / MusicCard: a narrow poster and a square).
 // Each piece flies in from, and back out by, the screen edge nearest to where it rests (`from`). Sizes are fractions of the
 // screen's width; when a shorter screen has no room for them all, the folder and the squares slide up
 // over the paper's empty ruled lines (up to OVERLAP of it) and then shrink a little. On phones the cards
@@ -46,8 +48,10 @@ const NATURAL = { photo: [250, 330], socials: [311, 212], square: 150, poster: P
 const PHONE = { photo: 0.4, socials: 0.54, square: 0.36 }; // widths, as fractions of the screen's width
 const OVERLAP = 0.26;
 const ROW_MAX = 0.8;
-const layoutM = (W, viewH) => {
-  const H = Math.max(viewH, 600); // the stage's height (it is at least 600px; the screen may be shorter)
+const MUSIC_M = 0.8; // the music square's size, as a fraction of the poster's height
+// viewH is the screen's height with the browser's bars showing (the small viewport), so everything fits
+// in what is visible then; H is the stage's (100lvh, at least 600px), which the % places are made of.
+const layoutM = (W, viewH, H) => {
   const size = Math.min((W - 48) / SHEET_PX.w, 0.95);
   const paperH = SHEET_PX.h * size;
   const top = Math.max(0.04 * viewH, 18);
@@ -72,14 +76,16 @@ const layoutM = (W, viewH) => {
   const pctY = (y) => `${((y / H) * 100).toFixed(2)}%`;
   const pctX = (x) => `${((x / W) * 100).toFixed(2)}%`;
   // The film poster and the music square, side by side and centred as a pair, shrunk to fit within
-  // ROW_MAX of the screen's width (they are tilted, so they need the margin).
+  // ROW_MAX of the screen's width (they are tilted, so they need the margin). The music square is
+  // MUSIC_M of the poster's height, level with the poster's middle.
   const gap = 0.06 * W;
-  const rowW = (NATURAL.poster / NATURAL.square) * square + square;
+  const rowW = (NATURAL.poster / NATURAL.square) * square + square; // (the poster keeps the size it had beside a full square)
   const fit = Math.min(1, (ROW_MAX * W - gap) / rowW);
   const zoomSq = (square * fit) / NATURAL.square;
   const posterW = NATURAL.poster * zoomSq;
   const sq = square * fit;
-  const pairLeft = (W - (posterW + gap + sq)) / 2;
+  const musicSq = sq * MUSIC_M;
+  const pairLeft = (W - (posterW + gap + musicSq)) / 2;
   // Each piece comes in from, and leaves by, the screen edge nearest to where it rests.
   const nearest = (x, y, w, h) => {
     const cx = x + w / 2;
@@ -90,7 +96,7 @@ const layoutM = (W, viewH) => {
   const photo = [W * (0.96 - PHONE.photo), paperBottom - 0.33 * paperH, PHONE.photo * W, NATURAL.photo[1] * photoZoom];
   const folder = [0.06 * W, folderTop, PHONE.socials * W * k, folderH * k];
   const movie = [pairLeft, squaresTop, posterW, sq];
-  const music = [pairLeft + posterW + gap, squaresTop + 2, sq, sq];
+  const music = [pairLeft + posterW + gap, squaresTop + (sq - musicSq) / 2, musicSq, musicSq];
   const place = ([x, y, w, h], rot, zoom) => ({ left: pctX(x), top: pctY(y), rot, zoom, from: nearest(x, y, w, h) });
   return {
     paper: { x: 0, y: (top + paperH / 2) / H - 0.5, rot: 2, size, from: nearest(24, top, W - 48, paperH) },
@@ -98,7 +104,7 @@ const layoutM = (W, viewH) => {
       photo: place(photo, -5, photoZoom),
       socials: place(folder, -1, folderZoom),
       movie: place(movie, 4, zoomSq),
-      music: place(music, -3, zoomSq),
+      music: place(music, -3, zoomSq * MUSIC_M),
     },
   };
 };
@@ -158,9 +164,9 @@ const Socials = () => (
   </div>
 );
 
-const CONTENT = { photo: <Photo />, movie: <MovieCard />, music: <MusicCard />, socials: <Socials /> };
-// Phones: the film and the music as small squares.
-const CONTENT_M = { ...CONTENT, movie: <MovieCard square />, music: <MusicCard square /> };
+const CONTENT = { photo: <Photo />, movie: <MovieCard details />, music: <MusicCard />, socials: <Socials /> };
+// Phones: the poster without its year and rating.
+const CONTENT_M = { ...CONTENT, movie: <MovieCard /> };
 
 export const AboutScene = ({ itemRef }) => {
   const sceneRef = useRef(null);
@@ -169,16 +175,21 @@ export const AboutScene = ({ itemRef }) => {
   const [landed, setLanded] = useState(false);
   const openTerminal = useOpenTerminal();
   const mobile = useMobile();
-  // The screen's size, for the phone layout (re-laid out when it changes).
-  const [screen, setScreen] = useState(() => [window.innerWidth, window.innerHeight]);
+  // The screen's size, for the phone layout (re-laid out when it changes): its width, its height with
+  // the browser's bars showing (the root's clientHeight, the small viewport: it does not change as the
+  // address bar slides away, so nothing jumps while scrolling) and the stage's height (100lvh).
+  const [screen, setScreen] = useState(() => [window.innerWidth, document.documentElement.clientHeight, Math.max(window.innerHeight, 600)]);
   useEffect(() => {
     if (!mobile) return undefined;
-    const onResize = () => setScreen([window.innerWidth, window.innerHeight]);
+    const onResize = () => {
+      const next = [window.innerWidth, document.documentElement.clientHeight, sceneRef.current?.offsetHeight || Math.max(window.innerHeight, 600)];
+      setScreen((last) => (last.every((v, i) => v === next[i]) ? last : next));
+    };
     onResize();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, [mobile]);
-  const phone = mobile ? layoutM(screen[0], screen[1]) : null;
+  const phone = mobile ? layoutM(screen[0], screen[1], screen[2]) : null;
   const paper = phone ? phone.paper : PAPER;
   const stickerSize = phone ? phone.paper.size * STICKER_CORNER_M.scale : 1;
 
@@ -275,7 +286,7 @@ export const AboutScene = ({ itemRef }) => {
         <Suspense fallback={null}>
           {CORNER_STICKERS.map((st, i) => {
             const at = mobile ? STICKER_CORNER_M : { corner: 'bl', dx: st.dx, dy: st.dy };
-            const [cx, cy] = cornerOf(window.innerWidth, window.innerHeight, paper, stickerSize, at.corner);
+            const [cx, cy] = cornerOf(mobile ? screen[0] : window.innerWidth, mobile ? screen[2] : window.innerHeight, paper, stickerSize, at.corner);
             return (
               <div
                 key={st.key}

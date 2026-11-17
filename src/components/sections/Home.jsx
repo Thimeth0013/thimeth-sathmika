@@ -303,11 +303,11 @@ export const Home = () => {
   return (
     // The track is the scroll distance of the fly-through; the stage inside it stays pinned. With
     // reduced motion it is just the one screen, unpinned.
-    <section ref={trackRef} id="home" data-nav-tone="light" style={{ height: `${(1 + SCHEDULE.end) * 100}svh` }}
+    <section ref={trackRef} id="home" data-nav-tone="light" style={{ height: `${(1 + SCHEDULE.end) * 100}lvh` }}
       className="relative motion-reduce:h-auto!">
       <div
         ref={stageRef}
-        className="sticky top-0 isolate h-svh min-h-[600px] overflow-hidden bg-[#1D6EB0] [container-type:size]"
+        className="sticky top-0 isolate h-lvh min-h-[600px] overflow-hidden bg-[#1D6EB0] [container-type:size]"
       >
         <div className="hero-frame absolute inset-0" data-portrait={mobile || undefined} style={{ '--horizon': mobile ? HORIZON_M : HORIZON }}>
           {/* Layers, back to front: sky, clouds, headline (z-2), the sweeping bank (z-3), ground,
@@ -386,7 +386,7 @@ export const Home = () => {
           <div ref={layer(9, DEPTH.ground, true)} style={{ '--pc-y': mobile ? 0.83 : 0.765 }} className={`${layerClass} pointer-events-none z-[5]`}>
             <div
               data-cat-avoid
-              className="pointer-events-auto absolute inset-x-0 top-[min(var(--sy)_+_var(--sh)_*_var(--pc-y),100cqh_-_96px)] mx-auto flex w-[min(calc(100%-32px),1176px)] justify-end md:w-[min(calc(100%-64px),1176px)]"
+              className="pointer-events-auto absolute inset-x-0 top-[min(var(--sy)_+_var(--sh)_*_var(--pc-y),100svh_-_96px)] mx-auto flex w-[min(calc(100%-32px),1176px)] justify-end md:w-[min(calc(100%-64px),1176px)]"
             >
               <div style={rise(300)} className="animate-rise flex flex-wrap justify-end gap-3">
                 <Button variant="forest" href="#about" onClick={smoothAnchor}>
@@ -464,7 +464,7 @@ export const Home = () => {
           key={id}
           id={id}
           aria-hidden="true"
-          style={{ top: `${at * 100}svh` }}
+          style={{ top: `${at * 100}lvh` }}
           className="pointer-events-none absolute inset-x-0 h-px"
         />
       ))}
