@@ -101,6 +101,8 @@ button, [role="button"] {
   .animate-settle { animation: hero-settle 2.2s var(--ease-out-expo) both; }
   @keyframes hero-rise { from { opacity: 0; transform: translateY(14px); } }
   .animate-rise { animation: hero-rise 1s var(--ease-out-expo) both; }
+  /* They wait while the loader is up (Home's useHeroReady sets data-loading on the stage). */
+  [data-loading] .animate-settle, [data-loading] .animate-rise { animation-play-state: paused; }
 
   /* ArrowSwap: two stacked arrows in a clipped box. On hover/focus of the parent .group the first
      flies out to the top-right while the second springs in from the bottom-left. */

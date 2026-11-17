@@ -54,16 +54,19 @@ const useFilm = () => {
   return { film, failed };
 };
 
-// The proxy passes every request straight to Spotify (no caching), so Spotify often answers
-// RATE_LIMITED. The card keeps the last good track in localStorage and shows it as "Played …" when
-// that happens, polls less often after a rate limit, and doesn't poll while the tab is hidden.
+// Spotify rate limits the proxy at times (RATE_LIMITED; the proxy then serves its last good track,
+// flagged `stale`, when it has one). The card also keeps the last good track in localStorage and shows
+// it as "Played …" when there is no answer, polls less often after a rate limit, and doesn't poll
+// while the tab is hidden. "… ago" is worked out here from times (playedAt from Spotify, seenAt when
+// it was last seen), not taken from the proxy's own text, which goes stale once stored.
 const TRACK_CACHE = 'spotify:last-track';
 const RATE_LIMIT_BACKOFF_MS = 180000;
 
 const readCachedTrack = () => {
   try {
     const cached = JSON.parse(localStorage.getItem(TRACK_CACHE));
-    return cached?.title ? { ...cached, isPlaying: false } : null;
+    // Not "paused" any more, nor the proxy's "… ago" text from back then: seenAt says when.
+    return cached?.title ? { ...cached, isPlaying: false, lastPlayed: undefined } : null;
   } catch {
     return null;
   }
@@ -85,7 +88,7 @@ const useTrack = () => {
           setTrack(data);
           setFailed(false);
           try {
-            localStorage.setItem(TRACK_CACHE, JSON.stringify({ ...data, seenAt: Date.now() }));
+            localStorage.setItem(TRACK_CACHE, JSON.stringify({ seenAt: Date.now(), ...data })); // a stale answer keeps the proxy's seenAt
           } catch {
             /* storage unavailable: just no fallback next time */
           }
@@ -173,13 +176,14 @@ export const MovieCard = ({ className = '', details = false }) => {
 /** The track playing now (or last played) on Spotify, as its cover with the title. */
 export const MusicCard = ({ className = '' }) => {
   const { track, failed } = useTrack();
-  const when = track && !track.isPlaying ? ago(track.lastPlayed ?? track.playedAt ?? track.seenAt) : '';
+  const paused = track?.lastPlayed === 'paused';
+  const when = track && !track.isPlaying && !paused ? ago(track.playedAt ?? track.seenAt ?? track.lastPlayed) : '';
   return (
     <Square
       href={track?.spotifyUrl ?? 'https://open.spotify.com/'}
       image={track?.albumArt}
       imageLabel={track ? `Cover of ${track.title}` : 'Album cover'}
-      label={track?.isPlaying ? 'Now playing' : `Played${when ? ` ${when}` : ''}`}
+      label={track?.isPlaying ? 'Now playing' : paused ? 'Paused' : `Played${when ? ` ${when}` : ''}`}
       title={track?.title ?? (failed ? 'Spotify' : 'Loading…')}
       className={className}
     >

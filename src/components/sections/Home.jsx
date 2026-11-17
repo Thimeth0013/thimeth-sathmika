@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useLenis } from 'lenis/react';
 import CV from '../../assets/Thimeth_Sathmika_CV.pdf';
 import sky from '../../assets/hero/sky.webp';
 import ground from '../../assets/hero/ground.webp';
@@ -262,6 +263,71 @@ const useFlyThrough = (trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRe
   }, [trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRef, sceneRefs]);
 };
 
+// The hero's loader. #boot (in index.html) covers the page from the first paint; this waits for the
+// hero's own images (the sky and the ground: the phone's or the desktop's) and the fonts, filling the
+// loader's line as each arrives, then fades it out and removes it. Until then the page does not scroll,
+// the hero's entrance animations wait (data-loading on the stage, .hero-frame rules in index.css) and the
+// later scenes are not mounted, so nothing else competes with the ground for the connection. It gives up
+// waiting after BOOT_MAX ms, so a slow or failed image never leaves the page covered.
+const BOOT_MAX = 12000;
+const useHeroReady = () => {
+  const lenis = useLenis();
+  const [ready, setReady] = useState(() => !document.getElementById('boot'));
+  useEffect(() => {
+    if (ready) return undefined;
+    const boot = document.getElementById('boot');
+    const root = document.documentElement;
+    root.style.overflow = 'hidden';
+    const images = isMobile() ? [skyM, groundM] : [sky, ground, groundFront];
+    const waits = [
+      ...images.map((src) => {
+        const img = new Image();
+        img.fetchPriority = 'high';
+        img.src = src;
+        return img.decode();
+      }),
+      document.fonts.ready,
+    ];
+    let done = 0;
+    let over = false;
+    const finish = () => {
+      if (over) return;
+      over = true;
+      setReady(true);
+    };
+    waits.forEach((wait) =>
+      wait
+        .catch(() => {})
+        .finally(() => {
+          done += 1;
+          boot?.style.setProperty('--p', String(Math.max(done / waits.length, 0.08)));
+        })
+    );
+    // A beat after the line is full, so it reads as finished.
+    Promise.allSettled(waits).then(() => setTimeout(finish, 250));
+    const cap = setTimeout(finish, BOOT_MAX);
+    return () => clearTimeout(cap);
+  }, [ready]);
+  useEffect(() => {
+    if (ready) return undefined;
+    lenis?.stop();
+    return () => lenis?.start();
+  }, [ready, lenis]);
+  // Once ready: let the page scroll, place the newly mounted scenes for where the page is (the scroll
+  // hook runs on scroll), and fade the loader out.
+  useEffect(() => {
+    if (!ready) return undefined;
+    document.documentElement.style.overflow = '';
+    window.dispatchEvent(new Event('scroll'));
+    const boot = document.getElementById('boot');
+    if (!boot) return undefined;
+    boot.classList.add('boot-done');
+    const gone = setTimeout(() => boot.remove(), 700);
+    return () => clearTimeout(gone);
+  }, [ready]);
+  return ready;
+};
+
 // A full-screen layer of the fly-through.
 // The origin is the vanishing point just above the horizon (HORIZON of the photo's height).
 const layerClass =
@@ -297,6 +363,7 @@ export const Home = () => {
   };
   useFlyThrough(trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRef, sceneRefs);
   const mobile = useMobile();
+  const ready = useHeroReady();
   const clouds = mobile ? HERO_CLOUDS_M : HERO_CLOUDS;
   const smoothAnchor = useSmoothAnchor();
 
@@ -307,6 +374,7 @@ export const Home = () => {
       className="relative motion-reduce:h-auto!">
       <div
         ref={stageRef}
+        data-loading={ready ? undefined : ''}
         className="sticky top-0 isolate h-lvh min-h-[600px] overflow-hidden bg-[#1D6EB0] [container-type:size]"
       >
         <div className="hero-frame absolute inset-0" data-portrait={mobile || undefined} style={{ '--horizon': mobile ? HORIZON_M : HORIZON }}>
@@ -420,11 +488,13 @@ export const Home = () => {
           style={{ opacity: 0, background: WHITE_HUE }}
           className="pointer-events-none absolute inset-0 z-[8] motion-reduce:hidden"
         />
+        {/* The later scenes mount once the hero is in (useHeroReady), so their images, the paper's
+            three.js and the icons don't share the connection with the hero's ground. */}
         <div className="pointer-events-none absolute inset-0 z-10 motion-reduce:hidden">
-          <AboutScene itemRef={aboutPiece} />
+          {ready && <AboutScene itemRef={aboutPiece} />}
         </div>
         <div className="pointer-events-none absolute inset-0 z-[11] motion-reduce:hidden">
-          <WorkScene headingRef={scene('workHeading')} cardRef={workCard} />
+          {ready && <WorkScene headingRef={scene('workHeading')} cardRef={workCard} />}
         </div>
         <div
           ref={scene('tools')}
@@ -437,12 +507,12 @@ export const Home = () => {
           </p>
         </div>
         <div ref={scene('skills')} style={{ visibility: 'hidden' }} className="pointer-events-none absolute inset-0 z-[12] motion-reduce:hidden">
-          <SkillsScene control={streamControl} />
+          {ready && <SkillsScene control={streamControl} />}
         </div>
         {/* Under the icons, so the last of them fly past in front of "My journey". */}
         {/* Lets clicks through (to About and Work under it); only the stickers take them. */}
         <div className="pointer-events-none absolute inset-0 z-[11] motion-reduce:hidden">
-          <JourneyScene control={journeyControl} />
+          {ready && <JourneyScene control={journeyControl} />}
         </div>
       </div>
 
