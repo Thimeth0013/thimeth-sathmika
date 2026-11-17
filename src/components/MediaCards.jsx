@@ -60,7 +60,7 @@ const useFilm = () => {
 // while the tab is hidden. "… ago" is worked out here from times (playedAt from Spotify, seenAt when
 // it was last seen), not taken from the proxy's own text, which goes stale once stored.
 const TRACK_CACHE = 'spotify:last-track';
-const RATE_LIMIT_BACKOFF_MS = 180000;
+const RATE_LIMIT_BACKOFF_MS = 60000;
 
 const readCachedTrack = () => {
   try {
@@ -156,7 +156,7 @@ export const MovieCard = ({ className = '', details = false }) => {
   const sub = details && film && (
     <>
       {film.year}
-      {film.rating ? <span className="text-[#8FBBFF]"> · {stars(film.rating)}</span> : null}
+      {film.rating ? <span className="text-sky"> · {stars(film.rating)}</span> : null}
     </>
   );
   return (
