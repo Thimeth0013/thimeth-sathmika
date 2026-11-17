@@ -1,30 +1,22 @@
-# 🌐 Personal Portfolio
+# Thimeth Sathmika — portfolio
 
-A modern, responsive, and animated portfolio website built using **React**, **Vite**, **Tailwind CSS**, and **Framer Motion**. This project showcases my skills, projects, and contact information in a minimal and interactive layout.
+My personal portfolio: one long, scroll-driven page (a meadow hero you fly into, then About, Featured
+Work, Tools, the Journey and the certificates) and a separate All work page.
 
----
+Built with React 19, Vite and Tailwind CSS v4; smooth scrolling by Lenis, the crumplable paper by
+three.js, and the rest hand-written. Hosted on GitHub Pages at
+https://thimeth0013.github.io/thimeth-sathmika/
 
-## ✨ Features
+## Run it
 
-- ⚡ Fast bundling and development with **Vite**
-- 🎨 Utility-first styling using **Tailwind CSS**
-- 🎬 Smooth page and component transitions with **Framer Motion**
-- 📱 Fully responsive across all screen sizes
-- 🔗 Easy to navigate and visually minimal design
+```bash
+npm install
+npm run dev       # local dev server
+npm run build     # production build in dist/
+npm run deploy    # build and publish to GitHub Pages
+```
 
----
+The contact form sends through EmailJS and needs `VITE_SERVICE_ID`, `VITE_TEMPLATE_ID` and
+`VITE_PUBLIC_KEY` in a `.env` file.
 
-## 📁 Tech Stack
-
-- [React](https://reactjs.org/)
-- [Vite](https://vitejs.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Framer Motion](https://www.framer.com/motion/)
-
----
-
-## 🔗 Live Link
-
-> You can view the live portfolio here:  
-[**https://thimeth0013.github.io/thimeth-sathmika/*](https://thimeth0013.github.io/thimeth-sathmika/)
-
+Project notes for contributors (and Claude Code) are in `CLAUDE.md`.

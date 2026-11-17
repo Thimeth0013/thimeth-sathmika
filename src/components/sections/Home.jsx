@@ -1,317 +1,469 @@
-import React, { useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
-import ScrollVelocity from '../ScrollVelocity/ScrollVelocity';
-import GlareHover from '../GlareHover/GlareHover';
-import LightRays from '../LightRays/LightRays';
+import { useEffect, useRef } from 'react';
 import CV from '../../assets/Thimeth_Sathmika_CV.pdf';
+import sky from '../../assets/hero/sky.webp';
+import ground from '../../assets/hero/ground.webp';
+import groundFront from '../../assets/hero/ground-front.webp';
+import skyM from '../../assets/hero/sky-m.webp';
+import groundM from '../../assets/hero/ground-m.webp';
+import { isMobile, useMobile } from '../../lib/useMobile';
+import { useSmoothAnchor } from '../../lib/useSmoothAnchor';
+import { MeadowCat } from '../MeadowCat';
+import { Clouds } from '../Clouds';
+import { ABOUT_CLOUDS, HERO_CLOUDS, HERO_CLOUDS_M } from '../heroClouds';
+import cloud1 from '../../assets/hero/cloud-1.webp';
+import { Button } from '../ui/Button';
+import { ArrowSwap } from '../ui/ArrowSwap';
+import { AboutScene } from '../AboutScene';
+import { SkillsScene } from '../SkillsScene';
+import { WorkScene } from '../WorkScene';
+import { JourneyList, JourneyScene } from '../JourneyScene';
+import { JOURNEY_RUN } from '../journey';
 
-import {
-  GithubIcon,
-  ExternalLinkIcon,
-  CodeIcon,
-  BrainIcon,
-  Sparkles,
-  Hand,
-  Lightbulb,
-} from 'lucide-react';
+// Staggered entrance for the copy (see .animate-rise in index.css).
+const rise = (ms) => ({ animationDelay: `${ms}ms` });
+
+// Scroll fly-through (after johnbolster.design). The hero is pinned (a sticky stage inside a taller
+// scroll track) and scrolling moves a camera straight forward into the scene, toward a point just above
+// the horizon (HORIZON). Each layer is a flat plate at depth Z, scaled by Z / (Z - d) about that point,
+// where d is how far the camera has come: near plates grow faster than far ones, which gives the depth.
+// The meadow sits below the point, so the zoom carries it down out of the frame as a solid. The
+// headline never zooms: it holds still while the meadow drops away (revealing all of "stand out."),
+// then a bank of cloud sweeps across it from left to right (SWEEP) and the text is wiped away behind
+// the bank's dense middle (a soft-edged mask that follows it). The clouds fade just before the camera reaches them (FADE). It stops on
+// the sky, which only grows a little.
+const DEPTH = { sky: 20, ground: 1.35 };
+const SWEEP = [0.37, 0.7]; // the sweep runs over this part of the hero's scroll
+// The pinned scroll continues past the hero: About (AboutScene.jsx), Featured Work (WorkScene.jsx),
+// Tools (SkillsScene.jsx), then the Journey (JourneyScene.jsx: Education, Experience, then the certificates ring). Everything is in screen heights of scroll; SCHEDULE turns the constants
+// into where each part starts and ends, and the track's height and the #about / #work / #skills
+// markers are set from it.
+const HERO_RUN = 1.4;
+const ABOUT_FROM = 0.51; // the paper (which starts well off the left edge) comes into view as the clearing
+// cloud's middle passes the right edge
+const ABOUT_RUN = 1.6;
+const ABOUT_LANDED = 0.55; // by here every About piece has landed
+// Each About piece flies in over PIECE_RUN of the About run, one after another. Near the end of the run
+// they fly back out the way they came (ABOUT_EXIT) while the sky turns white from the bottom up, as a
+// soft gradient sweeping up the screen (same window; never a hard edge, the flow must not break).
+// As the white comes up (WORK_FROM of the About run) the Featured Work column starts scrolling up, one screen height of scroll per
+// screen height it moves: "Featured Work" and its button (which sit at HEADING_Y in the column, just
+// below the screen) rise with the white and the first cards, stop in the middle, and the rest of the
+// cards pass over them; as the last one passes and leaves, the heading dissolves in place (WorkScene.jsx).
+// As the last card nears the top (TOOLS_AT: column position), "Tools I work with." comes towards you in
+// the middle (over TOOLS_COME) and the skill icons start streaming out around it (over TOOLS_RUN); the
+// line fades as the last icons launch (TOOLS_OUT, stream progress), and by STREAM_END every icon has
+// flown past. JOURNEY_AT after Tools starts (once the line has faded, while the last icons are still
+// flying past) "My journey" comes in; the Journey runs JOURNEY_RUN (its timing is in journey.js).
+const PIECE_RUN = 0.32;
+const PIECE_GAP = 0.07;
+const ABOUT_EXIT = [0.72, 0.96];
+const WHITE_EDGE = 110; // % of the screen: how soft the edge of the white sweeping up is
+// A soft sky-blue wash left at the top of the white (so it is not plain white): strongest at the top
+// centre, gone by about the middle of the screen. Fades in with the white.
+const WHITE_HUE =
+  'radial-gradient(140% 70% at 50% 0%, rgb(59 130 246 / 0.2), rgb(59 130 246 / 0.11) 32%, rgb(59 130 246 / 0.04) 58%, rgb(59 130 246 / 0) 80%)';
+const WORK_FROM = 0.8; // About run: once the bottom of the screen has mostly turned white
+const HEADING_Y = 1.05; // the heading's middle, in the column (screen heights): just below the screen
+const TOOLS_AT = 3.15; // column position (screen heights): the last card is near the top, rising out
+const TOOLS_COME = 0.25;
+const TOOLS_RUN = 2.4;
+const TOOLS_OUT = [0.6, 0.72];
+const STREAM_END = 0.96;
+const JOURNEY_AT = 1.7;
+const SCHEDULE = (() => {
+  const about = HERO_RUN * ABOUT_FROM;
+  const work = about + ABOUT_RUN * WORK_FROM; // the column starts moving, once the white is coming up
+  const tools = work + TOOLS_AT; // the line starts coming in; the icons start
+  const journey = tools + JOURNEY_AT; // "My journey" starts coming in
+  const end = journey + JOURNEY_RUN;
+  return { about, work, tools, journey, end };
+})();
+const SWEEP_SOFT = 70; // px: half the width of the wipe's soft edge
+// One plate per cloud (same order as HERO_CLOUDS): the big ones nearer, the small ones farther.
+const CLOUD_DEPTH = [2.3, 3.4, 4.2, 2.9, 5.2, 6, 6.8];
+const HORIZON = 0.53; // the vanishing point: centred, at this fraction of the photo's height
+// Phones use their own portrait photo (sky-m / ground-m, cut from mobile-hero.png: the same meadow and
+// computer, upright), whose ridge is lower; the frame's phone values are .hero-frame[data-portrait] in
+// index.css. No cat there.
+const HORIZON_M = 0.72;
+const TRAVEL = 2.75; // forward travel over the whole track; the near clouds are gone by ≈87% of the scroll
+const FADE = [0.7, 0.88]; // a fading plate fades between these fractions of the way to it (d / Z)
+
+const smooth = (a, b, x) => {
+  const t = Math.min(Math.max((x - a) / (b - a), 0), 1);
+  return t * t * (3 - 2 * t);
+};
+
+const useFlyThrough = (trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRef, sceneRefs) => {
+  useEffect(() => {
+    const track = trackRef.current;
+    const stage = stageRef.current;
+    if (!track || !stage || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const phone = isMobile();
+      const screen = stage.offsetHeight;
+      const scrolled = Math.max(-track.getBoundingClientRect().top, 0);
+      const p = Math.min(scrolled / (HERO_RUN * screen), 1);
+
+      // About: each piece flies in from its edge (data-from), in data-order, spinning down to its tilt
+      // (data-rot).
+      const pa = (scrolled - HERO_RUN * ABOUT_FROM * screen) / (ABOUT_RUN * screen);
+      aboutRef.current.forEach((piece, i) => {
+        if (!piece) return;
+        const order = Number(piece.dataset.order ?? i);
+        const t = Math.min(Math.max((pa - order * PIECE_GAP) / PIECE_RUN, 0), 1);
+        const e = 1 - Math.pow(1 - t, 3); // ease out
+        const away = 1 - e + smooth(ABOUT_EXIT[0], ABOUT_EXIT[1], pa); // back out the way it came
+        // data-from="nearest" (the stickers): out by the screen edge nearest to where it sits (it may
+        // have been dragged), picked while it is at rest.
+        let from = piece.dataset.from;
+        if (from === 'nearest') {
+          if (away < 0.001 || !piece.dataset.edge) {
+            const r = (piece.querySelector('canvas') ?? piece).getBoundingClientRect();
+            const box = stage.getBoundingClientRect();
+            const x = r.left + r.width / 2 - box.left;
+            const y = r.top + r.height / 2 - box.top;
+            const gaps = { left: x, right: box.width - x, top: y, bottom: box.height - y };
+            piece.dataset.edge = Object.keys(gaps).reduce((a, b) => (gaps[a] <= gaps[b] ? a : b));
+          }
+          from = piece.dataset.edge;
+        }
+        const off = {
+          left: [-1.15 * stage.offsetWidth, 0],
+          right: [1.15 * stage.offsetWidth, 0],
+          top: [0, -1.15 * screen],
+          bottom: [0, 1.15 * screen],
+        }[from] ?? [0, 0];
+        // A piece without data-rot (the full-screen paper) only slides.
+        const spin = piece.dataset.rot === undefined ? '' : ` rotate(${Number(piece.dataset.rot) + (order % 2 ? 18 : -18) * away}deg)`;
+        piece.style.visibility = t > 0 && away < 1 ? 'visible' : 'hidden';
+        piece.style.transform = `translate3d(${off[0] * away}px, ${off[1] * away}px, 0)${spin}`;
+      });
+      const d = TRAVEL * Math.pow(p, 1.15);
+      for (const { el, z, solid } of layersRef.current) {
+        if (!el) continue;
+        const k = d / z;
+        // Past FADE[1] a plate is behind the camera (the solid meadow is long out of frame by then).
+        if (k >= FADE[1]) {
+          el.style.visibility = 'hidden';
+          continue;
+        }
+        el.style.visibility = '';
+        el.style.transform = k > 0 ? `scale(${1 / (1 - k)})` : '';
+        el.style.opacity = solid ? '' : String(1 - smooth(FADE[0], FADE[1], k));
+      }
+
+      // The sky turns white from the bottom up as the About pieces leave: a gradient with a soft edge
+      // (WHITE_EDGE of the screen tall) sweeps up until the whole screen is white; the About clouds go
+      // with the sky. The side nav reads data-nav-tone to stay visible: white on the sky, forest on white.
+      const { white, whiteHue, aboutClouds, skills, tools, workHeading } = sceneRefs.current;
+      const rise = smooth(ABOUT_EXIT[0], ABOUT_EXIT[1], pa);
+      if (white) {
+        // % up the screen that is fully white; above it the white thins out over WHITE_EDGE along a
+        // smoothstep curve (several stops), so there is no visible line where it turns solid.
+        const solid = -WHITE_EDGE + rise * (100 + WHITE_EDGE);
+        const stops = Array.from({ length: 9 }, (_, i) => {
+          const f = i / 8;
+          const alpha = 1 - f * f * (3 - 2 * f);
+          return `rgb(255 255 255 / ${alpha.toFixed(3)}) ${(solid + f * WHITE_EDGE).toFixed(2)}%`;
+        });
+        white.style.background = `linear-gradient(to top, ${stops.join(', ')})`;
+      }
+      if (whiteHue) whiteHue.style.opacity = String(rise);
+      track.dataset.navTone = rise > 0.5 ? 'dark' : 'light';
+      // Once the sky has turned white, the stage itself is white too: its hero blue could otherwise show
+      // as a hairline at its bottom edge on phones (sub-pixel rounding against the white layer).
+      stage.style.backgroundColor = rise > 0.98 ? '#fff' : '';
+      if (aboutClouds) aboutClouds.style.opacity = String(smooth(0, 0.15, pa) * (1 - rise));
+
+      // Featured Work: the heading rises into the middle, then the column of cards scrolls up past it;
+      // once the last card's middle reaches the heading, the heading moves up with it (hidden under it).
+      const at = scrolled / screen; // where we are, in screen heights
+      const column = (at - SCHEDULE.work) * screen; // how far the column has moved up (px)
+      const cards = sceneRefs.current.workCards?.current ?? [];
+      const last = cards[cards.length - 1];
+      cards.forEach((card) => {
+        if (!card) return;
+        const y = Number(phone ? card.dataset.my : card.dataset.y) * screen - column;
+        const h = Number(card.dataset.h) * screen;
+        card.style.visibility = y < screen && y + h > 0 ? 'visible' : 'hidden';
+        card.style.transform = `translate3d(0, ${y}px, 0)`;
+      });
+      if (workHeading) {
+        // Rises with the column until it is in the middle and holds there. Once the last card's middle
+        // reaches it, it dissolves in place (fades out as a blur builds, like the Journey's text) while
+        // that card leaves the screen, and is gone as the Tools line starts to come in (TOOLS_AT).
+        // Phones: it just scrolls up with the column, above the cards, like a plain page.
+        const reached = last ? (Number(last.dataset.y) + Number(last.dataset.h) / 2 - 0.5) * screen : Infinity;
+        const gone = phone ? 0 : smooth(reached, TOOLS_AT * screen, column);
+        const y = phone ? (HEADING_Y - 0.5) * screen - column : Math.max((HEADING_Y - 0.5) * screen - column, 0);
+        workHeading.style.visibility = y < screen && gone < 1 ? 'visible' : 'hidden';
+        workHeading.style.transform = `translate3d(0, ${y}px, 0)`;
+        workHeading.style.opacity = String(1 - gone);
+        workHeading.style.filter = gone > 0.001 ? `blur(${(gone * 5).toFixed(2)}px)` : '';
+      }
+
+      // Tools: as the last card leaves, the line comes towards you in the middle and the icons stream out
+      // around it.
+      const sp = Math.min(Math.max((at - SCHEDULE.tools) / (TOOLS_RUN * STREAM_END), 0), 1);
+      if (tools) {
+        const comeIn = smooth(SCHEDULE.tools, SCHEDULE.tools + TOOLS_COME, at);
+        const fadeOut = smooth(TOOLS_OUT[0], TOOLS_OUT[1], sp);
+        tools.style.opacity = String(comeIn * (1 - fadeOut));
+        tools.style.transform = `scale(${0.55 + 0.45 * comeIn})`;
+        tools.style.visibility = comeIn > 0 && fadeOut < 1 ? 'visible' : 'hidden';
+      }
+      sceneRefs.current.stream?.current?.set(sp);
+      if (skills) skills.style.visibility = sp > 0 && sp < 1 ? 'visible' : 'hidden';
+
+      // The Journey (JourneyScene.jsx) takes it from here, in screen heights into the scene.
+      sceneRefs.current.journey?.current?.set(at - SCHEDULE.journey);
+
+      // The sweep: the bank crosses from just off the left edge to just off the right, level with the
+      // headline, and the headline is masked away left of the bank's middle.
+      const copy = copyRef.current;
+      const bank = sweepRef.current;
+      if (!copy || !bank) return;
+      const t = (p - SWEEP[0]) / (SWEEP[1] - SWEEP[0]);
+      if (t <= 0) {
+        bank.style.visibility = 'hidden';
+        copy.style.maskImage = copy.style.webkitMaskImage = '';
+        copy.style.visibility = '';
+        return;
+      }
+      const w = stage.offsetWidth;
+      const h1 = copy.querySelector('h1').getBoundingClientRect();
+      const top = stage.getBoundingClientRect().top;
+      const x = -bank.offsetWidth + (w + bank.offsetWidth) * Math.min(t, 1);
+      bank.style.visibility = t >= 1 ? 'hidden' : 'visible';
+      bank.style.transform = `translate3d(${x}px, ${h1.top - top + h1.height / 2 - bank.offsetHeight / 2}px, 0)`;
+      const edge = x + bank.offsetWidth * 0.5; // the bank's dense middle
+      const mask = `linear-gradient(to right, transparent ${edge - SWEEP_SOFT}px, #000 ${edge + SWEEP_SOFT}px)`;
+      copy.style.maskImage = copy.style.webkitMaskImage = mask;
+      copy.style.visibility = t >= 1 ? 'hidden' : '';
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, [trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRef, sceneRefs]);
+};
+
+// A full-screen layer of the fly-through.
+// The origin is the vanishing point just above the horizon (HORIZON of the photo's height).
+const layerClass =
+  'absolute inset-0 origin-[50%_calc(var(--sy)_+_var(--sh)_*_var(--horizon))] will-change-[transform,opacity]';
+const stageBox = 'absolute left-[var(--sx)] top-[var(--sy)] h-[var(--sh)] w-[var(--sw)]';
 
 export const Home = () => {
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.95 },
-    visible: (i = 0) => ({
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        delay: i * 0.15,
-        duration: 0.5,
-        ease: [0.25, 0.46, 0.45, 0.94],
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-      },
-    }),
+  const trackRef = useRef(null);
+  const stageRef = useRef(null);
+  const layersRef = useRef([]);
+  const copyRef = useRef(null);
+  const sweepRef = useRef(null);
+  const aboutRef = useRef([]);
+  const sceneRefs = useRef({});
+  const streamControl = useRef(null);
+  const journeyControl = useRef(null);
+  const workCards = useRef([]);
+  const workCard = (i) => (el) => {
+    workCards.current[i] = el;
   };
-
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  // Tracks which card is centred in the mobile horizontal scroller
-  const scrollerRef = useRef(null);
-  const [activeCard, setActiveCard] = useState(0);
-
-  const handleCardScroll = () => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    const step = el.scrollWidth / infoCards.length;
-    setActiveCard(Math.round(el.scrollLeft / step));
+  sceneRefs.current.stream = streamControl;
+  sceneRefs.current.journey = journeyControl;
+  sceneRefs.current.workCards = workCards;
+  const scene = (name) => (el) => {
+    sceneRefs.current[name] = el;
   };
-
-  const infoCards = [
-    {
-      icon: CodeIcon,
-      title: 'Clean Architecture',
-      text: 'Building scalable and maintainable systems with SOLID principles',
-    },
-    {
-      icon: BrainIcon,
-      title: 'AI Integration',
-      text: 'Leveraging machine learning for intelligent solutions',
-    },
-    {
-      icon: Sparkles,
-      title: 'Modern UI',
-      text: 'Designing sleek, responsive interfaces that enhance user experience across all devices.',
-    },
-  ];
+  const aboutPiece = (i) => (el) => {
+    aboutRef.current[i] = el;
+  };
+  // A plate at depth z; solid plates never fade (they leave the frame instead).
+  const layer = (i, z, solid = false) => (el) => {
+    layersRef.current[i] = { el, z, solid };
+  };
+  useFlyThrough(trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRef, sceneRefs);
+  const mobile = useMobile();
+  const clouds = mobile ? HERO_CLOUDS_M : HERO_CLOUDS;
+  const smoothAnchor = useSmoothAnchor();
 
   return (
-    <div className="w-full" id="home">
-      {/* Hero Section */}
-      <section className="relative w-full min-h-[100dvh] md:h-screen flex items-center overflow-hidden bg-black">
-        {/* Light Rays - Desktop only */}
-        <div className="hidden md:block absolute inset-0 z-0">
-          <LightRays
-            raysOrigin="bottom-left"
-            raysColor="#0059ffff"
-            raysSpeed={1.4}
-            lightSpread={1.0}
-            rayLength={2.6}
-            followMouse={true}
-            mouseInfluence={0.6}
-            noiseAmount={0.01}
-            distortion={0.02}
-            className="custom-rays"
-          />
-        </div>
-
-        {/* Mobile backdrop — CSS-only stand-in for the WebGL rays (no GPU cost) */}
-        <div className="md:hidden absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
-          <div className="absolute -top-28 -left-24 w-72 h-72 rounded-full bg-blue-700/25 blur-[90px]" />
-          <div className="absolute top-1/3 -right-24 w-64 h-64 rounded-full bg-blue-900/40 blur-[80px]" />
-          <div className="absolute -bottom-20 left-1/4 w-72 h-72 rounded-full bg-blue-800/20 blur-[100px]" />
-          <div className="absolute inset-0 hero-grid" />
-        </div>
-
-        <div className="absolute inset-0 z-10 pointer-events-none transition-all duration-500 group-hover:backdrop-blur-[6px] group-hover:bg-white/10"></div>
-
-        <div className="max-w-[1600px] mx-auto mt-0 md:mt-22 px-4 sm:px-6 lg:px-10 z-20 mb-0 md:mb-20 group relative">
-          {/* Desktop Layout */}
-          <div className="hidden md:block space-y-8 mb-20">
-            <h1 className="text-md md:text-xl text-white mt-30 font-medium">
-              <div className="flex">
-                <Hand className="text-blue-800 animate-wave mr-4" />
-                Hello I'm Thimeth Sathmika.
-              </div>
-            </h1>
-            <h1 className="text-2xl md:text-7xl font-bold">
-              <span className="block mb-20">
-                Creating tech with{' '}
-                <span className="relative text-blue-800 font-bold hover-trigger cursor-help">
-                  *intention
-                  <div className="hidden hover-display absolute bottom-[-180px] sm:bottom-[-180px] right-[180px] sm:right-[-423px] w-100 p-4 bg-black/40 backdrop-blur-md text-base rounded-xl shadow-xl border border-white/20 z-50 transition-all">
-                    <p>
-                      <span className="font-semibold text-white/80 text-sm sm:text-md delay-5000">Intention:</span> a thing intended; an aim or plan.
-                    </p>
-                  </div>
-                </span>{' '}
-                — experiences that matter.
-              </span>
-            </h1>
-            <div className="w-3/5 h-0.5 bg-gradient-to-r from-blue-800/40 to-black mb-[-20px]" />
-            <div className="flex justify-center md:justify-end">
-              <a
-                href="#about"
-                className="text-sm md:text-lg px-6 py-2 pt-2 text-blue-700 font-medium bg-transparent backdrop-blur-md rounded-xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-white transition-all"
-              >
-                Know Me Better
-              </a>
-           <a
-                href={CV}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm md:text-lg px-6 py-2 pt-2 text-blue-700 font-medium bg-transparent backdrop-blur-md rounded-xl border-s border-e border-blue-800/60 shadow-md hover:border-1 hover:text-white transition-all ml-10"
-              >
-                View Resume
-              </a>
-            </div>
-          </div>
-
-          {/* Mobile Layout */}
-          <div className="md:hidden max-w-3xl mx-auto space-y-6">
-            <h1 className="text-base text-white font-medium flex items-center gap-2">
-              <Hand className="text-blue-800 w-5 h-5 animate-wave" />
-              Hello, I'm Thimeth Sathmika
-            </h1>
-            <h1 className="text-[2rem] sm:text-4xl font-bold leading-tight tracking-tight">
-              Creating tech with{' '}
-              <span className="text-blue-800 font-bold">
-                *intention
-              </span>{' '}
-              — experiences that matter.
-            </h1>
-            <div className="flex flex-col gap-3 mt-6">
-              <a
-                href="#about"
-                className="text-sm px-4 py-2 text-center text-blue-700 font-medium bg-transparent backdrop-blur-md rounded-xl border border-blue-800 shadow-md hover:text-white transition-all"
-              >
-                Know Me Better
-              </a>
-              <a
-                href={CV}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm px-4 py-2 text-center text-blue-700 font-medium bg-transparent backdrop-blur-md rounded-xl border border-blue-800 shadow-md hover:text-white transition-all"
-              >
-                View Resume
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Scroll cue — mobile only, anchors the bottom of the hero */}
-        <a
-          href="#about"
-          className="md:hidden absolute bottom-7 left-0 right-0 z-20 flex flex-col items-center gap-1.5"
-        >
-          <span className="text-[10px] uppercase tracking-[0.25em] text-white/35">Scroll</span>
-          <span className="scroll-line" aria-hidden="true" />
-        </a>
-
-        <style>
-          {`
-            .hover-trigger:hover .hover-display {
-              display: block;
-            }
-            /* Scroll cue: faint track with a blue segment sliding down it */
-            .scroll-line {
-              position: relative;
-              display: block;
-              width: 1px;
-              height: 56px;
-              overflow: hidden;
-              background: rgba(255, 255, 255, 0.1);
-              /* Both ends fade out to the background instead of stopping flat */
-              -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
-              mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
-              -webkit-mask-repeat: no-repeat;
-              mask-repeat: no-repeat;
-            }
-            .scroll-line::after {
-              content: "";
-              position: absolute;
-              left: 0;
-              right: 0;
-              top: 0;
-              height: 40%;
-              background: #2563eb;
-              transform: translateY(-100%);
-              animation: scroll-line-travel 2.4s ease-in-out infinite;
-            }
-            @keyframes scroll-line-travel {
-              0%   { transform: translateY(-100%); }
-              100% { transform: translateY(250%); }
-            }
-            @media (prefers-reduced-motion: reduce) {
-              .scroll-line::after {
-                animation: none;
-                transform: translateY(75%);
-              }
-            }
-            .hero-grid {
-              background-image:
-                linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px);
-              background-size: 44px 44px;
-              -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 72%);
-              mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 72%);
-            }
-            .no-scrollbar {
-              -ms-overflow-style: none;
-              scrollbar-width: none;
-            }
-            .no-scrollbar::-webkit-scrollbar {
-              display: none;
-            }
-          `}
-        </style>
-      </section>
-
-      {/* Scroll Velocity Text - Desktop only */}
-      <div className="hidden md:block mt-0 z-70">
-        <ScrollVelocity
-          texts={['Design', 'Development']}
-          velocity={60}
-          className="text-white"
-          damping={40}
-          stiffness={350}
-          numCopies={8}
-          parallaxClassName="my-0"
-          scrollerClassName="py-10"
-          parallaxStyle={{ height: '130px' }}
-          scrollerStyle={{ willChange: 'transform' }}
-        />
-      </div>
-
-      {/* Info Cards with GlareHover */}
+    // The track is the scroll distance of the fly-through; the stage inside it stays pinned. With
+    // reduced motion it is just the one screen, unpinned.
+    <section ref={trackRef} id="home" data-nav-tone="light" style={{ height: `${(1 + SCHEDULE.end) * 100}svh` }}
+      className="relative motion-reduce:h-auto!">
       <div
-        ref={ref}
-        className="relative mt-14 md:mt-16 mb-14 md:mb-20 text-left max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-16"
+        ref={stageRef}
+        className="sticky top-0 isolate h-svh min-h-[600px] overflow-hidden bg-[#1D6EB0] [container-type:size]"
       >
-        {/* Mobile: edge-to-edge horizontal snap-scroller. sm and up: normal grid. */}
-        <div
-          ref={scrollerRef}
-          onScroll={handleCardScroll}
-          className="
-            relative z-20 flex snap-x snap-mandatory overflow-x-auto no-scrollbar items-stretch
-            gap-4 -mx-4 px-4 pb-4
-            sm:grid sm:grid-cols-2 sm:overflow-visible sm:mx-0 sm:px-0 sm:pb-0 sm:gap-6
-            md:grid-cols-3 md:gap-8
-          "
-        >
-          {infoCards.map((card, i) => (
-            <div
-              key={i}
-              className="snap-center shrink-0 basis-[82%] sm:basis-auto sm:shrink"
-            >
-              <GlareHover
-                glareColor="#ffffff"
-                glareOpacity={0.2}
-                glareAngle={-45}
-                glareSize={250}
-                transitionDuration={650}
-                playOnce={false}
-                className="p-5 md:p-6 rounded-xl border border-white/20 md:bg-white/20 bg-gray-800/20 backdrop-blur-md shadow-lg hover:bg-white/20 md:hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-300 ease-in-out"
-                style={{ width: '100%', height: '100%' }}
-              >
-                <motion.div
-                  className="w-full h-full flex flex-col gap-2"
-                  variants={cardVariants}
-                  initial="hidden"
-                  animate={isInView ? 'visible' : 'hidden'}
-                  custom={i}
-                >
-                  <card.icon className="w-7 h-7 md:w-8 md:h-8 text-blue-800 dark:text-blue-800 mb-2 md:mb-4" />
-                  <h3 className="text-lg md:text-lg font-semibold mb-2">{card.title}</h3>
-                  <p className="text-white/70 md:text-white/60 font-medium text-sm md:text-sm leading-relaxed">{card.text}</p>
-                </motion.div>
-              </GlareHover>
+        <div className="hero-frame absolute inset-0" data-portrait={mobile || undefined} style={{ '--horizon': mobile ? HORIZON_M : HORIZON }}>
+          {/* Layers, back to front: sky, clouds, headline (z-2), the sweeping bank (z-3), ground,
+              buttons (under the computer).
+              The ground hides the bottom of the headline where the hill rises. Each layer is a
+              full-screen wrapper the fly-through scales; the photo layers sit in the stage box (the
+              photo's own size and offset) inside it. Entrance animations are on the inner elements,
+              so the two transforms don't clash. */}
+          <div ref={layer(0, DEPTH.sky, true)} className={`${layerClass} z-0`}>
+            <div className={stageBox}>
+              <img src={mobile ? skyM : sky} alt="" fetchPriority="high" className="animate-settle absolute inset-0 size-full select-none" />
+            </div>
+          </div>
+
+          {clouds.map((cloud, i) => (
+            <div key={i} ref={layer(1 + i, CLOUD_DEPTH[i])} className={`${layerClass} z-[1]`}>
+              <div className={stageBox}>
+                <Clouds clouds={[cloud]} className="animate-settle" />
+              </div>
             </div>
           ))}
+
+          {/* Copy column. Its bottom is pinned to a height on the photo (--hy) so the last line always
+              meets the hill in the same place: readable on the left, sinking into the grass. */}
+          <div ref={copyRef} className={`${layerClass} pointer-events-none z-[2]`}>
+            <div className="absolute inset-x-0 top-[calc(var(--sy)_+_var(--sh)_*_var(--hy))] mx-auto w-[min(calc(100%-32px),1176px)] -translate-y-full md:w-[min(calc(100%-64px),1176px)]">
+              {/* Two short lines, set big so the words carry the hero. Size follows the stage, so the
+                  overlap with the hill holds at any desktop size, but never wider than the column (the
+                  longer line, "stand out.", is ≈4.6 em, plus some slack). */}
+              <h1
+                data-cat-avoid
+                style={rise(150)}
+                className="animate-rise font-grotezk text-[length:min(19cqw,7rem)] font-medium leading-[0.8] tracking-[-0.045em] text-cream md:text-[length:min(var(--sw)_*_0.125,min(100cqw_-_64px,1176px)_/_5,15rem)]"
+              >
+                Made to
+                <br /> stand out.
+              </h1>
+            </div>
+          </div>
+
+          {/* The bank that sweeps across the headline once the meadow has gone (moved by the fly-through). */}
+          <div
+            ref={sweepRef}
+            aria-hidden="true"
+            className="pointer-events-none invisible absolute left-0 top-0 z-[3] w-[125%] will-change-transform"
+          >
+            {/* Three copies of the big cloud, overlapped, so the bank is dense enough to read as a wall
+                of cloud over the text. */}
+            <img src={cloud1} alt="" className="block w-full select-none" />
+            <img src={cloud1} alt="" className="absolute left-[18%] top-[14%] w-[85%] -scale-x-100 select-none" />
+            <img src={cloud1} alt="" className="absolute left-[6%] top-[-6%] w-[75%] select-none" />
+          </div>
+
+          {/* Ground group: back meadow, the peeking cat, then the front slope copied from the same photo,
+              so the cat's flat bottom is hidden behind the ridge. One solid plate, so they never drift
+              apart. */}
+          <div ref={layer(8, DEPTH.ground, true)} className={`${layerClass} pointer-events-none z-[4]`}>
+            <div className={`${stageBox} animate-settle`}>
+              <img
+                src={mobile ? groundM : ground}
+                alt="A beige retro computer on a small wooden desk in a grassy meadow"
+                fetchPriority="high"
+                className="absolute inset-0 size-full select-none"
+              />
+              {!mobile && (
+                <>
+                  <MeadowCat />
+                  <img src={groundFront} alt="" className="absolute inset-0 size-full select-none" />
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Buttons stand in the grass below the computer's desk, at the ground's depth. Right-aligned
+              to the content column; vertically at --pc-y of the stage, but kept above the bottom edge. */}
+          <div ref={layer(9, DEPTH.ground, true)} style={{ '--pc-y': mobile ? 0.83 : 0.765 }} className={`${layerClass} pointer-events-none z-[5]`}>
+            <div
+              data-cat-avoid
+              className="pointer-events-auto absolute inset-x-0 top-[min(var(--sy)_+_var(--sh)_*_var(--pc-y),100cqh_-_96px)] mx-auto flex w-[min(calc(100%-32px),1176px)] justify-end md:w-[min(calc(100%-64px),1176px)]"
+            >
+              <div style={rise(300)} className="animate-rise flex flex-wrap justify-end gap-3">
+                <Button variant="forest" href="#about" onClick={smoothAnchor}>
+                  Know Me Better
+                  <ArrowSwap className="-mr-0.5" />
+                </Button>
+                <Button variant="beige" href={CV} target="_blank" rel="noopener noreferrer">
+                  View Resume
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Scroll position indicator — mobile only */}
-        <div className="flex justify-center gap-1.5 mt-1 sm:hidden">
-          {infoCards.map((_, i) => (
-            <span
-              key={i}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === activeCard ? 'w-5 bg-blue-700' : 'w-1.5 bg-white/25'
-              }`}
-            />
-          ))}
+        {/* After the hero, on the sky it ends on (above every hero layer): clouds drifting behind About,
+            the white the sky turns into (from the bottom up), About, Featured Work, then Tools. Hidden with reduced
+            motion, where the hero is not pinned. */}
+        {/* Every full-screen layer from here on lets clicks through (only its own pieces take them),
+            or it would sit over the hero's buttons and the scenes under it. */}
+        <div ref={scene('aboutClouds')} style={{ opacity: 0 }} className="pointer-events-none absolute inset-0 z-[7] motion-reduce:hidden">
+          <Clouds clouds={ABOUT_CLOUDS} />
+        </div>
+        <div
+          ref={scene('white')}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[8] motion-reduce:hidden"
+        />
+        <div
+          ref={scene('whiteHue')}
+          aria-hidden="true"
+          style={{ opacity: 0, background: WHITE_HUE }}
+          className="pointer-events-none absolute inset-0 z-[8] motion-reduce:hidden"
+        />
+        <div className="pointer-events-none absolute inset-0 z-10 motion-reduce:hidden">
+          <AboutScene itemRef={aboutPiece} />
+        </div>
+        <div className="pointer-events-none absolute inset-0 z-[11] motion-reduce:hidden">
+          <WorkScene headingRef={scene('workHeading')} cardRef={workCard} />
+        </div>
+        <div
+          ref={scene('tools')}
+          style={{ visibility: 'hidden', opacity: 0 }}
+          className="pointer-events-none absolute inset-0 z-[13] grid origin-center place-items-center will-change-transform motion-reduce:hidden"
+        >
+          {/* A soft white halo keeps the line clear of the icons streaming past behind it. */}
+          <p className="bg-[radial-gradient(closest-side,#fff_55%,rgb(255_255_255/0))] px-10 py-10 font-grotezk text-[length:1.9rem] font-medium leading-none tracking-[-0.035em] text-sky md:px-24 md:py-14 md:text-[length:clamp(2.6rem,5.2vw,5rem)]">
+            Tools I work with.
+          </p>
+        </div>
+        <div ref={scene('skills')} style={{ visibility: 'hidden' }} className="pointer-events-none absolute inset-0 z-[12] motion-reduce:hidden">
+          <SkillsScene control={streamControl} />
+        </div>
+        {/* Under the icons, so the last of them fly past in front of "My journey". */}
+        {/* Lets clicks through (to About and Work under it); only the stickers take them. */}
+        <div className="pointer-events-none absolute inset-0 z-[11] motion-reduce:hidden">
+          <JourneyScene control={journeyControl} />
         </div>
       </div>
-    </div>
+
+      {/* Reduced motion: no pinned scenes, so Experience and Education as a plain list. */}
+      <div className="hidden motion-reduce:block">
+        <JourneyList />
+      </div>
+
+      {/* Where each part is in the scroll (for the nav and links): About once its pieces have landed,
+          Work once the heading has reached the middle, Skills once the icons are streaming, Journey once
+          its heading is in. */}
+      {[
+        ['about', SCHEDULE.about + ABOUT_RUN * ABOUT_LANDED],
+        ['work', SCHEDULE.work + HEADING_Y - 0.5],
+        ['skills', SCHEDULE.tools + 0.8],
+        ['journey', SCHEDULE.journey + 0.45],
+      ].map(([id, at]) => (
+        <div
+          key={id}
+          id={id}
+          aria-hidden="true"
+          style={{ top: `${at * 100}svh` }}
+          className="pointer-events-none absolute inset-x-0 h-px"
+        />
+      ))}
+    </section>
   );
 };

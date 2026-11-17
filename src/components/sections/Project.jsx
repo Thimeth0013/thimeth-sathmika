@@ -1,320 +1,107 @@
-import React, { useRef, useState } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { Sparkle, Github, ExternalLink, Lightbulb, ChevronDown, ChevronUp } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { projectsData } from '../../data/projects';
-import { ProjectDetailModal } from '../ProjectDetails';
+import { ProjectThumb } from '../ProjectCard';
 
-const PROJECTS_PER_PAGE = 6;
+// The All work page's grid (WorkPage.jsx): every project, newest first, two to a row, in the same
+// column as the nav and the footer (so the same gaps at the sides). A row of filter pills narrows it
+// (Design / Code / Live: projects that have that link). Each card is the shared ProjectThumb (press it
+// for the details, which grow out of the card; its links show as icons on hover), with the title and
+// tags under it.
+//
+// Motion: each card fades up once, when it scrolls into view (Reveal: an IntersectionObserver and a CSS
+// transition, the second card in a row a beat after the first); changing the filter replays it for the
+// new set. Nothing moves on hover, and nothing re-animates when scrolling back.
+
+const column = 'mx-auto w-[min(calc(100%-32px),1176px)] md:w-[min(calc(100%-64px),1176px)]';
+
+const FILTERS = [
+  { id: 'all', label: 'All', test: () => true },
+  { id: 'design', label: 'Design', test: (p) => Boolean(p.designLink) },
+  { id: 'code', label: 'Code', test: (p) => Boolean(p.githubLink) },
+  { id: 'live', label: 'Live', test: (p) => Boolean(p.liveLink) },
+];
+
+// Fades its children up the first time they scroll into view.
+const Reveal = ({ delay = 0, className = '', children }) => {
+  const ref = useRef(null);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || seen) return undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setSeen(true);
+        io.disconnect();
+      },
+      { rootMargin: '0px 0px -8% 0px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [seen]);
+  return (
+    <div
+      ref={ref}
+      style={{ transitionDelay: seen ? `${delay}ms` : '0ms' }}
+      className={`transition-[opacity,translate] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none ${
+        seen ? '' : 'translate-y-4 opacity-0'
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
 
 export const Project = () => {
-  const [activeTab, setActiveTab] = useState('all');
-  const [displayCount, setDisplayCount] = useState(PROJECTS_PER_PAGE);
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const allProjects = [...projectsData].reverse();
-
-  const getFilteredProjects = () => {
-    switch (activeTab) {
-      case 'design':
-        return allProjects.filter(p => p.designLink && p.designLink.trim() !== '');
-      case 'code':
-        return allProjects.filter(p => p.githubLink && p.githubLink.trim() !== '');
-      case 'live':
-        return allProjects.filter(p => p.liveLink && p.liveLink.trim() !== '');
-      case 'ongoing':
-        return allProjects.filter(p => p.status === 'ongoing');
-      default:
-        return allProjects;
-    }
-  };
-
-  const filteredProjects = getFilteredProjects();
-  const displayedProjects = filteredProjects.slice(0, displayCount);
-  const hasMore = displayCount < filteredProjects.length;
-  const isExpanded = displayCount > PROJECTS_PER_PAGE;
-  const remainingCount = filteredProjects.length - displayCount;
-
-  const handleLoadMore = () => {
-    setDisplayCount(prev => prev + PROJECTS_PER_PAGE);
-  };
-
-  const handleShowLess = () => {
-    setDisplayCount(PROJECTS_PER_PAGE);
-    const section = document.getElementById('project');
-    if (section) {
-      window.scrollTo({ top: section.offsetTop - 100, behavior: 'smooth' });
-    }
-  };
-
-  const handleTabChange = (tabId) => {
-    setActiveTab(tabId);
-    setDisplayCount(PROJECTS_PER_PAGE);
-  };
-
-  const handleProjectClick = (project) => {
-    setSelectedProject(project);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setTimeout(() => setSelectedProject(null), 300);
-  };
-
-  const tabs = [
-    { id: 'all', label: 'All Projects', count: allProjects.length },
-    { id: 'design', label: 'Design', count: allProjects.filter(p => p.designLink && p.designLink.trim() !== '').length },
-    { id: 'code', label: 'Code', count: allProjects.filter(p => p.githubLink && p.githubLink.trim() !== '').length },
-    { id: 'live', label: 'Live Demo', count: allProjects.filter(p => p.liveLink && p.liveLink.trim() !== '').length },
-    { id: 'ongoing', label: 'Ongoing', count: allProjects.filter(p => p.status === 'ongoing').length },
-  ];
-
-  const titleVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: 'easeOut' },
-    },
-  };
-
-  const tabVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: 'easeOut', delay: 0.3 },
-    },
-  };
-
-  const cardVariants = (index = 0) => ({
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { duration: 0.5, ease: 'easeOut', delay: 0.6 + index * 0.1 },
-    },
-    exit: {
-      opacity: 0,
-      y: -20,
-      transition: { duration: 0.3, ease: 'easeIn' },
-    },
-  });
-
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.01 });
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const [filter, setFilter] = useState('all');
+  const all = useMemo(() => [...projectsData].reverse(), []);
+  const shown = all.filter(FILTERS.find((f) => f.id === filter).test);
 
   return (
-    <div className="w-full" id="project">
-      <section className="min-h-screen relative py-16 md:py-24 bg-black overflow-hidden">
-        {/* Background Grid */}
-        <div className="absolute inset-0 z-0 transform scale-y-[-1]">
-          <div className="relative h-full w-full bg-black">
-            <div className="absolute top-0 bottom-0 left-0 right-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:10px_20px] sm:bg-[size:14px_24px]"></div>
-          </div>
-        </div>
+    <section id="project" data-nav-tone="dark" className="bg-white pb-28 pt-10 text-forest md:pb-36 md:pt-16">
+      <div className={column}>
+        <Reveal>
+          <h1 className="font-grotezk text-[length:clamp(3rem,8vw,6.5rem)] font-medium leading-none tracking-[-0.04em] text-sky">All work</h1>
+          <p className="mt-5 max-w-[46ch] text-[18px] leading-[1.55] text-forest/75">
+            {all.length} projects across design, code and live builds.
+          </p>
+        </Reveal>
 
-        <div className="relative max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 z-10">
-          {/* Title */}
-          <motion.div
-            className="flex items-center pt-0 sm:pt-4"
-            variants={titleVariants}
-            initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
-          >
-            <Sparkle className="text-blue-800  mr-2 w-5 h-5 md:w-6 md:h-6" />
-            <h1 className="text-base md:text-2xl sm:text-xl font-medium text-blue-800">My work</h1>
-          </motion.div>
-          <motion.h1
-            className="text-xl md:text-5xl sm:text-5xl font-bold mt-4 mb-8 md:mb-12"
-            variants={titleVariants}
-            initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
-          >
-            Crafting next level digital products
-          </motion.h1>
-
-          {/* Tabs */}
-          <motion.div
-            className="flex gap-2 md:gap-4 mb-10 md:mb-14 justify-center sm:justify-start flex-wrap"
-            variants={tabVariants}
-            initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
-          >
-            {tabs.map((tab) => (
-              <motion.button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={`
-                  px-2 py-1 sm:px-4 sm:py-2
-                  rounded-lg
-                  text-xs sm:text-sm
-                  font-medium
-                  transition-all duration-300
-                  flex items-center gap-1 sm:gap-2
-                  ${activeTab === tab.id
-                    ? 'bg-blue-800 text-white'
-                    : 'bg-gray-900/50 text-gray-400 hover:bg-gray-800/50'}
-                `}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {tab.label}
-                <span
-                  className={`
-                    text-xs
-                    px-1 sm:px-2 py-0.5 sm:py-1
-                    rounded-full
-                    ${activeTab === tab.id
-                      ? 'bg-white/20 text-white'
-                      : 'bg-gray-700/50 text-gray-400'}
-                  `}
+        <Reveal delay={80}>
+          <div role="group" aria-label="Filter projects" className="mt-10 flex flex-wrap gap-2">
+            {FILTERS.map(({ id, label, test }) => {
+              const on = id === filter;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => setFilter(id)}
+                  className={`inline-flex h-10 cursor-pointer items-center gap-2 rounded-full border px-4 text-[14px] font-medium transition-[background-color,border-color,color,scale] duration-150 ease-out active:scale-[0.97] ${
+                    on ? 'border-forest bg-forest text-beige' : 'border-forest/15 text-forest/80 hover:border-forest/45'
+                  }`}
                 >
-                  {tab.count}
-                </span>
-              </motion.button>
-            ))}
-          </motion.div>
-
-          {/* Projects Grid */}
-          <div className="mt-12" ref={ref}>
-            <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-12 w-full" key={activeTab}>
-              {displayedProjects.length > 0 ? (
-                displayedProjects.map((project, index) => (
-                  <motion.div
-                    key={`${activeTab}-${project.id}`}
-                    className="relative cursor-pointer group flex flex-col"
-                    style={{
-                      y: window.innerWidth >= 640 ? parallaxY : 0,
-                    }}
-                    variants={cardVariants(index)}
-                    initial="hidden"
-                    animate={isInView ? 'visible' : 'hidden'}
-                    exit="exit"
-                    onClick={() => handleProjectClick(project)}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {/* Image */}
-                    <div className="relative w-full aspect-video overflow-hidden rounded-xl">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        loading="lazy"
-                        className="w-full h-full object-cover"
-                      />
-
-                      {/* Tags */}
-                      <div className="absolute bottom-0 left-0 p-3 md:p-4 flex gap-2 flex-wrap">
-                        {project.tags.map((tag, tagIndex) => (
-                          <span
-                            key={tagIndex}
-                            className="text-xs font-medium px-2 py-1 rounded-full bg-gray-900/60 backdrop-blur-sm text-gray-100"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Detail Section */}
-                    <div className="pt-4 flex flex-col flex-grow">
-                      <h3 className="text-sm md:text-md font-bold text-white mb-2">{project.title}</h3>
-                      <p className="text-gray-300 text-xs md:text-sm leading-relaxed mb-3 line-clamp-2">{project.description}</p>
-                      <div className="flex items-center flex-wrap gap-3 md:gap-4 mt-auto">
-                        {project.designLink && (
-                          <a
-                            href={project.designLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-xs md:text-sm font-medium text-blue-500 hover:underline"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <Lightbulb className="w-3 h-3 md:w-4 md:h-4" /> Design
-                          </a>
-                        )}
-                        {project.githubLink && (
-                          <a
-                            href={project.githubLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group flex items-center gap-1 text-xs md:text-sm font-medium text-gray-300 hover:underline"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <Github className="w-3 h-3 md:w-4 md:h-4" />
-                            Code
-                            {project.status === 'ongoing' && (
-                              <span className="text-lime-400 text-xs md:text-sm"> (Ongoing)</span>
-                            )}
-                          </a>
-                        )}
-                        {project.liveLink && (
-                          <a
-                            href={project.liveLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-xs md:text-sm font-medium text-green-500 hover:underline"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <ExternalLink className="w-3 h-3 md:w-4 md:h-4" /> Live Demo
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))
-              ) : (
-                <motion.div className="text-center py-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                  <div className="text-gray-400 text-base md:text-lg font-medium">No projects found for this category</div>
-                </motion.div>
-              )}
-            </motion.div>
-
-            {/* Load More / Show Less */}
-            {(hasMore || isExpanded) && (
-              <motion.div
-                className="flex flex-wrap justify-center gap-3 mt-4 mb-4"
-                initial={{ opacity: 0, y: 0 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                {hasMore && (
-                  <motion.button
-                    onClick={handleLoadMore}
-                    className="group relative px-4 py-3 bg-blue-800/40 hover:bg-blue-800 rounded-lg transition-all duration-300 flex items-center gap-2"
-                    whileHover={{ scale: 1.02 }}
-                  >
-                    <span className="text-sm text-gray-200 group-hover:text-white font-medium">
-                      Load More ({remainingCount}/{filteredProjects.length})
-                    </span>
-                    <ChevronDown className="w-5 h-5 group-hover:animate-bounce" />
-                  </motion.button>
-                )}
-
-                {isExpanded && (
-                  <motion.button
-                    onClick={handleShowLess}
-                    className="group relative px-4 py-3 bg-blue-800/10 hover:bg-blue-800/40 border border-blue-800/40 rounded-lg transition-all duration-300 flex items-center gap-2"
-                    whileHover={{ scale: 1.02 }}
-                  >
-                    <span className="text-sm text-gray-200 group-hover:text-white font-medium">Show Less</span>
-                    <ChevronUp className="w-5 h-5 transition-transform group-hover:-translate-y-0.5" />
-                  </motion.button>
-                )}
-              </motion.div>
-            )}
+                  {label}
+                  <span className={`font-mono text-[11px] tabular-nums ${on ? 'text-beige/70' : 'text-forest/50'}`}>{all.filter(test).length}</span>
+                </button>
+              );
+            })}
           </div>
-        </div>
-      </section>
+        </Reveal>
 
-      {/* Project Detail Modal */}
-      <ProjectDetailModal
-        project={selectedProject}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-      />
-    </div>
+        {/* Re-keyed on the filter, so the new set fades up again. */}
+        <ul key={filter} className="mt-12 grid gap-x-8 gap-y-14 md:grid-cols-2 md:gap-x-10 md:gap-y-16">
+          {shown.map((project, i) => (
+            <li key={project.id}>
+              <Reveal delay={(i % 2) * 70}>
+                <ProjectThumb project={project} className="aspect-[16/10]" />
+                <h2 className="mt-5 font-grotezk text-[24px] font-medium leading-tight tracking-[-0.02em]">{project.title}</h2>
+                <p className="mt-1.5 text-[14.5px] text-forest/65">{project.tags.slice(0, 4).join(' · ')}</p>
+              </Reveal>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 };
