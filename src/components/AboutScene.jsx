@@ -6,6 +6,8 @@ import { SOCIAL } from '../data/socials';
 import { IconFolder } from './IconFolder';
 import { MovieCard, MusicCard, POSTER } from './MediaCards';
 import { useMobile } from '../lib/useMobile';
+import { useOpenTerminal } from '../lib/terminal';
+import { MiniTerminal } from './MiniTerminal';
 
 // The paper pulls in three.js, so it loads in its own chunk, after the page.
 const AboutPaper = lazy(() => import('./AboutPaper').then((m) => ({ default: m.AboutPaper })));
@@ -27,6 +29,8 @@ const CARDS = [
   { key: 'movie', from: 'right', left: '77%', top: '41%', rot: -6 },
   { key: 'music', from: 'right', left: '77%', top: '14%', rot: 4 },
   { key: 'socials', from: 'bottom', left: '47%', top: '66%', rot: -2 },
+  // A small terminal window (MiniTerminal, desktop only) between the paper and the photo: opens the terminal.
+  { key: 'terminal', from: 'top', left: '44%', top: '27%', rot: -4 },
 ];
 const PAPER = { x: -0.25, y: -0.03, rot: -2.5 };
 // Phones (useMobile), after the owner's sketch, laid out from the screen's size (layoutM): the paper
@@ -41,6 +45,7 @@ const SHEET_PX = { w: 462, h: 525 }; // the paper's size at size 1 (AboutPaper: 
 const NATURAL = { photo: [250, 330], socials: [311, 212], square: 150, poster: POSTER }; // at zoom 1 (px)
 const PHONE = { photo: 0.4, socials: 0.54, square: 0.36 }; // widths, as fractions of the screen's width
 const OVERLAP = 0.26;
+const ROW_MAX = 0.8;
 const layoutM = (W, viewH) => {
   const H = Math.max(viewH, 600); // the stage's height (it is at least 600px; the screen may be shorter)
   const size = Math.min((W - 48) / SHEET_PX.w, 0.95);
@@ -66,10 +71,15 @@ const layoutM = (W, viewH) => {
   const squaresTop = folderTop + folderH * k + 0.03 * viewH;
   const pctY = (y) => `${((y / H) * 100).toFixed(2)}%`;
   const pctX = (x) => `${((x / W) * 100).toFixed(2)}%`;
-  // The film poster and the music square, side by side and centred as a pair.
-  const zoomSq = square / NATURAL.square;
+  // The film poster and the music square, side by side and centred as a pair, shrunk to fit within
+  // ROW_MAX of the screen's width (they are tilted, so they need the margin).
+  const gap = 0.06 * W;
+  const rowW = (NATURAL.poster / NATURAL.square) * square + square;
+  const fit = Math.min(1, (ROW_MAX * W - gap) / rowW);
+  const zoomSq = (square * fit) / NATURAL.square;
   const posterW = NATURAL.poster * zoomSq;
-  const pairLeft = (W - (posterW + 0.07 * W + square)) / 2;
+  const sq = square * fit;
+  const pairLeft = (W - (posterW + gap + sq)) / 2;
   // Each piece comes in from, and leaves by, the screen edge nearest to where it rests.
   const nearest = (x, y, w, h) => {
     const cx = x + w / 2;
@@ -79,8 +89,8 @@ const layoutM = (W, viewH) => {
   };
   const photo = [W * (0.96 - PHONE.photo), paperBottom - 0.33 * paperH, PHONE.photo * W, NATURAL.photo[1] * photoZoom];
   const folder = [0.06 * W, folderTop, PHONE.socials * W * k, folderH * k];
-  const movie = [pairLeft, squaresTop, posterW, square];
-  const music = [pairLeft + posterW + 0.07 * W, squaresTop + 2, square, square];
+  const movie = [pairLeft, squaresTop, posterW, sq];
+  const music = [pairLeft + posterW + gap, squaresTop + 2, sq, sq];
   const place = ([x, y, w, h], rot, zoom) => ({ left: pctX(x), top: pctY(y), rot, zoom, from: nearest(x, y, w, h) });
   return {
     paper: { x: 0, y: (top + paperH / 2) / H - 0.5, rot: 2, size, from: nearest(24, top, W - 48, paperH) },
@@ -157,6 +167,7 @@ export const AboutScene = ({ itemRef }) => {
   const pushRefs = useRef([]);
   const paperRef = useRef(null);
   const [landed, setLanded] = useState(false);
+  const openTerminal = useOpenTerminal();
   const mobile = useMobile();
   // The screen's size, for the phone layout (re-laid out when it changes).
   const [screen, setScreen] = useState(() => [window.innerWidth, window.innerHeight]);
@@ -215,6 +226,7 @@ export const AboutScene = ({ itemRef }) => {
     <div ref={sceneRef} aria-label="About me" role="group" className="pointer-events-none absolute inset-0">
       {CARDS.map((card, i) => {
         const { key } = card;
+        if (key === 'terminal' && phone) return null; // no terminal window on phones
         const { left, top, rot, zoom, from: edge } = phone ? { ...card, ...phone.cards[key] } : card;
         return (
         <div
@@ -232,7 +244,9 @@ export const AboutScene = ({ itemRef }) => {
             }}
             className="transition-transform duration-300 ease-out-expo"
           >
-            <div style={zoom ? { zoom } : undefined}>{(phone ? CONTENT_M : CONTENT)[key]}</div>
+            <div style={zoom ? { zoom } : undefined}>
+              {key === 'terminal' ? <MiniTerminal onOpen={openTerminal} /> : (phone ? CONTENT_M : CONTENT)[key]}
+            </div>
           </div>
         </div>
         );
@@ -263,7 +277,14 @@ export const AboutScene = ({ itemRef }) => {
             const at = mobile ? STICKER_CORNER_M : { corner: 'bl', dx: st.dx, dy: st.dy };
             const [cx, cy] = cornerOf(window.innerWidth, window.innerHeight, paper, stickerSize, at.corner);
             return (
-              <div key={st.key} ref={itemRef(CARDS.length + 1 + i)} data-order={0} data-from="nearest" style={{ visibility: 'hidden' }} className="absolute inset-0 will-change-transform">
+              <div
+                key={st.key}
+                ref={itemRef(CARDS.length + 1 + i)}
+                data-order={0}
+                data-from="nearest"
+                style={{ visibility: 'hidden' }}
+                className="absolute inset-0 will-change-transform"
+              >
                 <StickerPeel
                   imageSrc={st.src}
                   width={st.width * stickerSize}

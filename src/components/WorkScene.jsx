@@ -1,6 +1,7 @@
 import { projectsData } from '../data/projects';
 import { ProjectThumb } from './ProjectCard';
 import { ALL_WORK } from './projectView';
+import { MOBILE_Y } from './workLayout';
 import { Button } from './ui/Button';
 import { ArrowSwap } from './ui/ArrowSwap';
 
@@ -15,11 +16,6 @@ import { ArrowSwap } from './ui/ArrowSwap';
 // screen's width, all scrolling up together with the page (no hold, no dissolve); each card's place is
 // data-my (MOBILE_Y) and the heading moves with the column (Home's scroll hook reads isMobile()).
 
-// Phones: the cards' tops in the column (screen heights), MOBILE_H tall: the first just under the
-// heading's button, and spaced so the last is halfway off the top as Tools starts coming in (TOOLS_AT,
-// 3.15 in Home.jsx), so the next section begins while it is still leaving.
-const MOBILE_H = 0.42; // tall enough that the gaps between them stay small (≈ 3% of the screen)
-const MOBILE_Y = [0, 1, 2, 3, 4].map((i) => 1.15 + i * ((3.15 - MOBILE_H / 2 - 1.15) / 4));
 
 // The five newest projects (the list is oldest first).
 const FEATURED = [...projectsData].reverse().slice(0, 5);
@@ -40,9 +36,9 @@ const WORK_LAYOUT = [
 const Card = ({ project }) => (
   <ProjectThumb project={project} className="size-full shadow-[0_24px_60px_-28px_rgb(10_40_22/0.55)]">
     <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgb(10_30_18/0.78),rgb(10_30_18/0.15)_45%,transparent_70%)]" />
-    <span className="pointer-events-none absolute bottom-0 left-0 p-6 text-white">
-      <span className="block font-grotezk text-[24px] font-medium leading-tight tracking-[-0.02em]">{project.title}</span>
-      <span className="mt-1.5 block text-[14px] text-white/75">{project.tags.slice(0, 3).join(' · ')}</span>
+    <span className="pointer-events-none absolute bottom-0 left-0 p-4 text-white md:p-6">
+      <span className="block font-grotezk text-[17px] font-medium leading-tight tracking-[-0.02em] md:text-[24px]">{project.title}</span>
+      <span className="mt-1 block text-[12px] text-white/75 md:mt-1.5 md:text-[14px]">{project.tags.slice(0, 3).join(' · ')}</span>
     </span>
   </ProjectThumb>
 );
@@ -79,7 +75,7 @@ export const WorkScene = ({ headingRef, cardRef }) => (
           data-my={MOBILE_Y[i]}
           data-h={h}
           style={{ '--x': x, '--h': `${h * 100}svh`, visibility: 'hidden' }}
-          className={`pointer-events-auto absolute top-0 z-10 h-[42svh] w-[88vw] left-[6%] md:h-[var(--h)] md:left-[var(--x)] md:w-[min(34vw,520px)] will-change-transform`}
+          className={`pointer-events-auto absolute top-0 z-10 aspect-video h-[23svh] max-w-[94vw] left-1/2 -translate-x-1/2 md:aspect-auto md:max-w-none md:translate-x-0 md:h-[var(--h)] md:left-[var(--x)] md:w-[min(34vw,520px)] will-change-transform`}
         >
           <Card project={project} />
         </div>

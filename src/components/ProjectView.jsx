@@ -151,7 +151,7 @@ const Sheet = ({ view, onClosed, onSwap }) => {
         aria-modal="true"
         aria-label={`${project.title}: project details`}
         data-lenis-prevent
-        className="fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-white text-forest"
+        className="fixed inset-0 z-[60] overflow-y-auto overflow-x-clip overscroll-contain bg-white text-forest"
       >
         {/* Close: pinned to the top of the sheet, on the right edge of the content column. */}
         <div className="pointer-events-none sticky top-0 z-10 h-0">
@@ -160,10 +160,12 @@ const Sheet = ({ view, onClosed, onSwap }) => {
               ref={closeRef}
               type="button"
               onClick={close}
-              className="pointer-events-auto inline-flex h-11 cursor-pointer items-center gap-2 rounded-full border border-forest/15 bg-white/90 pl-4 pr-3 text-[14px] font-medium text-forest backdrop-blur-sm transition-[border-color,scale] duration-150 ease-out hover:border-forest/40 active:scale-[0.97]"
+              aria-label="Close"
+              className="pointer-events-auto inline-flex size-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-forest/15 bg-white/90 text-[14px] font-medium text-forest shadow-[0_6px_18px_-12px_rgb(10_40_22/0.5)] backdrop-blur-sm transition-[border-color,scale] duration-150 ease-out hover:border-forest/40 active:scale-[0.97] md:w-auto md:pl-4 md:pr-3"
             >
-              Close
-              <X aria-hidden="true" strokeWidth={1.75} className="size-4" />
+              {/* Phones: just the ✕ (a compact round button covers less of the text under it). */}
+              <span aria-hidden="true" className="max-md:hidden">Close</span>
+              <X aria-hidden="true" strokeWidth={1.75} className="size-5 md:size-4" />
             </button>
           </div>
         </div>
@@ -177,7 +179,7 @@ const Sheet = ({ view, onClosed, onSwap }) => {
             ))}
             {project.status === 'ongoing' && <li className="rounded-full bg-beige px-3 py-1 text-[12.5px] text-forest">Ongoing</li>}
           </ul>
-          <h2 className="mt-6 font-grotezk text-[length:clamp(2.4rem,6vw,4.75rem)] font-medium leading-[0.98] tracking-[-0.04em]">{project.title}</h2>
+          <h2 className="mt-6 font-grotezk text-[length:clamp(2.1rem,6vw,4.75rem)] font-medium leading-[0.98] tracking-[-0.04em] [overflow-wrap:anywhere] [hyphens:auto]">{project.title}</h2>
           {/* The large image: where the card's image lands. */}
           <div ref={heroRef} style={{ visibility: settled ? 'visible' : 'hidden', borderRadius: RADIUS }} className="mt-10 aspect-[16/9] overflow-hidden bg-forest/10">
             <img src={project.image} alt={`${project.title} preview`} className="size-full object-cover" />
@@ -190,7 +192,7 @@ const Sheet = ({ view, onClosed, onSwap }) => {
               {facts.map(({ label, value }) => (
                 <div key={label}>
                   <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-forest/55">{label}</dt>
-                  <dd className="mt-1.5 text-[15px] font-medium leading-snug">{value}</dd>
+                  <dd className="mt-1.5 text-[15px] font-medium leading-snug [overflow-wrap:anywhere]">{value}</dd>
                 </div>
               ))}
             </dl>
@@ -254,7 +256,7 @@ const Sheet = ({ view, onClosed, onSwap }) => {
               <span ref={nextRef} style={{ borderRadius: RADIUS }} className="block aspect-[16/9] overflow-hidden bg-forest/10">
                 <img src={next.image} alt="" loading="lazy" className="size-full object-cover" />
               </span>
-              <span className="mt-5 flex items-center justify-between gap-6">
+              <span className="mt-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
                 <span className="font-grotezk text-[length:clamp(1.6rem,3.2vw,2.4rem)] font-medium leading-tight tracking-[-0.03em]">{next.title}</span>
                 <span className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full border border-forest bg-forest px-5 text-[14.5px] font-medium text-beige transition-[background-color,border-color,scale] duration-150 ease-out group-hover:border-[#1B6A3B] group-hover:bg-[#1B6A3B] group-active:scale-[0.97]">
                   Next

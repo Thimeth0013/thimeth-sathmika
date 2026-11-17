@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSmoothAnchor } from '../lib/useSmoothAnchor';
-import { useMobile } from '../lib/useMobile';
 
 // Section nav between the hero and the footer (the hero has its own top bar, HeroNav, and the footer
 // has its own socials). At rest it is a column of dots on the right edge, vertically centred: one dot
@@ -20,9 +19,6 @@ const ITEMS = [
 const items = ITEMS;
 const SECTIONS = ITEMS.map((item) => item.href.slice(1));
 const ROW = 28; // px between items (the link rows are this tall, so the dot column is one hover area)
-// Phones: a simpler, smaller rail: taller rows for a finger (ROW_M), smaller dots, closer to the edge,
-// and the names (shown after a first tap) on white pills so they read over anything.
-const ROW_M = 34;
 const CLOSE_AFTER = 260; // ms after the pointer leaves, so a slip off the edge doesn't snap it shut
 
 export const SideNav = () => {
@@ -101,8 +97,7 @@ export const SideNav = () => {
     }, CLOSE_AFTER);
   };
 
-  const mobile = useMobile();
-  const offset = (i) => (i - (items.length - 1) / 2) * (mobile ? ROW_M : ROW);
+  const offset = (i) => (i - (items.length - 1) / 2) * ROW;
 
   // A tap on a closed menu (touch or pen) only opens it, so you can see where you're going.
   // Mouse clicks and keyboard (detail 0) navigate straight away.
@@ -123,7 +118,8 @@ export const SideNav = () => {
       aria-label="Sections"
       inert={hidden}
       data-open={open || undefined}
-      className={`side-dial pointer-events-none fixed right-0 top-1/2 z-40 size-0 transition-[translate,opacity,color] duration-500 ease-out-expo ${
+      // Desktop only: phones have the top bar's menu (MobileNav).
+      className={`side-dial pointer-events-none fixed right-0 top-1/2 z-40 size-0 max-md:hidden transition-[translate,opacity,color] duration-500 ease-out-expo ${
         tone === 'light' ? 'text-white' : 'text-forest'
       } ${
         hidden ? 'translate-x-8 opacity-0' : ''
@@ -154,25 +150,23 @@ export const SideNav = () => {
                   onEnter(e); // reopens after a click, when the pointer never left the nav
                 }}
                 onFocus={() => setPointed(i)}
-                className="group pointer-events-auto relative flex h-7 w-14 cursor-pointer items-center justify-end pr-[18px] focus-visible:outline-none max-md:h-[34px] max-md:w-10 max-md:pr-3"
+                className="group pointer-events-auto relative flex h-7 w-14 cursor-pointer items-center justify-end pr-[18px] focus-visible:outline-none"
               >
                 {/* The dot: one size, scaled down unless it is the current (or pointed-at) section. */}
                 <span
                   aria-hidden="true"
-                  className={`size-2.5 rounded-full bg-current transition-[scale,opacity] duration-300 ease-out-expo max-md:size-2 ${
+                  className={`size-2.5 rounded-full bg-current transition-[scale,opacity] duration-300 ease-out-expo ${
                     lit ? 'opacity-100' : 'scale-[0.56] opacity-40'
                   }`}
                 />
                 <span
                   style={{ '--i': i }}
                   className={`side-dial-name absolute right-full top-1/2 whitespace-nowrap rounded-full px-2 py-0.5 font-grotezk text-[17px] font-medium leading-6 tracking-[-0.01em] group-focus-visible:outline-2 group-focus-visible:outline-current ${
-                    mobile
-                      ? `bg-white/92 px-3 text-[15px] shadow-[0_6px_18px_-10px_rgb(10_40_22/0.45)] backdrop-blur-sm ${current ? 'text-forest' : 'text-forest/60'}`
-                      : current
-                        ? ''
-                        : tone === 'light'
-                          ? 'text-white/60 group-hover:text-white'
-                          : 'text-forest/55 group-hover:text-forest'
+                    current
+                      ? ''
+                      : tone === 'light'
+                        ? 'text-white/60 group-hover:text-white'
+                        : 'text-forest/55 group-hover:text-forest'
                   }`}
                 >
                   {name}

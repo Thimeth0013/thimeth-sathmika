@@ -6,6 +6,7 @@ import groundFront from '../../assets/hero/ground-front.webp';
 import skyM from '../../assets/hero/sky-m.webp';
 import groundM from '../../assets/hero/ground-m.webp';
 import { isMobile, useMobile } from '../../lib/useMobile';
+import { MOBILE_TOOLS_AT } from '../workLayout';
 import { useSmoothAnchor } from '../../lib/useSmoothAnchor';
 import { MeadowCat } from '../MeadowCat';
 import { Clouds } from '../Clouds';
@@ -54,8 +55,8 @@ const ABOUT_LANDED = 0.55; // by here every About piece has landed
 // line fades as the last icons launch (TOOLS_OUT, stream progress), and by STREAM_END every icon has
 // flown past. JOURNEY_AT after Tools starts (once the line has faded, while the last icons are still
 // flying past) "My journey" comes in; the Journey runs JOURNEY_RUN (its timing is in journey.js).
-const PIECE_RUN = 0.32;
-const PIECE_GAP = 0.07;
+const PIECE_RUN = 0.3;
+const PIECE_GAP = 0.05; // six pieces after the paper: the last lands by ABOUT_LANDED
 const ABOUT_EXIT = [0.72, 0.96];
 const WHITE_EDGE = 110; // % of the screen: how soft the edge of the white sweeping up is
 // A soft sky-blue wash left at the top of the white (so it is not plain white): strongest at the top
@@ -65,6 +66,9 @@ const WHITE_HUE =
 const WORK_FROM = 0.8; // About run: once the bottom of the screen has mostly turned white
 const HEADING_Y = 1.05; // the heading's middle, in the column (screen heights): just below the screen
 const TOOLS_AT = 3.15; // column position (screen heights): the last card is near the top, rising out
+// Phones have shorter 16:9 cards (workLayout.js), so Tools starts earlier there. The schedule is set
+// once, for the screen the page loads on.
+const TOOLS_AT_NOW = isMobile() ? MOBILE_TOOLS_AT : TOOLS_AT;
 const TOOLS_COME = 0.25;
 const TOOLS_RUN = 2.4;
 const TOOLS_OUT = [0.6, 0.72];
@@ -73,7 +77,7 @@ const JOURNEY_AT = 1.7;
 const SCHEDULE = (() => {
   const about = HERO_RUN * ABOUT_FROM;
   const work = about + ABOUT_RUN * WORK_FROM; // the column starts moving, once the white is coming up
-  const tools = work + TOOLS_AT; // the line starts coming in; the icons start
+  const tools = work + TOOLS_AT_NOW; // the line starts coming in; the icons start
   const journey = tools + JOURNEY_AT; // "My journey" starts coming in
   const end = journey + JOURNEY_RUN;
   return { about, work, tools, journey, end };
@@ -428,7 +432,7 @@ export const Home = () => {
           className="pointer-events-none absolute inset-0 z-[13] grid origin-center place-items-center will-change-transform motion-reduce:hidden"
         >
           {/* A soft white halo keeps the line clear of the icons streaming past behind it. */}
-          <p className="bg-[radial-gradient(closest-side,#fff_55%,rgb(255_255_255/0))] px-10 py-10 font-grotezk text-[length:1.9rem] font-medium leading-none tracking-[-0.035em] text-sky md:px-24 md:py-14 md:text-[length:clamp(2.6rem,5.2vw,5rem)]">
+          <p className="bg-[radial-gradient(closest-side,#fff_55%,rgb(255_255_255/0))] px-6 py-10 font-grotezk text-[length:2.35rem] font-medium leading-none tracking-[-0.035em] text-sky md:px-24 md:py-14 md:text-[length:clamp(2.6rem,5.2vw,5rem)]">
             Tools I work with.
           </p>
         </div>
