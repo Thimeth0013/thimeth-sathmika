@@ -1,4 +1,4 @@
-import{r as k,j as Ee}from"./Footer-DeOp1gZe.js";const _=96,ye=.18,yt=1024,qe=96,se=260,Tt={gloss:0,matte:1,holo:2};let Ye=1;const Rt=`#version 300 es
+import{r as k,j as Ee}from"./Footer-BKodJelq.js";const _=96,ye=.18,yt=1024,qe=96,se=260,Tt={gloss:0,matte:1,holo:2};let Ye=1;const Rt=`#version 300 es
 in vec2 aGrid;
 uniform vec2 uCanvas;
 uniform vec2 uMesh;

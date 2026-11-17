@@ -1,4 +1,4 @@
-import{c as I,j as e,r as m,X as J,p as T}from"./Footer-DeOp1gZe.js";import{T as Q,C as z,B as C}from"./main-CH6OsvUI.js";/**
+import{c as I,j as e,r as m,X as J,p as T}from"./Footer-BKodJelq.js";import{T as Q,C as z,B as C}from"./main-OvcQcBfL.js";/**
  * @license lucide-react v0.522.0 - ISC
  *
  * This source code is licensed under the ISC license.
