@@ -8,6 +8,7 @@ import safeCert from '../assets/projects/safecert.webp';
 import launchWindow from '../assets/projects/launchWindow.webp';
 import moneyMentor from '../assets/projects/moneyMentor.webp';
 import healthCare from '../assets/projects/healthCare.webp';
+import helioGrid from '../assets/projects/helioGrid.webp';
 
 export const projectsData = [
   {
@@ -390,6 +391,7 @@ export const projectsData = [
     designLink: 'https://stitch.withgoogle.com/projects/4366701402330493736',
     githubLink: 'https://github.com/Y3S2-SE/smart-healthcare-platform',
     liveLink: '',
+    videoLink: 'https://www.youtube.com/watch?v=QayUVQZl66Q',
     status: 'completed',
 
     keyFeatures: [
@@ -475,6 +477,55 @@ export const projectsData = [
       {
         label: 'Real-time & AI',
         value: 'WebSocket (ws), Google Generative AI (Gemini)'
+      }
+    ]
+  },
+  {
+    id: 11,
+    title: 'HelioGrid Solar Microgrid Trading',
+    description: 'A client-server platform where solar prosumers reserve energy slots at microgrid nodes, grid operators verify transfers by QR code, and backoffice staff run the network, with a C# Web API, a React web app and a native Android app. Built to understand web services, .NET and pure Android development.',
+    image: helioGrid,
+    tags: ['ASP.NET Core', 'React', 'Android (Java)', 'MongoDB'],
+    designLink: '',
+    githubLink: 'https://github.com/Y4-SE-Projects/smart-solar-microgrid',
+    liveLink: '',
+    videoLink: 'https://mysliit-my.sharepoint.com/:v:/g/personal/it23218512_my_sliit_lk/IQDWy-5XcajhRqMAPAnO0ljmAe0rNf54UP3ReUOkurppEVE?e=q1FSf9&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D',
+    status: 'completed',
+
+    keyFeatures: [
+      'Three roles (Backoffice, Grid Operator, Solar Prosumer) with platform access enforced by the API at login',
+      'Microgrid node management: GPS location, capacity, battery slots and operating schedules',
+      'Energy slot reservations with a 7-day booking window and a 12-hour change/cancel notice rule',
+      'HMAC-signed reservation QR passes that operators scan and verify server-side to finalize a transfer, with revoke and audit history',
+      'Google Maps view of nearby stations on web and Android',
+      'Prosumer account lifecycle: self-deactivation, reactivation requests and a backoffice approval queue',
+      'Offline-friendly Android client with Room (SQLite) session and dashboard caching'
+    ],
+
+    problem: 'Households with solar panels have no simple, trustworthy way to trade surplus energy through shared microgrid nodes. Without central rules, bookings clash, slots go stale and transfers cannot be verified at the station.',
+
+    impact: 'HelioGrid puts every rule in one FAT Web API, so the web and mobile clients behave identically and cannot drift. Prosumers book and track slots from their phone, operators verify each transfer against live server data before it is finalized, and administrators manage the whole network from one dashboard.',
+
+    architecture: [
+      {
+        label: 'Architecture',
+        value: 'Client-server, FAT service'
+      },
+      {
+        label: 'Backend',
+        value: '.NET Web API'
+      },
+      {
+        label: 'Clients',
+        value: 'React, native Android (Java)'
+      },
+      {
+        label: 'Database',
+        value: 'MongoDB'
+      },
+      {
+        label: 'External APIs',
+        value: 'Google Maps'
       }
     ]
   }

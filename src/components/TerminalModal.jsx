@@ -439,6 +439,7 @@ const TerminalModal = ({ isOpen = true, onClose = () => {} }) => {
                   <div className="flex gap-4 text-sm mt-4 border-t border-gray-700 pt-3">
                     {project.githubLink && <a href={project.githubLink} target="_blank" rel="noreferrer" className="text-green-400 hover:underline flex items-center gap-1"><ChevronRight size={14}/> View Code</a>}
                     {project.liveLink && <a href={project.liveLink} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline flex items-center gap-1"><ChevronRight size={14}/> Live Demo</a>}
+                    {project.videoLink && <a href={project.videoLink} target="_blank" rel="noreferrer" className="text-yellow-400 hover:underline flex items-center gap-1"><ChevronRight size={14}/> Walkthrough Video</a>}
                     {project.designLink && <a href={project.designLink} target="_blank" rel="noreferrer" className="text-pink-400 hover:underline flex items-center gap-1"><ChevronRight size={14}/> Design</a>}
                   </div>
                 </div>

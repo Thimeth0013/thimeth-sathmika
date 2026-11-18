@@ -209,12 +209,14 @@ const Sheet = ({ view, onClosed, onSwap }) => {
                   href={project[key]}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`group inline-flex h-11 items-center gap-2 rounded-full border px-5 text-[14.5px] font-medium transition-[background-color,border-color,scale] duration-150 ease-out active:scale-[0.97] ${
+                  className={`group inline-flex h-11 items-center gap-2 rounded-full border pl-5 pr-[18px] text-[14.5px] font-medium transition-[background-color,border-color,scale] duration-150 ease-out active:scale-[0.97] ${
                     i === 0 ? 'border-forest bg-forest text-beige hover:border-[#1B6A3B] hover:bg-[#1B6A3B]' : 'border-forest/20 text-forest hover:border-forest/50'
                   }`}
                 >
                   <Icon aria-hidden="true" strokeWidth={1.75} className="size-4" />
-                  {label}
+                  {/* Apfel Grotezk draws its capitals ~1px above the line box's middle; nudge the label onto the icons' centre.
+                      pr is 2px under pl because the arrow icon carries ~3px of empty space on its right. */}
+                  <span className="translate-y-px">{label}</span>
                   <ArrowUpRight aria-hidden="true" strokeWidth={1.75} className="size-4 opacity-60" />
                 </a>
                 );
