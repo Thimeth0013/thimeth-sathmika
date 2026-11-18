@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useLenis } from 'lenis/react';
 import CV from '../../assets/Thimeth_Sathmika_CV.pdf';
 import sky from '../../assets/hero/sky.webp';
@@ -15,6 +16,7 @@ import { ABOUT_CLOUDS, HERO_CLOUDS, HERO_CLOUDS_M } from '../heroClouds';
 import cloud1 from '../../assets/hero/cloud-1.webp';
 import { Button } from '../ui/Button';
 import { ArrowSwap } from '../ui/ArrowSwap';
+import { LiveOrb } from '../ui/LiveOrb';
 import { AboutScene } from '../AboutScene';
 import { SkillsScene } from '../SkillsScene';
 import { WorkScene } from '../WorkScene';
@@ -263,9 +265,11 @@ const useFlyThrough = (trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRe
   }, [trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRef, sceneRefs]);
 };
 
-// The hero's loader. #boot (in index.html) covers the page from the first paint; this waits for the
-// hero's own images (the sky and the ground: the phone's or the desktop's) and the fonts, filling the
-// loader's line as each arrives, then fades it out and removes it. Until then the page does not scroll,
+// The hero's loader. #boot (in index.html) covers the page from the first paint, with a plain CSS orb
+// face; Home mounts the live orb (LiveOrb, the eyes follow the pointer) into #boot-orb over it
+// (orbHost). This waits for the hero's own images (the sky and the ground: the phone's or the
+// desktop's) and the fonts, then fades the loader out, unmounts the orb (freeing its WebGL context)
+// and removes #boot. Until then the page does not scroll,
 // the hero's entrance animations wait (data-loading on the stage, .hero-frame rules in index.css) and the
 // later scenes are not mounted, so nothing else competes with the ground for the connection. It gives up
 // waiting after BOOT_MAX ms, so a slow or failed image never leaves the page covered.
@@ -275,7 +279,6 @@ const useHeroReady = () => {
   const [ready, setReady] = useState(() => !document.getElementById('boot'));
   useEffect(() => {
     if (ready) return undefined;
-    const boot = document.getElementById('boot');
     const root = document.documentElement;
     root.style.overflow = 'hidden';
     const images = isMobile() ? [skyM, groundM] : [sky, ground, groundFront];
@@ -288,22 +291,13 @@ const useHeroReady = () => {
       }),
       document.fonts.ready,
     ];
-    let done = 0;
     let over = false;
     const finish = () => {
       if (over) return;
       over = true;
       setReady(true);
     };
-    waits.forEach((wait) =>
-      wait
-        .catch(() => {})
-        .finally(() => {
-          done += 1;
-          boot?.style.setProperty('--p', String(Math.max(done / waits.length, 0.08)));
-        })
-    );
-    // A beat after the line is full, so it reads as finished.
+    // A beat after everything is in, so a fast load doesn't just flash the orb.
     Promise.allSettled(waits).then(() => setTimeout(finish, 250));
     const cap = setTimeout(finish, BOOT_MAX);
     return () => clearTimeout(cap);
@@ -314,7 +308,9 @@ const useHeroReady = () => {
     return () => lenis?.start();
   }, [ready, lenis]);
   // Once ready: let the page scroll, place the newly mounted scenes for where the page is (the scroll
-  // hook runs on scroll), and fade the loader out.
+  // hook runs on scroll), and fade the loader out; once it has faded, the orb unmounts and #boot goes.
+  const [orbHost] = useState(() => document.getElementById('boot-orb'));
+  const [gone, setGone] = useState(() => !document.getElementById('boot'));
   useEffect(() => {
     if (!ready) return undefined;
     document.documentElement.style.overflow = '';
@@ -322,10 +318,13 @@ const useHeroReady = () => {
     const boot = document.getElementById('boot');
     if (!boot) return undefined;
     boot.classList.add('boot-done');
-    const gone = setTimeout(() => boot.remove(), 700);
-    return () => clearTimeout(gone);
+    const t = setTimeout(() => setGone(true), 700);
+    return () => clearTimeout(t);
   }, [ready]);
-  return ready;
+  useEffect(() => {
+    if (gone) document.getElementById('boot')?.remove();
+  }, [gone]);
+  return { ready, orbHost: gone ? null : orbHost };
 };
 
 // A full-screen layer of the fly-through.
@@ -363,7 +362,7 @@ export const Home = () => {
   };
   useFlyThrough(trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRef, sceneRefs);
   const mobile = useMobile();
-  const ready = useHeroReady();
+  const { ready, orbHost } = useHeroReady();
   const clouds = mobile ? HERO_CLOUDS_M : HERO_CLOUDS;
   const smoothAnchor = useSmoothAnchor();
 
@@ -372,6 +371,8 @@ export const Home = () => {
     // reduced motion it is just the one screen, unpinned.
     <section ref={trackRef} id="home" data-nav-tone="light" style={{ height: `${(1 + SCHEDULE.end) * 100}lvh` }}
       className="relative motion-reduce:h-auto!">
+      {/* The loader's orb (see useHeroReady), in the site's cream with forest eyes. */}
+      {orbHost && createPortal(<LiveOrb variant="custom" color="#FBF6EC" eyeColor="#14532D" size={112} label="Loading" />, orbHost)}
       <div
         ref={stageRef}
         data-loading={ready ? undefined : ''}
