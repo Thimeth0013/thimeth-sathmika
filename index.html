@@ -10,33 +10,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300..700&family=Archivo:wght@400;500;600&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">
     <title>Thimeth Sathmika</title>
-    <!-- The loader (#boot): the hero's sky blue with a little orb character in the middle, cream with
-         forest eyes. Here it is a plain CSS face, so it shows from the first paint, before any script or
-         stylesheet; once React is up, Home.jsx mounts the live one (ui/LiveOrb.jsx, WebGL: the eyes
-         follow the pointer, glance around and blink) into #boot-orb over it, and the CSS face goes
-         (:has). Home fades #boot out and removes it once the hero's sky, ground and fonts are in. -->
+    <!-- The loader (#boot): the hero's sky gradient (the phone's on phones) with a small cream spinner,
+         plain HTML and CSS here, so it shows and spins from the first paint, before any script (a
+         transform animation, which the browser runs off the main thread). Kept simple on purpose: the
+         clouds are the site's highlight, so they are saved for the hero. The spinner shows only after a
+         moment, so a fast load never flashes it. When the hero is ready Home.jsx adds .boot-done (it fades
+         into the hero) and removes #boot. -->
     <style>
-      #boot { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; background: #2F7CC4; transition: opacity .55s cubic-bezier(.16, 1, .3, 1); }
+      #boot { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; background: linear-gradient(#216FB4, #317CC0 25%, #5499DA 55%, #A1C8FD 92%); transition: opacity .5s cubic-bezier(.4, 0, .2, 1); }
       #boot.boot-done { opacity: 0; pointer-events: none; }
-      #boot-orb { display: grid; width: 112px; height: 112px; }
-      #boot-orb > * { grid-area: 1 / 1; }
-      #boot-orb:has([data-slot="live-orb"]) .boot-face { display: none; }
-      /* Sized to match the live orb at rest (its sphere is 94% of the box; eyes from its shader). */
-      #boot .boot-face { position: relative; margin: 3%; border-radius: 50%; background: #FBF6EC; }
-      #boot .boot-face span { position: absolute; top: 37%; width: 5.4%; height: 18%; border-radius: 999px; background: #14532D; }
-      #boot .boot-face span:first-child { left: 33.3%; }
-      #boot .boot-face span:last-child { left: 61.3%; }
-      @media (prefers-reduced-motion: reduce) { #boot { transition: none; } }
+      #boot .boot-spin { width: 28px; height: 28px; border-radius: 50%; border: 2.5px solid rgb(251 246 236 / .3); border-top-color: #FBF6EC;
+        animation: boot-show .3s ease-out .35s both, boot-spin .8s linear infinite; }
+      @keyframes boot-spin { to { transform: rotate(1turn); } }
+      @keyframes boot-show { from { opacity: 0; } }
+      @media (max-width: 767px) { #boot { background: linear-gradient(#0056D2, #0462DD 25%, #1275F0 55%, #43A5FC 92%); } }
     </style>
-    <script type="module" crossorigin src="/thimeth-sathmika/assets/main-CeYhhnL3.js"></script>
-    <link rel="modulepreload" crossorigin href="/thimeth-sathmika/assets/Footer-t-1QMFy6.js">
-    <link rel="stylesheet" crossorigin href="/thimeth-sathmika/assets/Footer-CBl7T9x_.css">
+    <script type="module" crossorigin src="/thimeth-sathmika/assets/main-dAAYJP9J.js"></script>
+    <link rel="modulepreload" crossorigin href="/thimeth-sathmika/assets/Footer-DtrWRJqJ.js">
+    <link rel="stylesheet" crossorigin href="/thimeth-sathmika/assets/Footer-WV7UyVJV.css">
   </head>
   <body>
     <div id="boot" role="status" aria-label="Loading">
-      <div id="boot-orb" aria-hidden="true">
-        <div class="boot-face"><span></span><span></span></div>
-      </div>
+      <div class="boot-spin" aria-hidden="true"></div>
     </div>
     <div id="root"></div>
   </body>
