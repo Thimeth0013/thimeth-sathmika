@@ -19,7 +19,7 @@ import { AboutScene } from '../AboutScene';
 import { SkillsScene } from '../SkillsScene';
 import { WorkScene } from '../WorkScene';
 import { JourneyList, JourneyScene } from '../JourneyScene';
-import { JOURNEY_RUN } from '../journey';
+import { CERTS_SHOW, JOURNEY_RUN } from '../journey';
 
 // Staggered entrance for the copy (see .animate-rise in index.css).
 const rise = (ms) => ({ animationDelay: `${ms}ms` });
@@ -318,6 +318,45 @@ const useHeroReady = () => {
   return ready;
 };
 
+// The end of the pinned scenes: once you scroll down past the point where "Certificates & badges" starts
+// to dissolve (CERTS_SHOW.out), the page glides on to the bottom by itself (Lenis, a gentle ease-in-out;
+// FOOTER_GLIDE s plus PER_SCREEN for each screen of distance, at most GLIDE_MAX), through the last cards
+// leaving and the footer coming up, rather than leaving a stretch to scroll through. Only going down;
+// scrolling back up is free, and crossing the point down again glides again. Desktop only (phones keep
+// the earlier certificates, CertsMobile); off with reduced motion.
+const FOOTER_GLIDE = 1.1;
+const PER_SCREEN = 0.3;
+const GLIDE_MAX = 2.2;
+const useGlideToFooter = (trackRef, stageRef) => {
+  const lenis = useLenis();
+  useEffect(() => {
+    if (!lenis || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    let last = lenis.scroll;
+    let gliding = false;
+    const off = lenis.on('scroll', ({ scroll }) => {
+      const track = trackRef.current;
+      const stage = stageRef.current;
+      const from = last;
+      last = scroll;
+      if (!track || !stage || gliding || lenis.isStopped || isMobile()) return; // desktop only
+      const screen = stage.offsetHeight;
+      const fades = track.getBoundingClientRect().top + window.scrollY + (SCHEDULE.journey + CERTS_SHOW.out[0]) * screen;
+      if (from < fades && scroll >= fades && scroll < lenis.limit - 2) {
+        gliding = true;
+        lenis.scrollTo(lenis.limit, {
+          duration: Math.min(FOOTER_GLIDE + ((lenis.limit - scroll) / screen) * PER_SCREEN, GLIDE_MAX),
+          easing: (t) => (1 - Math.cos(Math.PI * t)) / 2,
+          lock: true,
+          onComplete: () => {
+            gliding = false;
+          },
+        });
+      }
+    });
+    return () => off?.();
+  }, [lenis, trackRef, stageRef]);
+};
+
 // A full-screen layer of the fly-through.
 // The origin is the vanishing point just above the horizon (HORIZON of the photo's height).
 const layerClass =
@@ -354,6 +393,7 @@ export const Home = () => {
   useFlyThrough(trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRef, sceneRefs);
   const mobile = useMobile();
   const ready = useHeroReady();
+  useGlideToFooter(trackRef, stageRef);
   const clouds = mobile ? HERO_CLOUDS_M : HERO_CLOUDS;
   const smoothAnchor = useSmoothAnchor();
 
