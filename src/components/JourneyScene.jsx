@@ -1,8 +1,9 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { GraduationCap, LaptopMinimal, Rocket } from 'lucide-react';
-import { CertRing } from './CertRing';
+import { CertStream, CertTitle } from './CertStream';
+import { CertsMobile } from './CertsMobile';
 import { isMobile, useMobile } from '../lib/useMobile';
-import { CERTS, CERTS_SHOW, HEAD, LINE, STOPS } from './journey';
+import { CERTS, CERTS_SHOW, CERTS_SHOW_M, HEAD, LINE, STOPS } from './journey';
 
 // The Journey, after Tools in the hero's pinned scroll (after johnbolster.design's "The Journey"):
 // Education and Experience as stops along a road, then the certificates. All of it is scroll-driven: the
@@ -18,8 +19,10 @@ import { CERTS, CERTS_SHOW, HEAD, LINE, STOPS } from './journey';
 // - The stops are flat text in one fixed place, above the dot: the mark (the start year; the latest is
 //   "Now") on one side of the middle, the caption on the other (alternating). Each fades in as a blur
 //   clears and dissolves the same way in reverse (STOP_IN, STOP_OUT).
-// - The road done, the certificates and badges come up on a turning ring with a search bar at the top
-//   (CertRing.jsx); scrolling turns the ring until the page moves on.
+// - The road done, "Certificates & badges" comes towards you in the middle (like the Tools line) and
+//   dissolves as you scroll on, while the certificate and badge cards come out of the distance towards
+//   you and pass by (CertStream.jsx), until the page moves on. Phones keep the earlier design: the title
+//   and a search bar come down, a swipeable row of the cards comes up (CertsMobile.jsx).
 
 const ICON = { Education: GraduationCap, Experience: LaptopMinimal };
 
@@ -213,14 +216,13 @@ export const JourneyScene = ({ control }) => {
   const headFillRef = useRef(null);
   const soFarRef = useRef(null);
   const stopRefs = useRef([]);
-  const barRef = useRef(null);
   const titleRef = useRef(null);
-  const bodyRef = useRef(null);
-  const spinRef = useRef(null);
-  // The ring is mounted only around the time it is on screen (it animates every frame while mounted);
-  // its own intro (the cards assembling) plays once it has mostly come in (ringPlay).
-  const [ringLive, setRingLive] = useState(false);
-  const [ringPlay, setRingPlay] = useState(false);
+  const titleCtl = useRef(null);
+  const streamRef = useRef(null);
+  // Phones: the title, search bar and row (CertsMobile).
+  const mBarRef = useRef(null);
+  const mTitleRef = useRef(null);
+  const mBodyRef = useRef(null);
   const threadRef = useRef(null);
   const dotRef = useRef(null);
 
@@ -229,9 +231,6 @@ export const JourneyScene = ({ control }) => {
     if (!root) return undefined;
     const soFarWords = [...soFarRef.current.querySelectorAll('[data-w]')];
     const stops = stopRefs.current.map((el) => ({ mark: el.querySelector('[data-mark]'), caption: el.querySelector('[data-caption]') }));
-
-    let liveNow = false;
-    let playNow = false;
 
     // The line: draws in from its foot to the dot with the heading (a dash that grows along the path),
     // then the dot shows; it changes shape only at the transitions (lineAt), and fades as it leaves.
@@ -250,7 +249,6 @@ export const JourneyScene = ({ control }) => {
     };
 
     const set = (s) => {
-      const h = root.clientHeight;
       root.style.visibility = s > 0 ? 'visible' : 'hidden';
 
       // The heading.
@@ -277,31 +275,35 @@ export const JourneyScene = ({ control }) => {
         showStop(caption, c);
       });
 
-      // The certificates: the search bar and the title come down from the top, the ring and its caption
-      // up from the bottom; scrolling turns the ring until the page moves on.
-      const cIn = easeOut(CERTS_SHOW.in, s);
-      const shown = cIn > 0;
-      const bar = barRef.current;
+      // Phones: the search bar and the title come down from the top, the row and its caption up from the
+      // bottom, over short, matched distances.
+      const bar = mBarRef.current;
+      if (bar) {
+        const h = root.clientHeight;
+        const mIn = easeOut(CERTS_SHOW_M.in, s);
+        for (const el of [bar, mTitleRef.current, mBodyRef.current]) {
+          el.style.visibility = mIn > 0 ? 'visible' : 'hidden';
+          el.style.opacity = String(mIn);
+        }
+        bar.style.transform = `translate3d(0, ${(mIn - 1) * 0.06 * h}px, 0)`;
+        mTitleRef.current.style.transform = `translate3d(0, ${(mIn - 1) * 0.08 * h}px, 0)`;
+        mBodyRef.current.style.transform = `translate3d(0, ${(1 - mIn) * 0.12 * h}px, 0)`;
+      }
+
+      // Desktop: the title comes towards you in the middle (grows in, like the Tools line) and stays
+      // while the cards stream by, then dissolves in place (fades as a blur builds) near the end.
       const title = titleRef.current;
-      const body = bodyRef.current;
-      for (const el of [bar, title, body]) {
-        el.style.visibility = shown ? 'visible' : 'hidden';
-        el.style.opacity = String(cIn);
-      }
-      // Short, matched travel (the ring's own entrance is its assemble intro, not a long slide and scale).
-      bar.style.transform = `translate3d(0, ${(cIn - 1) * 0.06 * h}px, 0)`;
-      title.style.transform = `translate3d(0, ${(cIn - 1) * 0.08 * h}px, 0)`;
-      body.style.transform = `translate3d(0, ${(1 - cIn) * 0.12 * h}px, 0)`;
-      const live = s > CERTS_SHOW.in[0] - 0.4;
-      if (live !== liveNow) {
-        liveNow = live;
-        setRingLive(live);
-      }
-      const play = live && cIn > 0.35;
-      if (play !== playNow) {
-        playNow = play;
-        setRingPlay(play);
-      }
+      if (!title) return;
+      const cIn = easeOut(CERTS_SHOW.in, s);
+      const cOut = smooth(CERTS_SHOW.out, s);
+      title.style.visibility = cIn > 0 && cOut < 1 ? 'visible' : 'hidden';
+      title.style.opacity = String(cIn * (1 - cOut));
+      title.style.transform = `scale(${0.55 + 0.45 * cIn})`;
+      title.style.filter = cOut > 0.001 ? `blur(${(cOut * 8).toFixed(2)}px)` : '';
+      // Its search (behind the "&") closes once it has left the screen (CertTitle).
+      titleCtl.current?.shown(cIn > 0.05 && cOut < 0.95);
+      const [from, to] = CERTS_SHOW.stream;
+      streamRef.current?.set(clamp((s - from) / (to - from)));
     };
     if (control) control.current = { set };
     set(0);
@@ -355,8 +357,24 @@ export const JourneyScene = ({ control }) => {
         ))}
       </ol>
 
-      {/* Certificates and badges */}
-      <CertRing barRef={barRef} titleRef={titleRef} bodyRef={bodyRef} spin={spinRef} live={ringLive} play={ringPlay} />
+      {/* Certificates and badges. Phones: the title, a search bar and a swipeable row. */}
+      {mobile ? (
+        <CertsMobile barRef={mBarRef} titleRef={mTitleRef} bodyRef={mBodyRef} />
+      ) : (
+        <>
+          {/* Desktop: the cards stream by, behind the title. */}
+          <CertStream control={streamRef} />
+          <div
+            ref={titleRef}
+            style={{ visibility: 'hidden' }}
+            className="pointer-events-none absolute inset-0 z-[200] grid origin-center place-items-center will-change-[transform,opacity,filter]"
+          >
+            {/* The title (on a soft white halo, clear of the cards passing behind it); its "&" opens a
+                search bar in its place. */}
+            <CertTitle stream={streamRef} control={titleCtl} />
+          </div>
+        </>
+      )}
     </div>
   );
 };

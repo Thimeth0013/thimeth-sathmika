@@ -1,9 +1,10 @@
 import { educationData, experienceData } from '../data/about';
 import CertificateData from '../data/certificate';
 import BadgesData from '../data/badges';
+import { isMobile } from '../lib/useMobile';
 
-// Data and timing for the Journey scene (JourneyScene.jsx) and its certificates ring (CertRing.jsx), the
-// last part of the hero's pinned scroll.
+// Data and timing for the Journey scene (JourneyScene.jsx) and its certificates (the stream on desktop,
+// CertStream.jsx; the row on phones, CertsMobile.jsx), the last part of the hero's pinned scroll.
 // Kept out of the component file so Home.jsx can size the track from JOURNEY_RUN.
 //
 // Everything is in screen heights of scroll from the moment the scene starts (Home's SCHEDULE.journey).
@@ -26,8 +27,8 @@ export const STOPS = [
     mark: i === all.length - 1 ? 'Now' : item.period.match(/\d{4}/)?.[0],
   }));
 
-// Certificates and badges (certificate.js, badges.js), newest first: shown on a turning ring after the
-// road ends (CertRing.jsx).
+// Certificates and badges (certificate.js, badges.js), newest first: they stream by after the road
+// ends (CertStream.jsx).
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const dateOf = (text = '') => {
   const [month, year] = text.split(' ');
@@ -57,9 +58,24 @@ const LAST = STOPS[STOPS.length - 1].at; // "Now"
 // the stops; as "Now" goes, the dot swings up to the right and the line bends after it (turn), then it
 // sweeps off the right of the screen as the certificates come in (leave).
 export const LINE = { draw: [0.1, 0.6], straighten: [0.75, 1.55], turn: [LAST + 0.3, LAST + 0.85], leave: [LAST + 0.75, LAST + 1.3] };
-// Then the certificates: as "Now" goes, the ring (and the search bar) comes into the middle (IN) and
-// stays CERT_HOLD (scrolling does not turn it: drag it, or search); then the track ends and the page
-// scrolls on to the footer.
-const CERT_HOLD = 1;
-export const CERTS_SHOW = { in: [LAST + 0.85, LAST + 1.5] };
-export const JOURNEY_RUN = CERTS_SHOW.in[1] + CERT_HOLD;
+// Then the certificates. Desktop: as "Now" goes, "Certificates & badges" comes towards you in the middle
+// (IN), like the Tools line, and stays there (its "&" opens a search bar) while the cards come out
+// of the distance towards you (STREAM, CertStream.jsx), over CERT_RUN screens; it dissolves (OUT) as the
+// last of them pass. The track ends at CERT_END of the stream, when every card but the last has gone and
+// that one is on its way out at the top: from there the page scrolls on, carrying it off, and the footer
+// comes up.
+const CERT_RUN = 3.2;
+const STREAM_FROM = LAST + 1.1;
+export const CERTS_SHOW = {
+  in: [LAST + 0.5, LAST + 1.05], // as "Now" dissolves and the line turns away, so there is no gap
+  out: [STREAM_FROM + 0.72 * CERT_RUN, STREAM_FROM + 0.9 * CERT_RUN],
+  stream: [STREAM_FROM, STREAM_FROM + CERT_RUN],
+};
+const CERT_END = 0.89;
+// Phones keep the design that was live before the stream (CertsMobile.jsx): as "Now" goes, the title
+// and search bar come down and the row of cards comes up (IN), then it holds CERT_HOLD_M before the
+// page scrolls on to the footer.
+const CERT_HOLD_M = 1;
+export const CERTS_SHOW_M = { in: [LAST + 0.85, LAST + 1.5] };
+// The track's length is set once, for the screen the page loads on (like Home's SCHEDULE).
+export const JOURNEY_RUN = isMobile() ? CERTS_SHOW_M.in[1] + CERT_HOLD_M : CERTS_SHOW.stream[0] + CERT_END * CERT_RUN;
