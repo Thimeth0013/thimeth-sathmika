@@ -3,9 +3,9 @@ import { useSmoothAnchor } from '../lib/useSmoothAnchor';
 
 // Section nav between the hero and the footer (the hero has its own top bar, HeroNav, and the footer
 // has its own socials). At rest it is a column of dots on the right edge, vertically centred: one dot
-// per section, the current section's a bit bigger and at full strength. Hover the dots and the names
-// slide out beside them; the dot of the item under the pointer grows too. Each dot and its name are
-// one link, so clicking either one navigates. On
+// per section, the current section's a bit bigger and at full strength. Hover a dot and its name (only
+// that one) slides out beside it, and the dot grows. Each dot and its name are one link, so clicking
+// either one navigates. On
 // touch, the first tap opens the menu and the next tap on an item goes there. Layout and motion:
 // .side-dial-* in index.css.
 
@@ -27,12 +27,14 @@ export const SideNav = () => {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
   const [hidden, setHidden] = useState(true);
+  const [covered, setCovered] = useState(false);
   const [pointed, setPointed] = useState(null);
   const [tone, setTone] = useState('dark');
   const pointerType = useRef('mouse');
 
-  // Scroll-spy (the last section whose top has passed 40% of the screen). Hidden while the hero or the
-  // footer covers the middle of the screen: the hero has HeroNav, and the footer has its own links.
+  // Scroll-spy (the last section whose top has passed 40% of the screen). Hidden (it slides away) until
+  // About, since the hero has HeroNav. At the end the footer (above it, z-[45]) scrolls up over it and
+  // covers it; meanwhile it takes no clicks or focus (covered), but it does not move.
   useEffect(() => {
     let frame = 0;
     const update = () => {
@@ -41,12 +43,15 @@ export const SideNav = () => {
       const passed = SECTIONS.filter((id) => document.getElementById(id)?.getBoundingClientRect().top <= line);
       setActive(Math.max(SECTIONS.indexOf(passed.pop()), 0));
       const mid = window.innerHeight / 2;
-      // Until About (a marker inside the pinned hero track) is reached, and over the footer.
+      // Until About (a marker inside the pinned hero track) is reached; and covered once the footer is
+      // over the middle of the screen, where the dots are.
       const about = document.getElementById('about')?.getBoundingClientRect();
       const footer = document.getElementById('contact')?.getBoundingClientRect();
-      const hide = Boolean((about && about.top > mid) || (footer && footer.top < mid));
+      const hide = Boolean(about && about.top > mid);
+      const under = Boolean(footer && footer.top < mid);
       setHidden(hide);
-      if (hide) setOpen(false);
+      setCovered(under);
+      if (hide || under) setOpen(false);
       // Colour: whatever is behind the nav says whether it is dark (white nav) or light (forest nav)
       // through data-nav-tone (the hero track changes its own as the sky fades to white).
       const behind = document
@@ -116,7 +121,7 @@ export const SideNav = () => {
     <nav
       ref={navRef}
       aria-label="Sections"
-      inert={hidden}
+      inert={hidden || covered}
       data-open={open || undefined}
       // Desktop only: phones have the top bar's menu (MobileNav).
       className={`side-dial pointer-events-none fixed right-0 top-1/2 z-40 size-0 max-md:hidden transition-[translate,opacity,color] duration-500 ease-out-expo ${
@@ -159,15 +164,12 @@ export const SideNav = () => {
                     lit ? 'opacity-100' : 'scale-[0.56] opacity-40'
                   }`}
                 />
+                {/* Its name: shown only while its dot is the one hovered or focused, centred in a slot of
+                    the same width for every item, so the names share a centre line; the slot overlaps
+                    the row by 25px, so the name sits close to its dot. */}
                 <span
-                  style={{ '--i': i }}
-                  className={`side-dial-name absolute right-full top-1/2 whitespace-nowrap rounded-full px-2 py-0.5 font-grotezk text-[17px] font-medium leading-6 tracking-[-0.01em] group-focus-visible:outline-2 group-focus-visible:outline-current ${
-                    current
-                      ? ''
-                      : tone === 'light'
-                        ? 'text-white/60 group-hover:text-white'
-                        : 'text-forest/55 group-hover:text-forest'
-                  }`}
+                  data-shown={i === pointed || undefined}
+                  className="side-dial-name absolute right-[calc(100%-25px)] top-1/2 w-24 whitespace-nowrap rounded-full py-0.5 text-center font-grotezk text-[17px] font-medium leading-6 tracking-[-0.01em] group-focus-visible:outline-2 group-focus-visible:outline-current"
                 >
                   {name}
                 </span>

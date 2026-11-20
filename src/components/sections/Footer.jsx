@@ -37,7 +37,7 @@ export const Footer = () => {
   }, []);
 
   return (
-    <footer ref={footerRef} id="contact" data-nav-tone="dark" className="relative isolate z-10 bg-white font-grotezk text-forest">
+    <footer ref={footerRef} id="contact" data-nav-tone="dark" className="relative isolate z-[45] bg-white font-grotezk text-forest">
       {/* ASCII background: React Bits' GradientASCII (horizon shape, light mode) in the palette's blues,
           without the top halo or the intro reveal (which left the top centre white for the first seconds). Its box is fitted to the headline (see fit above). The content sits above
           it (z-10). */}
