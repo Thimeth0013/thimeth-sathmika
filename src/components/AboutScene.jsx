@@ -2,6 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import profileImage from '../assets/profile2.webp';
 import falcon from '../assets/creative/sticker-falcon.webp';
 import deathstar from '../assets/creative/sticker-deathstar.webp';
+import dustbunny from '../assets/creative/sticker-dustbunny.webp';
 import { SOCIAL } from '../data/socials';
 import { IconFolder } from './IconFolder';
 import { MovieCard, MusicCard, POSTER } from './MediaCards';
@@ -110,20 +111,23 @@ const layoutM = (W, viewH, H) => {
 };
 const STICKER_CORNER_M = { corner: 'tr', dx: -6, dy: 2, scale: 0.72 }; // smaller, on the very corner
 const PUSH_MAX = 160; // px: how far a card can be shoved
-// Two peelable stickers stuck over the paper's bottom-left corner, half on the sheet and half off: the
-// Millennium Falcon on top, the Death Star right under it and smaller, so it is hidden until you peel
-// the Falcon away. dx/dy: px from the sheet's corner to the sticker's middle (the sheet is SHEET px,
-// centred at PAPER, tilted with it). They mount once the paper has landed, so their own peel-in is their
+// Peelable stickers stuck over the paper's corners, half on the sheet and half off: on the bottom-left
+// corner the Millennium Falcon, with the Death Star right under it and smaller, so it is hidden until
+// you peel the Falcon away; on the top-right corner the dust bunny (a soot sprite). corner ('tl', 'tr',
+// 'bl', 'br') and dx/dy: px from that corner of the sheet to the sticker's middle (the sheet is SHEET
+// px, centred at PAPER, tilted with it). Phones (`m`): the Falcon pair goes on the top-right corner
+// (STICKER_CORNER_M) and the dust bunny on the bottom-left, smaller. They mount once the paper has landed, so their own peel-in is their
 // entrance, and when About scrolls away each leaves by the screen edge nearest to it (wherever it has
 // been dragged).
 const SHEET = { w: 484, h: 545 };
 const CORNER_STICKERS = [
-  { key: 'deathstar', src: deathstar, dx: -12, dy: -52, rot: 10, width: 92 },
-  { key: 'falcon', src: falcon, dx: -12, dy: -52, rot: -12, width: 140 },
+  { key: 'deathstar', src: deathstar, corner: 'bl', dx: -12, dy: -52, rot: 10, width: 92, m: STICKER_CORNER_M },
+  { key: 'falcon', src: falcon, corner: 'bl', dx: -12, dy: -52, rot: -12, width: 140, m: STICKER_CORNER_M },
+  { key: 'dustbunny', src: dustbunny, corner: 'tr', dx: -40, dy: 36, rot: 7, width: 80, m: { corner: 'bl', dx: -50, dy: 90 } },
 ];
 const cornerOf = (w, h, paper = PAPER, size = 1, corner = 'bl') => {
   const a = (paper.rot * Math.PI) / 180;
-  const [x, y] = [((corner === 'tr' ? 1 : -1) * SHEET.w * size) / 2, ((corner === 'tr' ? -1 : 1) * SHEET.h * size) / 2];
+  const [x, y] = [((corner[1] === 'r' ? 1 : -1) * SHEET.w * size) / 2, ((corner[0] === 't' ? -1 : 1) * SHEET.h * size) / 2];
   return [paper.x * w + x * Math.cos(a) - y * Math.sin(a), paper.y * h + x * Math.sin(a) + y * Math.cos(a)];
 };
 
@@ -280,12 +284,12 @@ export const AboutScene = ({ itemRef }) => {
       </div>
 
       {/* The corner stickers, each in its own full-screen box (StickerPeel's drag area, and a piece of
-          its own for the scroll hook: it leaves by the nearest screen edge). The Death Star first, so the
-          Falcon sits over it. */}
+          its own for the scroll hook: it leaves by the nearest screen edge). The Death Star before the
+          Falcon, so the Falcon sits over it. */}
       {landed && (
         <Suspense fallback={null}>
           {CORNER_STICKERS.map((st, i) => {
-            const at = mobile ? STICKER_CORNER_M : { corner: 'bl', dx: st.dx, dy: st.dy };
+            const at = mobile ? st.m : st;
             const [cx, cy] = cornerOf(mobile ? screen[0] : window.innerWidth, mobile ? screen[2] : window.innerHeight, paper, stickerSize, at.corner);
             return (
               <div
