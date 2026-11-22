@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- The phone browser bar takes the colour of the top of the page. -->
     <meta name="theme-color" content="#2F7CC4" data-light="#2F7CC4" data-dark="#0C1321" />
-    <!-- Light or dark: the saved choice (the Enderman in the footer switches it), else the system's;
+    <!-- Light or dark: light unless the visitor has chosen dark (the Enderman in the footer switches it);
          set before the first paint so the page never flashes the wrong one (src/lib/theme.js). -->
     <script>
       (function () {
         var t;
         try { t = localStorage.getItem('theme'); } catch (e) {}
-        if (t !== 'dark' && t !== 'light') t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        if (t !== 'dark') t = 'light'; // light unless the visitor chose dark
         document.documentElement.dataset.theme = t;
         var bar = document.querySelector('meta[name="theme-color"]');
         if (bar) bar.setAttribute('content', bar.dataset[t]);

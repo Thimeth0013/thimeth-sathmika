@@ -1,8 +1,8 @@
 import { useSyncExternalStore } from 'react';
 
 // Light and dark ("day" and "night"). The theme is `data-theme` on <html>: a script in each page's
-// <head> (index.html, work/index.html) sets it before the first paint, from the visitor's saved choice
-// or else their system setting, so the page never flashes the wrong one. The way to switch is the
+// <head> (index.html, work/index.html) sets it before the first paint, from the visitor's saved choice,
+// light by default (whatever the system setting), so the page never flashes the wrong one. The way to switch is the
 // Enderman on the footer's meadow (Enderman.jsx): clicking him toggles it and saves the choice.
 // The look itself is CSS (index.css): `.theme-flip` sections swap the white and forest tokens,
 // `.theme-keep` puts them back for things that stay light, `--paper` is the page colour, and the

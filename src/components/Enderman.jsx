@@ -24,8 +24,8 @@ const ROWS = [
   { feet: 36, h: 46, x: [22, 60] },
   { feet: 62, h: 82, x: [30, 44] },
 ];
-const FIRST = 20000;
-const AGAIN = [32000, 60000]; // ms before he comes back, picked at random each time
+const FIRST = 10000;
+const AGAIN = [12000, 24000]; // ms before he comes back, picked at random each time
 const HOLD = [900, 1900]; // ms he stays at a stop
 const GAP = 160; // ms between vanishing and appearing
 const PURPLE = ['#E879F9', '#C026D3', '#A21CAF', '#F0ABFC', '#7E22CE'];
@@ -191,7 +191,9 @@ export const Enderman = ({ active }) => {
           e.preventDefault();
           clickRef.current?.();
         }}
-        style={{ visibility: 'hidden' }}
+        // Zero height until place() sizes it: at its natural 420px it hung below a phone's 130px meadow
+        // and, though hidden, made the page ~290px longer (an empty band under the footer).
+        style={{ visibility: 'hidden', bottom: 0, height: 0 }}
         className="pointer-events-auto absolute w-auto max-w-none -translate-x-1/2 cursor-pointer select-none outline-none focus-visible:drop-shadow-[0_0_6px_#E879F9]"
       />
     </div>

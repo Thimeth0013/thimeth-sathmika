@@ -196,13 +196,13 @@ const Stop = ({ stop, i, stopRef, mobile }) => {
       <div
         data-caption
         style={{ visibility: 'hidden', ...captionPlace }}
-        className={`absolute w-max max-w-[min(84vw,400px)] text-forest md:max-w-[min(30vw,400px)] ${mobile ? 'text-center' : left ? '' : 'text-right'}`}
+        className={`absolute w-max max-w-[min(84vw,400px)] text-forest md:max-w-[min(38vw,540px)] ${mobile ? 'text-center' : left ? '' : 'text-right'}`}
       >
         <Icon aria-hidden="true" strokeWidth={1.25} className={`mb-4 size-11 ${mobile ? 'mx-auto' : left ? '' : 'ml-auto'}`} />
         <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-forest/60">
           {stop.kind} · {stop.period}
         </p>
-        <h3 className="mt-2 font-grotezk text-[26px] font-medium leading-[1.1] tracking-[-0.02em]">{stop.title}</h3>
+        <h3 className="mt-2 font-grotezk text-[26px] font-medium leading-[1.1] tracking-[-0.02em] text-balance">{stop.title}</h3>
         <p className="mt-2 text-[16px] text-forest/70">{stop.organization}</p>
       </div>
     </div>
