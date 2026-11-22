@@ -1,4 +1,4 @@
-import{r as jt,j as Rn}from"./Footer-BGHm7Fk8.js";/**
+import{r as jt,j as Rn}from"./Footer-Cl7WYcfe.js";/**
  * @license
  * Copyright 2010-2025 Three.js Authors
  * SPDX-License-Identifier: MIT
