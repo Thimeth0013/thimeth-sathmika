@@ -6,6 +6,7 @@ import { ProjectViewProvider } from './components/ProjectView';
 import { SideNav } from './components/SideNav';
 import { Home } from './components/sections/Home';
 import { Footer } from './components/sections/Footer';
+import { FOOTER_IN_SCENE } from './components/journey';
 import { TerminalContext } from './lib/terminal';
 import "./index.css";
 
@@ -39,14 +40,14 @@ const App = () => {
         <HeroNav />
         <MobileNav />
         <main>
-          {/* Desktop: the footer follows straight on (the last certificate card leaves through the top as
-              it comes up). Phones keep a little white between the certificates and the footer. */}
+          {/* Desktop: the footer is the pinned scroll's last scene (inside Home). Phones and reduced motion
+              have it as a section after the page, after a little white. */}
           <Home />
-          <div aria-hidden="true" className="h-[4svh] bg-white md:hidden" />
+          {!FOOTER_IN_SCENE && <div aria-hidden="true" className="h-[4svh] bg-[rgb(var(--paper))] md:hidden" />}
         </main>
         {/* After main in the DOM, so keyboard users reach it after the scenes, where it is visible. */}
         <SideNav />
-        <Footer />
+        {!FOOTER_IN_SCENE && <Footer />}
         {terminal && (
           <Suspense fallback={null}>
             <TerminalModal isOpen onClose={() => setTerminal(false)} />

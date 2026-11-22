@@ -12,6 +12,7 @@ import { useSmoothAnchor } from '../../lib/useSmoothAnchor';
 import { MeadowCat } from '../MeadowCat';
 import { Clouds } from '../Clouds';
 import { ABOUT_CLOUDS, HERO_CLOUDS, HERO_CLOUDS_M } from '../heroClouds';
+import { STARS } from '../stars';
 import cloud1 from '../../assets/hero/cloud-1.webp';
 import { Button } from '../ui/Button';
 import { ArrowSwap } from '../ui/ArrowSwap';
@@ -19,7 +20,8 @@ import { AboutScene } from '../AboutScene';
 import { SkillsScene } from '../SkillsScene';
 import { WorkScene } from '../WorkScene';
 import { JourneyList, JourneyScene } from '../JourneyScene';
-import { CERTS_SHOW, JOURNEY_RUN } from '../journey';
+import { FOOTER_IN_SCENE, FOOTER_SHOW, JOURNEY_RUN } from '../journey';
+import { FooterScene, FooterSky } from './Footer';
 
 // Staggered entrance for the copy (see .animate-rise in index.css).
 const rise = (ms) => ({ animationDelay: `${ms}ms` });
@@ -84,6 +86,7 @@ const SCHEDULE = (() => {
   return { about, work, tools, journey, end };
 })();
 const SWEEP_SOFT = 70; // px: half the width of the wipe's soft edge
+const FOOTER_SKY = [0.15, 0.6]; // the footer scene's sky fades in over this part of the scene (in by the time its text is)
 // One plate per cloud (same order as HERO_CLOUDS): the big ones nearer, the small ones farther.
 const CLOUD_DEPTH = [2.3, 3.4, 4.2, 2.9, 5.2, 6, 6.8];
 const HORIZON = 0.53; // the vanishing point: centred, at this fraction of the photo's height
@@ -172,7 +175,7 @@ const useFlyThrough = (trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRe
         const stops = Array.from({ length: 9 }, (_, i) => {
           const f = i / 8;
           const alpha = 1 - f * f * (3 - 2 * f);
-          return `rgb(255 255 255 / ${alpha.toFixed(3)}) ${(solid + f * WHITE_EDGE).toFixed(2)}%`;
+          return `rgb(var(--paper) / ${alpha.toFixed(3)}) ${(solid + f * WHITE_EDGE).toFixed(2)}%`;
         });
         white.style.background = `linear-gradient(to top, ${stops.join(', ')})`;
       }
@@ -180,7 +183,7 @@ const useFlyThrough = (trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRe
       track.dataset.navTone = rise > 0.5 ? 'dark' : 'light';
       // Once the sky has turned white, the stage itself is white too: its hero blue could otherwise show
       // as a hairline at its bottom edge on phones (sub-pixel rounding against the white layer).
-      stage.style.backgroundColor = rise > 0.98 ? '#fff' : '';
+      stage.style.backgroundColor = rise > 0.98 ? 'rgb(var(--paper))' : '';
       if (aboutClouds) aboutClouds.style.opacity = String(smooth(0, 0.15, pa) * (1 - rise));
 
       // Featured Work: the heading rises into the middle, then the column of cards scrolls up past it;
@@ -225,6 +228,23 @@ const useFlyThrough = (trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRe
 
       // The Journey (JourneyScene.jsx) takes it from here, in screen heights into the scene.
       sceneRefs.current.journey?.current?.set(at - SCHEDULE.journey);
+
+      // Desktop: the footer, as the last scene (FooterScene and FooterSky, Footer.jsx). It starts while
+      // the last certificates fly out past the edges: the meadow rises, the sky fades in over the whole
+      // screen as the last card leaves (FOOTER_SKY of the scene; one full-screen layer, so it has no edge
+      // anywhere), then the text and the note card come in.
+      if (FOOTER_IN_SCENE) {
+        const f = Math.min(Math.max((at - SCHEDULE.journey - FOOTER_SHOW.from) / FOOTER_SHOW.run, 0), 1);
+        const footerSky = sceneRefs.current.footerSky;
+        if (footerSky) {
+          const shown = smooth(FOOTER_SKY[0], FOOTER_SKY[1], f);
+          footerSky.style.opacity = shown.toFixed(3);
+          footerSky.style.visibility = shown > 0 ? 'visible' : 'hidden';
+          // The side nav's dots turn white over the footer's blue sky, as they are over About's.
+          if (shown > 0.5) track.dataset.navTone = 'light';
+        }
+        sceneRefs.current.footer?.current?.set(f);
+      }
 
       // The sweep: the bank crosses from just off the left edge to just off the right, level with the
       // headline, and the headline is masked away left of the bank's middle.
@@ -318,50 +338,40 @@ const useHeroReady = () => {
   return ready;
 };
 
-// The end of the pinned scenes: once you scroll down past the point where "Certificates & badges" starts
-// to dissolve (CERTS_SHOW.out), the page glides on to the bottom by itself (Lenis, a gentle ease-in-out;
-// FOOTER_GLIDE s plus PER_SCREEN for each screen of distance, at most GLIDE_MAX), through the last cards
-// leaving and the footer coming up, rather than leaving a stretch to scroll through. Only going down;
-// scrolling back up is free, and crossing the point down again glides again. Desktop only (phones keep
-// the earlier certificates, CertsMobile); off with reduced motion.
-const FOOTER_GLIDE = 1.1;
-const PER_SCREEN = 0.3;
-const GLIDE_MAX = 2.2;
-const useGlideToFooter = (trackRef, stageRef) => {
-  const lenis = useLenis();
-  useEffect(() => {
-    if (!lenis || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-    let last = lenis.scroll;
-    let gliding = false;
-    const off = lenis.on('scroll', ({ scroll }) => {
-      const track = trackRef.current;
-      const stage = stageRef.current;
-      const from = last;
-      last = scroll;
-      if (!track || !stage || gliding || lenis.isStopped || isMobile()) return; // desktop only
-      const screen = stage.offsetHeight;
-      const fades = track.getBoundingClientRect().top + window.scrollY + (SCHEDULE.journey + CERTS_SHOW.out[0]) * screen;
-      if (from < fades && scroll >= fades && scroll < lenis.limit - 2) {
-        gliding = true;
-        lenis.scrollTo(lenis.limit, {
-          duration: Math.min(FOOTER_GLIDE + ((lenis.limit - scroll) / screen) * PER_SCREEN, GLIDE_MAX),
-          easing: (t) => (1 - Math.cos(Math.PI * t)) / 2,
-          lock: true,
-          onComplete: () => {
-            gliding = false;
-          },
-        });
-      }
-    });
-    return () => off?.();
-  }, [lenis, trackRef, stageRef]);
-};
-
 // A full-screen layer of the fly-through.
 // The origin is the vanishing point just above the horizon (HORIZON of the photo's height).
 const layerClass =
   'absolute inset-0 origin-[50%_calc(var(--sy)_+_var(--sh)_*_var(--horizon))] will-change-[transform,opacity]';
 const stageBox = 'absolute left-[var(--sx)] top-[var(--sy)] h-[var(--sh)] w-[var(--sw)]';
+
+// The later scenes mount one after another once the hero is in: About at once (it is next), then
+// Featured Work, Tools, the Journey and the footer, each in an idle moment (STEPS in all). Mounting
+// them all together was one long block (~0.3 s on a slow phone) right as the hero appeared. Each mount
+// fires a scroll event, so the scroll hook places the new scene at once (a reload mid-page shows it).
+const STEPS = 5;
+const useStagedMount = (ready) => {
+  const [step, setStep] = useState(0);
+  useEffect(() => {
+    if (!ready || step >= STEPS) return undefined;
+    if (step === 0) {
+      setStep(1);
+      return undefined;
+    }
+    const next = () => setStep((n) => n + 1);
+    if (!('requestIdleCallback' in window)) {
+      const timer = setTimeout(next, 30);
+      return () => clearTimeout(timer);
+    }
+    const id = window.requestIdleCallback(next, { timeout: 400 });
+    return () => window.cancelIdleCallback(id);
+  }, [ready, step]);
+  useEffect(() => {
+    if (!step) return undefined;
+    const frame = requestAnimationFrame(() => window.dispatchEvent(new Event('scroll')));
+    return () => cancelAnimationFrame(frame);
+  }, [step]);
+  return step;
+};
 
 export const Home = () => {
   const trackRef = useRef(null);
@@ -373,12 +383,14 @@ export const Home = () => {
   const sceneRefs = useRef({});
   const streamControl = useRef(null);
   const journeyControl = useRef(null);
+  const footerControl = useRef(null);
   const workCards = useRef([]);
   const workCard = (i) => (el) => {
     workCards.current[i] = el;
   };
   sceneRefs.current.stream = streamControl;
   sceneRefs.current.journey = journeyControl;
+  sceneRefs.current.footer = footerControl;
   sceneRefs.current.workCards = workCards;
   const scene = (name) => (el) => {
     sceneRefs.current[name] = el;
@@ -393,7 +405,7 @@ export const Home = () => {
   useFlyThrough(trackRef, stageRef, layersRef, copyRef, sweepRef, aboutRef, sceneRefs);
   const mobile = useMobile();
   const ready = useHeroReady();
-  useGlideToFooter(trackRef, stageRef);
+  const step = useStagedMount(ready);
   const clouds = mobile ? HERO_CLOUDS_M : HERO_CLOUDS;
   const smoothAnchor = useSmoothAnchor();
 
@@ -405,7 +417,7 @@ export const Home = () => {
       <div
         ref={stageRef}
         data-loading={ready ? undefined : ''}
-        className="sticky top-0 isolate h-lvh min-h-[600px] overflow-hidden bg-[#1D6EB0] [container-type:size]"
+        className="sticky top-0 isolate h-lvh min-h-[600px] overflow-hidden bg-[#1D6EB0] [container-type:size] dark:bg-[#0B1530]"
       >
         <div className="hero-frame absolute inset-0" data-portrait={mobile || undefined} style={{ '--horizon': mobile ? HORIZON_M : HORIZON }}>
           {/* Layers, back to front: sky, clouds, headline (z-2), the sweeping bank (z-3), ground,
@@ -416,14 +428,15 @@ export const Home = () => {
               so the two transforms don't clash. */}
           <div ref={layer(0, DEPTH.sky, true)} className={`${layerClass} z-0`}>
             <div className={stageBox}>
-              <img src={mobile ? skyM : sky} alt="" fetchPriority="high" className="animate-settle absolute inset-0 size-full select-none" />
+              <img src={mobile ? skyM : sky} alt="" fetchPriority="high" className="night-sky animate-settle absolute inset-0 size-full select-none" />
+              <div aria-hidden="true" style={STARS} className="stars absolute inset-x-0 top-0 h-[55%] [mask-image:linear-gradient(to_bottom,#000_50%,transparent)]" />
             </div>
           </div>
 
           {clouds.map((cloud, i) => (
             <div key={i} ref={layer(1 + i, CLOUD_DEPTH[i])} className={`${layerClass} z-[1]`}>
               <div className={stageBox}>
-                <Clouds clouds={[cloud]} className="animate-settle" />
+                <Clouds clouds={[cloud]} className="night-clouds animate-settle" />
               </div>
             </div>
           ))}
@@ -450,7 +463,7 @@ export const Home = () => {
           <div
             ref={sweepRef}
             aria-hidden="true"
-            className="pointer-events-none invisible absolute left-0 top-0 z-[3] w-[125%] will-change-transform"
+            className="night-clouds pointer-events-none invisible absolute left-0 top-0 z-[3] w-[125%] will-change-transform"
           >
             {/* Three copies of the big cloud, overlapped, so the bank is dense enough to read as a wall
                 of cloud over the text. */}
@@ -463,7 +476,7 @@ export const Home = () => {
               so the cat's flat bottom is hidden behind the ridge. One solid plate, so they never drift
               apart. */}
           <div ref={layer(8, DEPTH.ground, true)} className={`${layerClass} pointer-events-none z-[4]`}>
-            <div className={`${stageBox} animate-settle`}>
+            <div className={`${stageBox} night-ground animate-settle`}>
               <img
                 src={mobile ? groundM : ground}
                 alt="A beige retro computer on a small wooden desk in a grassy meadow"
@@ -505,7 +518,7 @@ export const Home = () => {
         {/* Every full-screen layer from here on lets clicks through (only its own pieces take them),
             or it would sit over the hero's buttons and the scenes under it. */}
         <div ref={scene('aboutClouds')} style={{ opacity: 0 }} className="pointer-events-none absolute inset-0 z-[7] motion-reduce:hidden">
-          <Clouds clouds={ABOUT_CLOUDS} />
+          <Clouds clouds={ABOUT_CLOUDS} className="night-clouds" />
         </div>
         <div
           ref={scene('white')}
@@ -518,13 +531,13 @@ export const Home = () => {
           style={{ opacity: 0, background: WHITE_HUE }}
           className="pointer-events-none absolute inset-0 z-[8] motion-reduce:hidden"
         />
-        {/* The later scenes mount once the hero is in (useHeroReady), so their images, the paper's
+        {/* The later scenes mount once the hero is in (useHeroReady, then one by one: useStagedMount), so their images, the paper’s
             three.js and the icons don't share the connection with the hero's ground. */}
         <div className="pointer-events-none absolute inset-0 z-10 motion-reduce:hidden">
-          {ready && <AboutScene itemRef={aboutPiece} />}
+          {step >= 1 && <AboutScene itemRef={aboutPiece} />}
         </div>
-        <div className="pointer-events-none absolute inset-0 z-[11] motion-reduce:hidden">
-          {ready && <WorkScene headingRef={scene('workHeading')} cardRef={workCard} />}
+        <div className="theme-flip pointer-events-none absolute inset-0 z-[11] motion-reduce:hidden">
+          {step >= 2 && <WorkScene headingRef={scene('workHeading')} cardRef={workCard} />}
         </div>
         <div
           ref={scene('tools')}
@@ -532,18 +545,28 @@ export const Home = () => {
           className="pointer-events-none absolute inset-0 z-[13] grid origin-center place-items-center will-change-transform motion-reduce:hidden"
         >
           {/* A soft white halo keeps the line clear of the icons streaming past behind it. */}
-          <p className="bg-[radial-gradient(closest-side,#fff_55%,rgb(255_255_255/0))] px-6 py-10 font-grotezk text-[length:2.35rem] font-medium leading-none tracking-[-0.035em] text-sky md:px-24 md:py-14 md:text-[length:clamp(2.6rem,5.2vw,5rem)]">
+          <p className="bg-[radial-gradient(closest-side,rgb(var(--paper))_55%,rgb(var(--paper)/0))] px-6 py-10 font-grotezk text-[length:2.35rem] font-medium leading-none tracking-[-0.035em] text-sky md:px-24 md:py-14 md:text-[length:clamp(2.6rem,5.2vw,5rem)]">
             Tools I work with.
           </p>
         </div>
-        <div ref={scene('skills')} style={{ visibility: 'hidden' }} className="pointer-events-none absolute inset-0 z-[12] motion-reduce:hidden">
-          {ready && <SkillsScene control={streamControl} />}
+        <div ref={scene('skills')} style={{ visibility: 'hidden' }} className="theme-flip pointer-events-none absolute inset-0 z-[12] motion-reduce:hidden">
+          {step >= 3 && <SkillsScene control={streamControl} />}
         </div>
         {/* Under the icons, so the last of them fly past in front of "My journey". */}
         {/* Lets clicks through (to About and Work under it); only the stickers take them. */}
-        <div className="pointer-events-none absolute inset-0 z-[11] motion-reduce:hidden">
-          {ready && <JourneyScene control={journeyControl} />}
+        <div className="theme-flip pointer-events-none absolute inset-0 z-[11] motion-reduce:hidden">
+          {step >= 4 && <JourneyScene control={journeyControl} />}
         </div>
+        {/* Desktop: the footer as the last scene: its sky behind the certificate cards (above the white,
+            under the scenes), and its meadow, text and note card in front of everything. */}
+        {step >= 5 && FOOTER_IN_SCENE && (
+          <>
+            <FooterSky skyRef={scene('footerSky')} style={{ opacity: 0, visibility: 'hidden' }} className="absolute inset-0 z-[9] motion-reduce:hidden" />
+            <div className="pointer-events-none absolute inset-0 z-[14] motion-reduce:hidden">
+              <FooterScene control={footerControl} />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Reduced motion: no pinned scenes, so Experience and Education as a plain list. */}
@@ -559,6 +582,8 @@ export const Home = () => {
         ['work', SCHEDULE.work + HEADING_Y - 0.5],
         ['skills', SCHEDULE.tools + 0.8],
         ['journey', SCHEDULE.journey + 0.45],
+        // Desktop: the footer scene, once it is all in (the end of the track).
+        ...(FOOTER_IN_SCENE ? [['contact', SCHEDULE.end - 0.02]] : []),
       ].map(([id, at]) => (
         <div
           key={id}

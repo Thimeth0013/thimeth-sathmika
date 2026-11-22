@@ -109,13 +109,20 @@ const drawFace = (cert) => {
   return new Promise((resolve) => canvas.toBlob((blob) => resolve(blob ? URL.createObjectURL(blob) : canvas.toDataURL())));
 };
 
-// Drawn once per page, after the fonts load.
+// Drawn once per page, after the fonts load, one face per idle moment (drawing them all in one go was
+// a ~200 ms block right as the scenes mount after the loader).
+const idle = () =>
+  new Promise((done) => ('requestIdleCallback' in window ? window.requestIdleCallback(done, { timeout: 1000 }) : setTimeout(done, 0)));
 let facesPromise;
 export const faces = () => {
   facesPromise ??= (async () => {
     const fonts = ['500 23px "Apfel Grotezk"', '400 15px "Apfel Grotezk"', '400 10.5px "Azeret Mono"'];
     await Promise.all(fonts.map((f) => document.fonts?.load(f).catch(() => null)));
-    const urls = await Promise.all(CERTS.map(drawFace));
+    const urls = [];
+    for (const cert of CERTS) {
+      await idle();
+      urls.push(await drawFace(cert));
+    }
     return Object.fromEntries(CERTS.map((c, i) => [c.key, urls[i]]));
   })();
   return facesPromise;

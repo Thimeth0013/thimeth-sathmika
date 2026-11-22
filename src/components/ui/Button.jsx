@@ -2,7 +2,7 @@
 // Variants: dark (primary), outline (secondary), soft (tertiary, on white panels).
 const base =
   // pt-[2px]: Archivo's tall ascent sits text ~1px above centre; this centres the caps optically.
-  'group inline-flex h-[46px] items-center justify-center gap-2 rounded-full border px-[22px] pt-[2px] ' +
+  'theme-keep group inline-flex h-[46px] items-center justify-center gap-2 rounded-full border px-[22px] pt-[2px] ' +
   'text-[14.5px] font-medium tracking-[-0.005em] no-underline ' +
   'transition-[background-color,color,border-color,box-shadow,translate,scale] duration-250 ease-out-expo active:scale-[.97]';
 

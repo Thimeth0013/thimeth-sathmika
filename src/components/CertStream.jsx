@@ -228,7 +228,7 @@ const FocusCard = ({ cert, url, from, onClose }) => {
 
   const linked = cert.url && cert.url !== '#';
   return (
-    <div role="dialog" aria-modal="true" aria-label={`${cert.kind}: ${cert.title}`} className="fixed inset-0 z-[65] grid place-items-center px-6">
+    <div role="dialog" aria-modal="true" aria-label={`${cert.kind}: ${cert.title}`} className="theme-flip fixed inset-0 z-[65] grid place-items-center px-6">
       <div ref={veilRef} onClick={leave} className="absolute inset-0 bg-white/75 backdrop-blur-[6px]" />
       <div className="pointer-events-none relative flex w-full max-w-[460px] flex-col items-center">
         <div
@@ -249,7 +249,7 @@ const FocusCard = ({ cert, url, from, onClose }) => {
                 href={cert.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-1.5 rounded-full bg-forest px-4 py-2 text-[13.5px] font-medium text-cream transition-[scale] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]"
+                className="theme-keep group inline-flex items-center gap-1.5 rounded-full bg-forest px-4 py-2 text-[13.5px] font-medium text-cream transition-[scale] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]"
               >
                 View {cert.kind.toLowerCase()}
                 <ArrowUpRight
@@ -334,7 +334,7 @@ export const CertTitle = ({ stream, control }) => {
   const layer = 'col-start-1 row-start-1 transition-[opacity,filter,translate,scale] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)]';
 
   return (
-    <div className="relative grid place-items-center bg-[radial-gradient(closest-side,#fff_55%,rgb(255_255_255/0))] px-6 py-10 md:px-24 md:py-14">
+    <div className="relative grid place-items-center bg-[radial-gradient(closest-side,rgb(var(--paper))_55%,rgb(var(--paper)/0))] px-6 py-10 md:px-24 md:py-14">
       {/* The words, with the "&" as the search button. */}
       <h2
         className={`${layer} text-center font-grotezk text-[length:clamp(2.2rem,4.2vw,4rem)] font-medium leading-none tracking-[-0.035em] text-sky ${
@@ -356,7 +356,7 @@ export const CertTitle = ({ stream, control }) => {
           <span aria-hidden="true" className="translate-y-[0.03em] text-[0.7em] leading-none">
             &amp;
           </span>
-          <span aria-hidden="true" className="absolute -bottom-[0.04em] -right-[0.04em] grid size-[0.4em] place-items-center rounded-full bg-sky text-white ring-[0.05em] ring-white">
+          <span aria-hidden="true" className="absolute -bottom-[0.04em] -right-[0.04em] grid size-[0.4em] place-items-center rounded-full bg-sky text-[#fff] ring-[0.05em] ring-white">
             <Search strokeWidth={3} className="size-[62%]" />
           </span>
         </button>{' '}

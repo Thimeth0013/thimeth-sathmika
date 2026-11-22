@@ -86,7 +86,7 @@ export const MobileNav = () => {
   return (
     <div className="md:hidden">
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-[translate,background-color,color,box-shadow] duration-300 ease-out-expo ${
+        className={`theme-flip fixed inset-x-0 top-0 z-50 transition-[translate,background-color,color,box-shadow] duration-300 ease-out-expo ${
           hidden && !open ? '-translate-y-full' : ''
         } ${plain ? 'text-cream' : 'bg-white/85 text-forest shadow-[0_8px_24px_-18px_rgb(10_40_22/0.5)] backdrop-blur-md'}`}
       >
@@ -119,7 +119,7 @@ export const MobileNav = () => {
         aria-label="Menu"
         inert={!open}
         data-lenis-prevent
-        className={`fixed inset-y-0 right-0 z-[56] flex w-[min(80vw,320px)] flex-col bg-white text-forest transition-[translate,box-shadow] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
+        className={`fixed inset-y-0 right-0 z-[56] flex w-[min(80vw,320px)] flex-col bg-white text-forest theme-flip transition-[translate,box-shadow] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
           open ? 'shadow-[-24px_0_60px_-30px_rgb(10_40_22/0.5)]' : 'translate-x-full'
         }`}
       >

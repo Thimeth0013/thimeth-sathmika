@@ -36,9 +36,9 @@ const WORK_LAYOUT = [
 const Card = ({ project }) => (
   <ProjectThumb project={project} className="size-full shadow-[0_24px_60px_-28px_rgb(10_40_22/0.55)]">
     <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgb(10_30_18/0.78),rgb(10_30_18/0.15)_45%,transparent_70%)]" />
-    <span className="pointer-events-none absolute bottom-0 left-0 p-4 text-white md:p-6">
+    <span className="pointer-events-none absolute bottom-0 left-0 p-4 text-[#fff] md:p-6">
       <span className="block font-grotezk text-[17px] font-medium leading-tight tracking-[-0.02em] md:text-[24px]">{project.title}</span>
-      <span className="mt-1 block text-[12px] text-white/75 md:mt-1.5 md:text-[14px]">{project.tags.slice(0, 3).join(' · ')}</span>
+      <span className="mt-1 block text-[12px] text-[#fff]/75 md:mt-1.5 md:text-[14px]">{project.tags.slice(0, 3).join(' · ')}</span>
     </span>
   </ProjectThumb>
 );

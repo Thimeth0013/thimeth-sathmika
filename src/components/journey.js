@@ -77,5 +77,17 @@ const CERT_END = 0.89;
 // page scrolls on to the footer.
 const CERT_HOLD_M = 1;
 export const CERTS_SHOW_M = { in: [LAST + 0.85, LAST + 1.5] };
+// Desktop (with motion): the footer is the scroll's last scene (FooterScene in Footer.jsx), not a
+// section after it. It starts (FOOTER_SHOW.from) while the last certificates fly out past the edges
+// and runs FOOTER_SHOW.run screens: the meadow rises, the sky fades in as the last card leaves, then
+// the headline, the note card and the socials come in; the track ends there. Phones and reduced motion
+// keep the ordinary footer after the page (App.jsx). Set once, for the screen the page loads on.
+export const FOOTER_IN_SCENE =
+  typeof window !== 'undefined' && !isMobile() && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+export const FOOTER_SHOW = { from: STREAM_FROM + 0.82 * CERT_RUN, run: 1.6 };
 // The track's length is set once, for the screen the page loads on (like Home's SCHEDULE).
-export const JOURNEY_RUN = isMobile() ? CERTS_SHOW_M.in[1] + CERT_HOLD_M : CERTS_SHOW.stream[0] + CERT_END * CERT_RUN;
+export const JOURNEY_RUN = isMobile()
+  ? CERTS_SHOW_M.in[1] + CERT_HOLD_M
+  : FOOTER_IN_SCENE
+    ? FOOTER_SHOW.from + FOOTER_SHOW.run
+    : CERTS_SHOW.stream[0] + CERT_END * CERT_RUN;

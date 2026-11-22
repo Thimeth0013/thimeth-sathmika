@@ -58,7 +58,7 @@ export const Project = () => {
   const shown = all.filter(FILTERS.find((f) => f.id === filter).test);
 
   return (
-    <section id="project" data-nav-tone="dark" className="bg-white pb-28 pt-10 text-forest md:pb-36 md:pt-16">
+    <section id="project" data-nav-tone="dark" className="theme-flip bg-white pb-28 pt-10 text-forest md:pb-36 md:pt-16">
       <div className={column}>
         <Reveal>
           <h1 className="font-grotezk text-[length:clamp(3rem,8vw,6.5rem)] font-medium leading-none tracking-[-0.04em] text-sky">All work</h1>
@@ -78,7 +78,7 @@ export const Project = () => {
                   aria-pressed={on}
                   onClick={() => setFilter(id)}
                   className={`inline-flex h-10 cursor-pointer items-center gap-2 rounded-full border px-4 text-[14px] font-medium transition-[background-color,border-color,color,scale] duration-150 ease-out active:scale-[0.97] ${
-                    on ? 'border-forest bg-forest text-beige' : 'border-forest/15 text-forest/80 hover:border-forest/45'
+                    on ? 'theme-keep border-forest bg-forest text-beige' : 'border-forest/15 text-forest/80 hover:border-forest/45'
                   }`}
                 >
                   {label}

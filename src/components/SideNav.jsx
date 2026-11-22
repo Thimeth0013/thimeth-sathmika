@@ -33,8 +33,10 @@ export const SideNav = () => {
   const pointerType = useRef('mouse');
 
   // Scroll-spy (the last section whose top has passed 40% of the screen). Hidden (it slides away) until
-  // About, since the hero has HeroNav. At the end the footer (above it, z-[45]) scrolls up over it and
-  // covers it; meanwhile it takes no clicks or focus (covered), but it does not move.
+  // About, since the hero has HeroNav. On desktop the footer is the pinned scroll's last scene (#contact
+  // is a marker there): the dots stay, white over its blue sky (the stage's data-nav-tone). The ordinary
+  // footer (reduced motion) is a section after the page that scrolls up over the dots: once it is over
+  // the middle of the screen they fade out where they are and take no clicks or focus (covered).
   useEffect(() => {
     let frame = 0;
     const update = () => {
@@ -48,7 +50,7 @@ export const SideNav = () => {
       const about = document.getElementById('about')?.getBoundingClientRect();
       const footer = document.getElementById('contact')?.getBoundingClientRect();
       const hide = Boolean(about && about.top > mid);
-      const under = Boolean(footer && footer.top < mid);
+      const under = Boolean(footer && document.getElementById('contact').tagName === 'FOOTER' && footer.top < mid);
       setHidden(hide);
       setCovered(under);
       if (hide || under) setOpen(false);
@@ -124,10 +126,10 @@ export const SideNav = () => {
       inert={hidden || covered}
       data-open={open || undefined}
       // Desktop only: phones have the top bar's menu (MobileNav).
-      className={`side-dial pointer-events-none fixed right-0 top-1/2 z-40 size-0 max-md:hidden transition-[translate,opacity,color] duration-500 ease-out-expo ${
-        tone === 'light' ? 'text-white' : 'text-forest'
+      className={`side-dial theme-flip pointer-events-none fixed right-0 top-1/2 z-40 size-0 max-md:hidden transition-[translate,opacity,color] duration-500 ease-out-expo ${
+        tone === 'light' ? 'text-[#fff]' : 'text-forest'
       } ${
-        hidden ? 'translate-x-8 opacity-0' : ''
+        hidden ? 'translate-x-8 opacity-0' : covered ? 'opacity-0' : ''
       }`}
       onPointerEnter={onEnter}
       onPointerLeave={onLeave}

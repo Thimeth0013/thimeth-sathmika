@@ -44,6 +44,8 @@ const PAPER = { x: -0.25, y: -0.03, rot: -2.5 };
 // screen's width; when a shorter screen has no room for them all, the folder and the squares slide up
 // over the paper's empty ruled lines (up to OVERLAP of it) and then shrink a little. On phones the cards
 // sit above the paper (z-[1]); the stickers go on its top right corner. Desktop never uses these.
+const STICKER_WARM = 2500; // ms after the scene mounts before the first sticker is set up
+const STICKER_GAP = 400; // ms between setting up one sticker and the next
 const SHEET_PX = { w: 462, h: 525 }; // the paper's size at size 1 (AboutPaper: 440 x 500 x 1.05)
 const NATURAL = { photo: [250, 330], socials: [311, 212], square: 150, poster: POSTER }; // at zoom 1 (px)
 const PHONE = { photo: 0.4, socials: 0.54, square: 0.36 }; // widths, as fractions of the screen's width
@@ -116,7 +118,7 @@ const PUSH_MAX = 160; // px: how far a card can be shoved
 // you peel the Falcon away; on the top-right corner the dust bunny (a soot sprite). corner ('tl', 'tr',
 // 'bl', 'br') and dx/dy: px from that corner of the sheet to the sticker's middle (the sheet is SHEET
 // px, centred at PAPER, tilted with it). Phones (`m`): the Falcon pair goes on the top-right corner
-// (STICKER_CORNER_M) and the dust bunny on the bottom-left, smaller. They mount once the paper has landed, so their own peel-in is their
+// (STICKER_CORNER_M) and the dust bunny on the bottom-left, smaller. They are set up early, on hold, and start once the paper has landed, so their own peel-in is their
 // entrance, and when About scrolls away each leaves by the screen edge nearest to it (wherever it has
 // been dragged).
 const SHEET = { w: 484, h: 545 };
@@ -210,13 +212,39 @@ export const AboutScene = ({ itemRef }) => {
     return () => window.removeEventListener('scroll', check);
   }, [landed]);
 
-  // The stickers load in late (their chunk), possibly after the page has scrolled on; they start hidden,
-  // and a scroll event makes the scroll hook place (or hide) them straight away.
+  // The stickers are set up ahead of time, one at a time at quiet moments after the page has loaded
+  // (STICKER_WARM after this mounts, then each in an idle callback), on hold (StickerPeel's `hold`: image,
+  // texture and a first draw done, invisible, nothing moving); the paper landing releases them and their
+  // peel-in plays. Setting one up costs a long frame (a WebGL context, shaders, the texture), which used
+  // to land mid-scroll when they mounted on landing. If the paper lands first, the rest mount then.
+  const [mounted, setMounted] = useState(0);
   useEffect(() => {
-    if (!landed) return undefined;
+    if (mounted >= CORNER_STICKERS.length) return undefined;
+    if (landed) {
+      setMounted(CORNER_STICKERS.length);
+      return undefined;
+    }
+    let idle = 0;
+    const timer = setTimeout(
+      () => {
+        const next = () => setMounted((n) => n + 1);
+        if ('requestIdleCallback' in window) idle = window.requestIdleCallback(next, { timeout: 3000 });
+        else next();
+      },
+      mounted ? STICKER_GAP : STICKER_WARM
+    );
+    return () => {
+      clearTimeout(timer);
+      if (idle) window.cancelIdleCallback(idle);
+    };
+  }, [mounted, landed]);
+  // Each loads in late (its chunk), possibly after the page has scrolled on; it starts hidden, and a
+  // scroll event makes the scroll hook place (or hide) it straight away.
+  useEffect(() => {
+    if (!mounted) return undefined;
     const frame = requestAnimationFrame(() => window.dispatchEvent(new Event('scroll')));
     return () => cancelAnimationFrame(frame);
-  }, [landed]);
+  }, [mounted]);
 
   // The crumpled sheet (x, y, r: px in the scene) pushes overlapping cards straight away from it.
   const onFrame = useCallback(({ x, y, r, crumple }) => {
@@ -286,9 +314,9 @@ export const AboutScene = ({ itemRef }) => {
       {/* The corner stickers, each in its own full-screen box (StickerPeel's drag area, and a piece of
           its own for the scroll hook: it leaves by the nearest screen edge). The Death Star before the
           Falcon, so the Falcon sits over it. */}
-      {landed && (
+      {mounted > 0 && (
         <Suspense fallback={null}>
-          {CORNER_STICKERS.map((st, i) => {
+          {CORNER_STICKERS.slice(0, mounted).map((st, i) => {
             const at = mobile ? st.m : st;
             const [cx, cy] = cornerOf(mobile ? screen[0] : window.innerWidth, mobile ? screen[2] : window.innerHeight, paper, stickerSize, at.corner);
             return (
@@ -310,6 +338,7 @@ export const AboutScene = ({ itemRef }) => {
                   shadowIntensity={0.45}
                   lightingIntensity={0.35}
                   backColor="#f3f1ea"
+                  hold={!landed}
                 />
               </div>
             );

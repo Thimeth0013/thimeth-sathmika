@@ -72,7 +72,7 @@ export const NoteCard = ({ className = '' }) => {
           <textarea
             name="message"
             required
-            rows={5}
+            rows={6}
             placeholder="Write me a note…"
             className={`${field} note-ruled block w-full resize-none`}
           />

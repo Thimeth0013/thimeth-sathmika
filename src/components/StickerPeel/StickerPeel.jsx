@@ -305,6 +305,7 @@ const StickerPeel = ({
   friction = 0.5,
   bounce = 0.35,
   intro = true,
+  hold = false, // Local: set up (image, texture, a first invisible draw) but wait to start the intro
   initialPosition = 'center',
   onDragStart,
   onDragEnd,
@@ -335,6 +336,7 @@ const StickerPeel = ({
     friction: clamp(friction, 0, 1),
     bounce: clamp(bounce, 0, 1),
     intro,
+    hold,
     initialPosition,
     onDragStart,
     onDragEnd,
@@ -779,6 +781,17 @@ const StickerPeel = ({
         resizePending = false;
         applyLayout();
       }
+      // Local: on hold, the sticker is set up ahead of time (AboutScene mounts it early, at a quiet
+      // moment): once its image is in, it is drawn once, invisibly, so the GPU has done its first-draw
+      // work, and nothing moves until the hold is released (then the intro plays as usual).
+      if (settingsRef.current.hold) {
+        if (sticker.ready && !document.hidden) {
+          canvas.style.opacity = '0';
+          draw();
+        }
+        last = 0;
+        return;
+      }
       if (!visible || document.hidden) return;
       const s = settingsRef.current;
       const dt = last ? clamp((now - last) / 1000, 0.001, 1 / 30) : 1 / 60;
@@ -1033,7 +1046,7 @@ const StickerPeel = ({
   return (
     <div ref={rootRef} className={`sticker-peel${className ? ` ${className}` : ''}`} style={style} {...rest}>
       <canvas ref={canvasRef} className="sticker-peel-canvas" aria-hidden="true" />
-      <div ref={hitRef} className="sticker-peel-hit" />
+      <div ref={hitRef} className="sticker-peel-hit" style={hold ? { pointerEvents: 'none' } : undefined} />
     </div>
   );
 };

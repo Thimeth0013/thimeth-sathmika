@@ -82,13 +82,13 @@ export const IconStream = ({ items, control, className = '' }) => {
             style={{ visibility: 'hidden' }}
           >
             <span
-              className="grid place-items-center rounded-[16px] bg-white shadow-[0_1px_2px_rgb(20_83_45/0.06),0_10px_24px_-10px_rgb(10_40_22/0.35)] ring-1 ring-forest/5"
+              className="theme-keep grid place-items-center rounded-[16px] bg-white shadow-[0_1px_2px_rgb(20_83_45/0.06),0_10px_24px_-10px_rgb(10_40_22/0.35)] ring-1 ring-forest/5"
               style={{ width: TILE, height: TILE }}
             >
               <img src={src} alt="" draggable={false} className="size-[58%] select-none object-contain" />
             </span>
             <span
-              className={`pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-full bg-sky px-2.5 py-1 font-grotezk text-[13px] font-medium text-white transition-opacity duration-150 ${
+              className={`pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-full bg-sky px-2.5 py-1 font-grotezk text-[13px] font-medium text-[#fff] transition-opacity duration-150 ${
                 hovered === i ? 'opacity-100' : 'opacity-0'
               }`}
             >

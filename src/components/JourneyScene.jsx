@@ -381,7 +381,7 @@ export const JourneyScene = ({ control }) => {
 
 // With reduced motion the pinned scenes are off; this plain list keeps Experience and Education readable.
 export const JourneyList = () => (
-  <div className="bg-white px-6 py-20 text-forest">
+  <div className="theme-flip bg-white px-6 py-20 text-forest">
     <div className="mx-auto max-w-3xl">
       <h2 className="font-grotezk text-5xl font-medium tracking-[-0.04em] text-sky">My journey so far.</h2>
       <ol className="mt-10 space-y-8">

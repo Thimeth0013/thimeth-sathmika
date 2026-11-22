@@ -151,7 +151,7 @@ const Sheet = ({ view, onClosed, onSwap }) => {
         aria-modal="true"
         aria-label={`${project.title}: project details`}
         data-lenis-prevent
-        className="fixed inset-0 z-[60] overflow-y-auto overflow-x-clip overscroll-contain bg-white text-forest"
+        className="fixed inset-0 z-[60] overflow-y-auto overflow-x-clip overscroll-contain bg-white text-forest theme-flip"
       >
         {/* Close: pinned to the top of the sheet, on the right edge of the content column. */}
         <div className="pointer-events-none sticky top-0 z-10 h-0">
@@ -210,7 +210,7 @@ const Sheet = ({ view, onClosed, onSwap }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`group inline-flex h-11 items-center gap-2 rounded-full border pl-5 pr-[18px] text-[14.5px] font-medium transition-[background-color,border-color,scale] duration-150 ease-out active:scale-[0.97] ${
-                    i === 0 ? 'border-forest bg-forest text-beige hover:border-[#1B6A3B] hover:bg-[#1B6A3B]' : 'border-forest/20 text-forest hover:border-forest/50'
+                    i === 0 ? 'theme-keep border-forest bg-forest text-beige hover:border-[#1B6A3B] hover:bg-[#1B6A3B]' : 'border-forest/20 text-forest hover:border-forest/50'
                   }`}
                 >
                   <Icon aria-hidden="true" strokeWidth={1.75} className="size-4" />
@@ -260,7 +260,7 @@ const Sheet = ({ view, onClosed, onSwap }) => {
               </span>
               <span className="mt-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
                 <span className="font-grotezk text-[length:clamp(1.6rem,3.2vw,2.4rem)] font-medium leading-tight tracking-[-0.03em]">{next.title}</span>
-                <span className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full border border-forest bg-forest px-5 text-[14.5px] font-medium text-beige transition-[background-color,border-color,scale] duration-150 ease-out group-hover:border-[#1B6A3B] group-hover:bg-[#1B6A3B] group-active:scale-[0.97]">
+                <span className="theme-keep inline-flex h-11 shrink-0 items-center gap-2 rounded-full border border-forest bg-forest px-5 text-[14.5px] font-medium text-beige transition-[background-color,border-color,scale] duration-150 ease-out group-hover:border-[#1B6A3B] group-hover:bg-[#1B6A3B] group-active:scale-[0.97]">
                   Next
                   <ArrowRight
                     aria-hidden="true"
