@@ -5,14 +5,26 @@
     <link rel="icon" type="image/png" href="/thimeth-sathmika/icon2.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- The phone browser bar takes the colour of the top of the page. -->
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#ffffff" data-light="#ffffff" data-dark="#0C1321" />
+    <!-- Light or dark: the saved choice (the Enderman in the footer switches it), else the system's;
+         set before the first paint so the page never flashes the wrong one (src/lib/theme.js). -->
+    <script>
+      (function () {
+        var t;
+        try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (t !== 'dark' && t !== 'light') t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = t;
+        var bar = document.querySelector('meta[name="theme-color"]');
+        if (bar) bar.setAttribute('content', bar.dataset[t]);
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300..700&family=Archivo:wght@400;500;600&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">
     <title>All work · Thimeth Sathmika</title>
-    <script type="module" crossorigin src="/thimeth-sathmika/assets/work-CuqybrVn.js"></script>
-    <link rel="modulepreload" crossorigin href="/thimeth-sathmika/assets/Footer-grS6DBzB.js">
-    <link rel="stylesheet" crossorigin href="/thimeth-sathmika/assets/Footer-c1s-QpNq.css">
+    <script type="module" crossorigin src="/thimeth-sathmika/assets/work-DE__htgh.js"></script>
+    <link rel="modulepreload" crossorigin href="/thimeth-sathmika/assets/Footer-BGHm7Fk8.js">
+    <link rel="stylesheet" crossorigin href="/thimeth-sathmika/assets/Footer-6M1Zt9bW.css">
   </head>
   <body>
     <div id="root"></div>
