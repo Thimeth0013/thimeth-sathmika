@@ -1,5 +1,14 @@
 const CertificateData = [
   {
+    id: 7,
+    title: "Claude 101",
+    description: "Anthropic Academy course on working with Claude: prompting, everyday workflows and getting reliable results from an AI assistant.",
+    company: "Anthropic",
+    companyUrl: "https://anthropic.skilljar.com/",
+    certificateUrl: "https://verify.skilljar.com/c/whg4ej5w7e56",
+    date: "November 2026",
+  },
+  {
     id: 6,
     title: "MongoDB Python Developer Path",
     description: "Certification in building modern applications with Python and MongoDB, covering database fundamentals, data modeling, and CRUD operations.",

@@ -101,7 +101,6 @@ export const CertStream = ({ control }) => {
         el.style.width = `${cw.toFixed(1)}px`;
         el.style.height = `${ch.toFixed(1)}px`;
         el.style.transform = `translate(${(x - cw / 2).toFixed(1)}px, ${(y - ch / 2).toFixed(1)}px) rotate(${path.tilt}deg)`;
-        el.firstElementChild.style.borderRadius = `${(14 * scale).toFixed(1)}px`;
         el.style.opacity = String(smooth(0, fog, t));
         el.style.zIndex = String(Math.round(k * 100));
       });
@@ -233,7 +232,7 @@ const FocusCard = ({ cert, url, from, onClose }) => {
       <div className="pointer-events-none relative flex w-full max-w-[460px] flex-col items-center">
         <div
           ref={cardRef}
-          className="w-full overflow-hidden rounded-[18px] bg-[#FBF6EC] shadow-[0_2px_4px_rgb(20_83_45/0.08),0_40px_80px_-30px_rgb(10_40_22/0.5)]"
+          className="w-full overflow-hidden bg-[#FBF6EC] shadow-[0_2px_4px_rgb(20_83_45/0.08),0_40px_80px_-30px_rgb(10_40_22/0.5)]"
           style={{ aspectRatio: `${FACE.w} / ${FACE.h}` }}
         >
           {url && <img src={url} alt="" draggable={false} className="block size-full select-none" />}

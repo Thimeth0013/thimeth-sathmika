@@ -143,7 +143,7 @@ export const CertsMobile = ({ barRef, titleRef, bodyRef }) => {
                       if (url && url !== '#') window.open(url, '_blank', 'noopener,noreferrer');
                     }}
                     aria-label={item.alt}
-                    className="block w-[74vw] overflow-hidden rounded-[14px] shadow-[0_14px_34px_-18px_rgb(10_40_22/0.45)] transition-[scale] duration-150 ease-out active:scale-[0.98]"
+                    className="block w-[74vw] overflow-hidden shadow-[0_14px_34px_-18px_rgb(10_40_22/0.45)] transition-[scale] duration-150 ease-out active:scale-[0.98]"
                   >
                     <img src={item.src} alt="" draggable={false} className="block w-full" style={{ aspectRatio: `${FACE.w} / ${FACE.h}` }} />
                   </button>
