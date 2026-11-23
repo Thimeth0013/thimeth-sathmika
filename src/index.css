@@ -350,8 +350,9 @@ button, [role="button"] {
    - .theme-flip: a section whose white and forest swap at night (Tailwind's bg-white, text-forest and
      their /alpha forms all read these variables), so its white becomes deep navy and its forest text
      a pale green-white. .theme-keep puts them back for what stays light (tool icon tiles, buttons).
-   - .night-sky / .night-clouds / .night-ground: night grades of the hero's (and About's) photo layers;
-     .stars: a starfield that only shows at night (its image is STARS from components/stars.js, inline).
+   - The scenes' sky and grades follow the time of day (see "Time of day" below); the dark theme shows
+     them at night. .stars: a starfield that only shows at night (its image is STARS from
+     components/stars.js, inline).
    - The switch happens on the footer (the Enderman), where what changes on screen is the sky, clouds and
      meadow: those fade by themselves (opacity and filter transitions). The flipped sections are off
      screen then, so they just swap (a transition on every element's colours cost ~1s of dropped frames).
@@ -371,18 +372,44 @@ button, [role="button"] {
   --color-white: #fff;
   --color-forest: #14532D;
 }
-.night-sky, .night-ground { transition: filter 1s ease; }
-.night-clouds { transition: filter 1s ease, opacity 1s ease; }
-[data-theme='dark'] .night-sky { filter: brightness(0.32) saturate(1.3) hue-rotate(14deg); }
-[data-theme='dark'] .night-clouds { filter: brightness(0.5) sepia(0.5) hue-rotate(185deg) saturate(1.8); opacity: 0.55; }
-[data-theme='dark'] .night-ground { filter: brightness(0.36) saturate(0.7) hue-rotate(-14deg); }
-.stars {
-  opacity: 0;
+/* ------------------------------------------------------------------
+   Time of day. src/lib/skyBoot.js (inlined in each page's <head>) blends the four phases (morning,
+   noon, evening, night) by the visitor's clock and sets, on <html>: --sky / --sky-m (the hero and About
+   sky, phones: -m), --footer-sky / --footer-haze, --w-night, the photo layers' grades (--cloud-grade,
+   --ground-grade, --cloud-alpha), data-sky (the main phase) and data-theme (night is dark). A change
+   between phases is a soft front crossing the sky (warm light rising from the horizon, night coming down
+   from the top). src/lib/theme.js re-blends every minute and lets the Enderman pick a phase (easing to
+   it). The ground photo is lit by a low sun, so a grade reads as morning or evening light.
+------------------------------------------------------------------ */
+/* The pinned stage's own colour (under the sky) follows the main phase. Set on the stage, not as a
+   variable on <html>: changing one of those restyles the whole page. */
+.sky-stage { background-color: #1D6EB0; }
+[data-sky='morning'] .sky-stage { background-color: #3C77B8; }
+[data-sky='evening'] .sky-stage { background-color: #2A3A6E; }
+[data-sky='night'] .sky-stage { background-color: #0B1530; }
+/* The hero sky, with a fine grain over it on desktop (the photo it replaced had one; it also hides
+   banding). */
+.hero-sky { background: url('./assets/hero/grain.png') 0 0 / 96px 96px, var(--sky); }
+@media (max-width: 767px) {
+  .hero-sky { background: var(--sky-m); }
+}
+.footer-sky { background: var(--footer-sky); }
+.footer-haze { background: var(--footer-haze); }
+/* The grades sit on the images themselves, not on their animated containers (the drifting clouds, the
+   settling ground): there a filter is drawn once into the picture; on an animated box it was redone
+   every frame. At noon the grade is none (skyBoot.js), so the daytime costs nothing. */
+.grade-clouds { opacity: var(--cloud-alpha, 1); transition: opacity 1s ease; }
+.grade-clouds img, img.grade-ground, .grade-ground > * { transition: filter 1s ease; }
+.grade-clouds img { filter: var(--cloud-grade, none); }
+img.grade-ground, .grade-ground > * { filter: var(--ground-grade, none); }
+.stars, .night-only {
+  opacity: var(--w-night, 0);
   transition: opacity 1.4s ease;
 }
-[data-theme='dark'] .stars { opacity: 1; }
 
-.night-only { opacity: 0; transition: opacity 1s ease; }
-[data-theme='dark'] .night-only { opacity: 1; }
-.night-fog { transition: opacity 1s ease; }
-[data-theme='dark'] .night-fog { opacity: 0.45; }
+/* The meadow's fog belongs to the morning and the night (--fog, from skyBoot.js: full in the morning,
+   0.6 at night, none at noon or in the evening). Fully gone, it is hidden and its drift paused (the
+   visibility transition keeps it shown until the fade out has finished). */
+.meadow-fog { opacity: var(--fog, 1); transition: opacity 1s ease, visibility 1s; }
+[data-fog='off'] .meadow-fog { visibility: hidden; }
+[data-fog='off'] .grass-fog { animation-play-state: paused; }

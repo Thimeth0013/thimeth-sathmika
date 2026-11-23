@@ -6,18 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- The phone browser bar takes the colour of the top of the page. -->
     <meta name="theme-color" content="#ffffff" data-light="#ffffff" data-dark="#0C1321" />
-    <!-- Light or dark: light unless the visitor has chosen dark (the Enderman in the footer switches it);
-         set before the first paint so the page never flashes the wrong one (src/lib/theme.js). -->
-    <script>
-      (function () {
-        var t;
-        try { t = localStorage.getItem('theme'); } catch (e) {}
-        if (t !== 'dark') t = 'light'; // light unless the visitor chose dark
-        document.documentElement.dataset.theme = t;
-        var bar = document.querySelector('meta[name="theme-color"]');
-        if (bar) bar.setAttribute('content', bar.dataset[t]);
-      })();
-    </script>
+    <!-- Time of day and theme, before the first paint (src/lib/skyBoot.js, inlined here by Vite). -->
+    <!-- sky-boot -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300..700&family=Archivo:wght@400;500;600&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">

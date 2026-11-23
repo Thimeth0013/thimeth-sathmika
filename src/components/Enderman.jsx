@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
 import enderman from '../assets/footer/enderman.webp';
-import { toggleTheme, useTheme } from '../lib/theme';
+import { PHASES, nextSky, useSky } from '../lib/theme';
 import { usePredecode } from '../lib/predecode';
 
 // An Enderman on the footer's meadow (an easter egg; the owner's image, cut out of its checkerboard:
-// footer/enderman.webp), and the site's light/dark switch: clicking him toggles the theme
-// (src/lib/theme.js) and he teleports away at once.
+// footer/enderman.webp), and the site's time-of-day switch: clicking him moves the sky on to the next
+// phase, morning → noon → evening → night (src/lib/theme.js; night is the dark theme), and he teleports
+// away at once.
 // Once the footer has been settled in view for FIRST ms (`active`), he appears on the meadow's farther
 // grass and teleports about it for a few stops, then away. Every visit is different (`visit()`): how
 // many stops, which of the three farther rows (ROWS) and where along each, how long he holds, and how
@@ -59,8 +60,9 @@ const wait = (ms, signal) =>
     signal.addEventListener('abort', () => clearTimeout(t), { once: true });
   });
 
-export const Enderman = ({ active }) => {
-  const theme = useTheme();
+export const Enderman = ({ active, first = FIRST }) => {
+  const sky = useSky();
+  const next = PHASES[(PHASES.indexOf(sky) + 1) % PHASES.length];
   usePredecode([enderman], 5000); // so his first pop-in doesn't hitch
   const boxRef = useRef(null);
   const bodyRef = useRef(null);
@@ -149,15 +151,15 @@ export const Enderman = ({ active }) => {
         }
       })();
     };
-    // Clicked: switch the theme and teleport away now; the visits start over from the wait.
+    // Clicked: on to the next time of day, and teleport away now; the visits start over from the wait.
     clickRef.current = () => {
       if (!here) return;
-      toggleTheme();
+      nextSky();
       vanish();
       start(between(AGAIN));
       window.setTimeout(() => !here && hide(), 240);
     };
-    start(FIRST);
+    start(first);
     return () => {
       run?.abort();
       clickRef.current = null;
@@ -165,7 +167,7 @@ export const Enderman = ({ active }) => {
       hide();
       box.querySelectorAll('span').forEach((p) => p.remove());
     };
-  }, [active]);
+  }, [active, first]);
 
   return (
     <div ref={boxRef} className="pointer-events-none absolute inset-0">
@@ -182,8 +184,8 @@ export const Enderman = ({ active }) => {
         alt=""
         role="button"
         tabIndex={0}
-        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-        title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+        aria-label={`Change the time of day to ${next}`}
+        title={`${next[0].toUpperCase()}${next.slice(1)}`}
         draggable={false}
         onClick={() => clickRef.current?.()}
         onKeyDown={(e) => {

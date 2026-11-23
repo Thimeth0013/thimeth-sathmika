@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLenis } from 'lenis/react';
 import CV from '../../assets/Thimeth_Sathmika_CV.pdf';
-import sky from '../../assets/hero/sky.webp';
 import ground from '../../assets/hero/ground.webp';
 import groundFront from '../../assets/hero/ground-front.webp';
-import skyM from '../../assets/hero/sky-m.webp';
 import groundM from '../../assets/hero/ground-m.webp';
 import { isMobile, useMobile } from '../../lib/useMobile';
 import { MOBILE_TOOLS_AT } from '../workLayout';
@@ -297,7 +295,7 @@ const useHeroReady = () => {
     if (ready) return undefined;
     const root = document.documentElement;
     root.style.overflow = 'hidden';
-    const images = isMobile() ? [skyM, groundM] : [sky, ground, groundFront];
+    const images = isMobile() ? [groundM] : [ground, groundFront]; // the sky is CSS (.hero-sky)
     const waits = [
       ...images.map((src) => {
         const img = new Image();
@@ -417,7 +415,7 @@ export const Home = () => {
       <div
         ref={stageRef}
         data-loading={ready ? undefined : ''}
-        className="sticky top-0 isolate h-lvh min-h-[600px] overflow-hidden bg-[#1D6EB0] [container-type:size] dark:bg-[#0B1530]"
+        className="sticky top-0 isolate h-lvh min-h-[600px] overflow-hidden sky-stage [container-type:size]"
       >
         <div className="hero-frame absolute inset-0" data-portrait={mobile || undefined} style={{ '--horizon': mobile ? HORIZON_M : HORIZON }}>
           {/* Layers, back to front: sky, clouds, headline (z-2), the sweeping bank (z-3), ground,
@@ -428,7 +426,11 @@ export const Home = () => {
               so the two transforms don't clash. */}
           <div ref={layer(0, DEPTH.sky, true)} className={`${layerClass} z-0`}>
             <div className={stageBox}>
-              <img src={mobile ? skyM : sky} alt="" fetchPriority="high" className="night-sky animate-settle absolute inset-0 size-full select-none" />
+              {/* The sky is CSS: a gradient for the time of day, blended by the visitor's clock
+                  (src/lib/skyBoot.js, "Time of day" in index.css), with a fine grain. */}
+              <div aria-hidden="true" className="sky-paint animate-settle absolute inset-0">
+                <div className="hero-sky absolute inset-0" />
+              </div>
               <div aria-hidden="true" style={STARS} className="stars absolute inset-x-0 top-0 h-[55%] [mask-image:linear-gradient(to_bottom,#000_50%,transparent)]" />
             </div>
           </div>
@@ -436,7 +438,7 @@ export const Home = () => {
           {clouds.map((cloud, i) => (
             <div key={i} ref={layer(1 + i, CLOUD_DEPTH[i])} className={`${layerClass} z-[1]`}>
               <div className={stageBox}>
-                <Clouds clouds={[cloud]} className="night-clouds animate-settle" />
+                <Clouds clouds={[cloud]} className="grade-clouds animate-settle" />
               </div>
             </div>
           ))}
@@ -463,7 +465,7 @@ export const Home = () => {
           <div
             ref={sweepRef}
             aria-hidden="true"
-            className="night-clouds pointer-events-none invisible absolute left-0 top-0 z-[3] w-[125%] will-change-transform"
+            className="grade-clouds pointer-events-none invisible absolute left-0 top-0 z-[3] w-[125%] will-change-transform"
           >
             {/* Three copies of the big cloud, overlapped, so the bank is dense enough to read as a wall
                 of cloud over the text. */}
@@ -476,7 +478,7 @@ export const Home = () => {
               so the cat's flat bottom is hidden behind the ridge. One solid plate, so they never drift
               apart. */}
           <div ref={layer(8, DEPTH.ground, true)} className={`${layerClass} pointer-events-none z-[4]`}>
-            <div className={`${stageBox} night-ground animate-settle`}>
+            <div className={`${stageBox} grade-ground animate-settle`}>
               <img
                 src={mobile ? groundM : ground}
                 alt="A beige retro computer on a small wooden desk in a grassy meadow"
@@ -518,7 +520,7 @@ export const Home = () => {
         {/* Every full-screen layer from here on lets clicks through (only its own pieces take them),
             or it would sit over the hero's buttons and the scenes under it. */}
         <div ref={scene('aboutClouds')} style={{ opacity: 0 }} className="pointer-events-none absolute inset-0 z-[7] motion-reduce:hidden">
-          <Clouds clouds={ABOUT_CLOUDS} className="night-clouds" />
+          <Clouds clouds={ABOUT_CLOUDS} className="grade-clouds" />
         </div>
         <div
           ref={scene('white')}

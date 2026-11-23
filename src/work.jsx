@@ -2,6 +2,9 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { WorkPage } from './WorkPage.jsx';
+import { startSkyClock } from './lib/theme';
+
+startSkyClock(); // the sky drifts with the visitor's clock (src/lib/theme.js)
 
 // Entry for the separate "All work" page (work/index.html), opened from Featured Work's "View all work".
 createRoot(document.getElementById('root')).render(

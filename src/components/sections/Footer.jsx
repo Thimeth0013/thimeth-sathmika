@@ -28,10 +28,6 @@ import ground from '../../assets/footer/ground-mc.webp';
 // widths, cropped at the sides on narrow screens), with the socials and the credit on it.
 
 const column = 'mx-auto w-[min(calc(100%-32px),1176px)] md:w-[min(calc(100%-64px),1176px)]';
-// Blue most of the way down, so the white text reads on it; it whitens only in the last strip before
-// the horizon.
-const SKY =
-  'linear-gradient(to bottom, #2F78CC 0%, #3E86DC 24%, #5594E3 48%, #6EA8EB 70%, #8EBDF2 86%, #C8E0FB 96%, #EEF6FF 100%)';
 const FEATHER = 'linear-gradient(to bottom, rgb(var(--paper)), rgb(var(--paper) / 0.75) 30%, rgb(var(--paper) / 0))';
 // The top padding leaves a band of open sky above the headline for the clouds.
 const TOP = 'clamp(110px, 10vw, 170px)';
@@ -44,13 +40,11 @@ const smooth = (x) => x * x * (3 - 2 * x);
 
 // The sky and its clouds, over the whole footer's box (the gradient ends at the horizon, the meadow's
 // top; the haze colour carries on under the meadow). Children go over the gradient.
-const HAZE = '#EEF6FF';
-// At night (data-theme="dark"; .night-only in index.css fades it in over the day sky): a deep navy sky
-// lifting to a dusky blue at the horizon, stars over its upper part and a blocky, Minecraft-style square
-// moon. The clouds go grey and the meadow dark (.night-clouds, .night-ground).
-const NIGHT_SKY =
-  'linear-gradient(to bottom, #060C1D 0%, #0A1530 30%, #112048 58%, #1D2F62 80%, #33477C 93%, #4A5C8C 100%)';
-const NIGHT_HAZE = '#4A5C8C';
+// The time of day sets it (--footer-sky / --footer-haze, blended by src/lib/skyBoot.js): each phase's
+// sky stays blue (or deep) most of the way down, so the white text reads, and warms or whitens only
+// towards the horizon. Night (.night-only, by how much night there is) adds stars and a blocky,
+// Minecraft-style square moon. The clouds and the meadow take the time of day's grades
+// (.grade-clouds, .grade-ground).
 const Moon = () => (
   <svg viewBox="0 0 8 8" shapeRendering="crispEdges" className="absolute right-[10%] top-[3%] w-[clamp(34px,3.4vw,58px)] lg:left-[50%] lg:right-auto lg:top-[10%] drop-shadow-[0_0_18px_rgb(220_230_255/0.45)]">
     <rect width="8" height="8" fill="#E9EEF8" />
@@ -64,15 +58,23 @@ export const FooterSky = ({ skyRef, className = '', style, children }) => {
   const mobile = useMobile();
   return (
     <div ref={skyRef} aria-hidden="true" style={{ ...VARS, ...style }} className={`pointer-events-none overflow-hidden ${className}`}>
-      <div className="absolute inset-0" style={{ background: HAZE }} />
-      <div className="absolute inset-x-0 top-0 bottom-[calc(var(--ground)-12px)]" style={{ background: SKY }} />
-      <div className="night-only absolute inset-0" style={{ background: NIGHT_HAZE }}>
-        <div className="absolute inset-x-0 top-0 bottom-[calc(var(--ground)-12px)]" style={{ background: NIGHT_SKY }} />
-        <div style={STARS} className="stars absolute inset-x-0 top-0 h-[70%] [mask-image:linear-gradient(to_bottom,#000_40%,transparent)]" />
+      {/* .sky-paint: later changes of the time of day fade a new layer in over the first (skyBoot.js). */}
+      <div className="sky-paint absolute inset-0">
+        <div className="footer-haze absolute inset-0" />
+      </div>
+      <div className="sky-paint absolute inset-x-0 top-0 bottom-[calc(var(--ground)-12px)]">
+        <div className="footer-sky absolute inset-0" />
+      </div>
+      <div style={STARS} className="stars absolute inset-x-0 top-0 h-[70%] [mask-image:linear-gradient(to_bottom,#000_40%,transparent)]" />
+      <div className="night-only absolute inset-0">
         <Moon />
       </div>
       {children}
-      <Clouds clouds={mobile ? FOOTER_CLOUDS_M : FOOTER_CLOUDS} className="night-clouds opacity-75" />
+      {/* 75% opaque as a group (so overlapping clouds still merge into one shape); the time of day's
+          grade inside. */}
+      <div className="absolute inset-0 opacity-75">
+        <Clouds clouds={mobile ? FOOTER_CLOUDS_M : FOOTER_CLOUDS} className="grade-clouds" />
+      </div>
     </div>
   );
 };
@@ -166,15 +168,15 @@ const fade = (a) =>
 const fogPatch = (a, shift) =>
   `radial-gradient(closest-side at ${42 + shift}% 52%, ${fade(a)}), radial-gradient(closest-side at ${64 - shift}% ${44 + shift / 2}%, ${fade(a * 0.7)})`;
 // `settled`: the footer is all in view (the Enderman's cue, see Enderman.jsx).
-const FooterGround = ({ groundRef, endRef, settled }) => {
+export const FooterGround = ({ groundRef, endRef, settled, first }) => {
   // Decode the meadow early (lib/predecode.js), so the frame it first appears in doesn't hitch.
   usePredecode([ground]);
   return (
-    <div ref={groundRef} className="relative z-10 h-[var(--ground)] shrink-0">
-      <img src={ground} alt="" draggable={false} className="night-ground pointer-events-none absolute inset-0 size-full select-none object-cover object-top" />
+    <div ref={groundRef} style={VARS} className="relative z-10 h-[var(--ground)] shrink-0">
+      <img src={ground} alt="" draggable={false} className="grade-ground pointer-events-none absolute inset-0 size-full select-none object-cover object-top" />
       <div
         aria-hidden="true"
-        className="night-fog pointer-events-none absolute inset-0 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_8%,#000_80%,transparent)]"
+        className="meadow-fog pointer-events-none absolute inset-0 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_8%,#000_80%,transparent)]"
       >
         {FOG.flatMap(({ top, height, w, dur, alpha }, row) =>
           [0, 1].map((k) => (
@@ -195,7 +197,7 @@ const FooterGround = ({ groundRef, endRef, settled }) => {
           ))
         )}
       </div>
-      <Enderman active={settled} />
+      <Enderman active={settled} first={first} />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_25%,rgb(8_28_14/0.5))]" />
       <div ref={endRef} className={`${column} pointer-events-none relative flex h-full flex-wrap content-end items-end justify-between gap-x-10 gap-y-1 pb-[clamp(10px,1.6vw,24px)]`}>
         {/* Icon-only links (the name is the accessible label and the tooltip). The first icon's left

@@ -5,19 +5,9 @@
     <link rel="icon" type="image/png" href="/icon2.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- The phone browser bar takes the colour of the top of the page. -->
-    <meta name="theme-color" content="#2F7CC4" data-light="#2F7CC4" data-dark="#0C1321" />
-    <!-- Light or dark: light unless the visitor has chosen dark (the Enderman in the footer switches it);
-         set before the first paint so the page never flashes the wrong one (src/lib/theme.js). -->
-    <script>
-      (function () {
-        var t;
-        try { t = localStorage.getItem('theme'); } catch (e) {}
-        if (t !== 'dark') t = 'light'; // light unless the visitor chose dark
-        document.documentElement.dataset.theme = t;
-        var bar = document.querySelector('meta[name="theme-color"]');
-        if (bar) bar.setAttribute('content', bar.dataset[t]);
-      })();
-    </script>
+    <meta name="theme-color" content="#2F7CC4" data-sky-bar />
+    <!-- Time of day and theme, before the first paint (src/lib/skyBoot.js, inlined here by Vite). -->
+    <!-- sky-boot -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300..700&family=Archivo:wght@400;500;600&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -37,7 +27,10 @@
       @keyframes boot-show { from { opacity: 0; } }
       @media (max-width: 767px) { #boot { background: linear-gradient(#0056D2, #0462DD 25%, #1275F0 55%, #43A5FC 92%); } }
       /* Night: the same loader under a night sky. */
-      [data-theme="dark"] #boot { background: linear-gradient(#060B18, #0B1530 45%, #16244A 100%); }
+      /* The loader matches the hero sky for the time of day (data-sky, set above). */
+      [data-sky="morning"] #boot { background: linear-gradient(#3C77B8, #6A9BD2 35%, #B6C6DE 70%, #F2CDBE 100%); }
+      [data-sky="evening"] #boot { background: linear-gradient(#2A3A6E, #66639A 30%, #D69B7E 60%, #FAC85A 100%); }
+      [data-sky="night"] #boot { background: linear-gradient(#060B18, #0B1530 45%, #16244A 100%); }
     </style>
   </head>
   <body>
