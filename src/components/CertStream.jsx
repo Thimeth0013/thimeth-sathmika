@@ -238,11 +238,11 @@ const FocusCard = ({ cert, url, from, onClose }) => {
           {url && <img src={url} alt="" draggable={false} className="block size-full select-none" />}
         </div>
         <div ref={textRef} className="pointer-events-auto mt-6 flex flex-col items-center text-center text-forest">
-          <p className="max-w-[min(560px,90vw)] font-grotezk text-[22px] font-medium leading-tight tracking-[-0.02em]">{cert.title}</p>
-          <p className="mt-1 text-[14px] text-forest/70">
-            {cert.issuer} · {cert.date}
-          </p>
-          <div className="mt-4 flex items-center gap-2">
+          {/* The face already shows the title, issuer and date: just the description and the buttons. */}
+          {cert.description && (
+            <p className="w-[min(680px,90vw)] text-pretty text-[15px] leading-relaxed text-forest/80">{cert.description}</p>
+          )}
+          <div className="mt-5 flex items-center gap-2">
             {linked && (
               <a
                 href={cert.url}

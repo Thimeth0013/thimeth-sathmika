@@ -160,6 +160,9 @@ export const CertsMobile = ({ barRef, titleRef, bodyRef }) => {
                 <p className="mt-1 text-[14px] text-forest/70">
                   {current.issuer} · {current.date}
                 </p>
+                {current.description && (
+                  <p className="mx-auto mt-2 line-clamp-2 max-w-[min(520px,88vw)] text-pretty text-[13px] leading-snug text-forest/75">{current.description}</p>
+                )}
                 <a
                   href={current.url}
                   target="_blank"

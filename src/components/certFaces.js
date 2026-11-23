@@ -110,19 +110,23 @@ const drawFace = (cert) => {
 };
 
 // Drawn once per page, after the fonts load, one face per idle moment (drawing them all in one go was
-// a ~200 ms block right as the scenes mount after the loader).
+// a ~200 ms block right as the scenes mount after the loader). Each waits at most 120 ms for one, so
+// all 14 are in within ~2 s even while the page is busy scrolling.
 const idle = () =>
-  new Promise((done) => ('requestIdleCallback' in window ? window.requestIdleCallback(done, { timeout: 1000 }) : setTimeout(done, 0)));
+  new Promise((done) => ('requestIdleCallback' in window ? window.requestIdleCallback(done, { timeout: 120 }) : setTimeout(done, 0)));
 let facesPromise;
 export const faces = () => {
   facesPromise ??= (async () => {
     const fonts = ['500 23px "Apfel Grotezk"', '400 15px "Apfel Grotezk"', '400 10.5px "Azeret Mono"'];
     await Promise.all(fonts.map((f) => document.fonts?.load(f).catch(() => null)));
-    const urls = [];
+    // Draw each in its own idle moment, but don't wait for one's image encoding (toBlob, off the main
+    // thread, which can take seconds on a busy page) before drawing the next: the encodings overlap.
+    const pending = [];
     for (const cert of CERTS) {
       await idle();
-      urls.push(await drawFace(cert));
+      pending.push(drawFace(cert));
     }
+    const urls = await Promise.all(pending);
     return Object.fromEntries(CERTS.map((c, i) => [c.key, urls[i]]));
   })();
   return facesPromise;

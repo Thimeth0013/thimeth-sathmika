@@ -35,8 +35,8 @@ const dateOf = (text = '') => {
   return Number(year) * 12 + Math.max(MONTH_NAMES.indexOf(month), 0);
 };
 export const CERTS = [
-  ...CertificateData.map((c) => ({ key: `c${c.id}`, kind: 'Certificate', title: c.title, issuer: c.company, date: c.date, url: c.certificateUrl })),
-  ...BadgesData.map((b) => ({ key: `b${b.id}`, kind: 'Badge', title: b.title, issuer: b.issuer, date: b.dateEarned, url: b.badgeUrl })),
+  ...CertificateData.map((c) => ({ key: `c${c.id}`, kind: 'Certificate', title: c.title, issuer: c.company, date: c.date, url: c.certificateUrl, description: c.description })),
+  ...BadgesData.map((b) => ({ key: `b${b.id}`, kind: 'Badge', title: b.title, issuer: b.issuer, date: b.dateEarned, url: b.badgeUrl, description: b.description })),
 ].sort((a, b) => dateOf(b.date) - dateOf(a.date));
 
 // The heading comes towards you (COME), its letters fill (FILL), "so far" comes in (SO_FAR), then it
