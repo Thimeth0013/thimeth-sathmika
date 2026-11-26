@@ -381,6 +381,8 @@ button, [role="button"] {
    from the top). src/lib/theme.js re-blends every minute and lets the Enderman pick a phase (easing to
    it). The ground photo is lit by a low sun, so a grade reads as morning or evening light.
 ------------------------------------------------------------------ */
+/* The computer's screen glow in the hero (Home.jsx), by --glow. */
+.screen-glow { opacity: var(--glow, 0); transition: opacity 1s ease; }
 /* The pinned stage's own colour (under the sky) follows the main phase. Set on the stage, not as a
    variable on <html>: changing one of those restyles the whole page. */
 .sky-stage { background-color: #1D6EB0; }

@@ -7,6 +7,7 @@
 //   --footer-sky / --footer-haze   the footer's sky and the colour under its meadow
 //   --w-night     how much night there is (the stars, the moon)
 //   --fog / data-fog   the meadow's fog: morning and night only
+//   --glow        the hero computer's screen glow (none at noon, most at night)
 //   --cloud-grade / --ground-grade / --cloud-alpha   the photo layers' grades
 //   data-sky      the main phase (the loader, the stage colour, the browser bar, the Enderman's "next")
 //   data-daypart  the main phase on the visitor's clock
@@ -49,6 +50,7 @@
   // the long way round (-175, not 185), through dusky purples rather than greens.
   var CLOUD = { morning: [1.02, 0.2, -12, 1.3], noon: [1, 0, 0, 1], evening: [1, 0.6, -8, 1.6], night: [0.5, 0.5, -175, 1.8] };
   var GROUND = { morning: [0.98, 0, 6, 0.86], noon: [1, 0, 0, 1], evening: [0.88, 0.3, -4, 1.2], night: [0.36, 0, -14, 0.7] };
+  var GLOW = { morning: 0.35, noon: 0, evening: 0.65, night: 1 }; // the hero computer's screen glow
   var DARK_AT = 0.75; // how much night opens the page in the dark theme
   var FOG_NIGHT = 0.6; // the meadow's fog: full in the morning, this at night, none at noon or in the evening
   var BAR = { morning: '#4A80BF', noon: '#2F7CC4', evening: '#2E3D72', night: '#0C1321' };
@@ -219,6 +221,7 @@
       night: w.night.toFixed(3),
       fog: fog.toFixed(3),
       fogOn: fog > 0.01,
+      glow: (w.morning * GLOW.morning + w.evening * GLOW.evening + w.night * GLOW.night).toFixed(3),
       cloud: grade(CLOUD, w),
       ground: grade(GROUND, w),
       alpha: (1 - 0.45 * w.night).toFixed(3),
@@ -242,6 +245,7 @@
     s.setProperty('--footer-haze', v.haze);
     s.setProperty('--w-night', v.night);
     s.setProperty('--fog', v.fog);
+    s.setProperty('--glow', v.glow);
     s.setProperty('--cloud-grade', v.cloud);
     s.setProperty('--ground-grade', v.ground);
     s.setProperty('--cloud-alpha', v.alpha);
@@ -286,6 +290,7 @@
     set('img.grade-ground, .grade-ground > *', 'filter', v.ground);
     set('.stars, .night-only', 'opacity', v.night);
     set('.meadow-fog', 'opacity', v.fog);
+    set('.screen-glow', 'opacity', v.glow);
     marks(v);
   }
   function now() {

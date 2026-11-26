@@ -341,6 +341,9 @@ const useHeroReady = () => {
 const layerClass =
   'absolute inset-0 origin-[50%_calc(var(--sy)_+_var(--sh)_*_var(--horizon))] will-change-[transform,opacity]';
 const stageBox = 'absolute left-[var(--sx)] top-[var(--sy)] h-[var(--sh)] w-[var(--sw)]';
+// The computer's screen in the desktop ground photo (ground.webp, 1672×941: x 1331–1379, y 512–557), as
+// a clip-path that leaves only it (the screen glow).
+const SCREEN = 'inset(54.4% 17.5% 40.8% 79.5% round 0px)';
 
 // The later scenes mount one after another once the hero is in: About at once (it is next), then
 // Featured Work, Tools, the Journey and the footer, each in an idle moment (STEPS in all). Mounting
@@ -492,6 +495,25 @@ export const Home = () => {
                 </>
               )}
             </div>
+            {/* The computer's screen glows when the light is low (desktop): by --glow from the time of
+                day (skyBoot.js: none at noon, faint in the morning, more in the evening, most at night).
+                Outside the graded box, so it is not darkened with the meadow: the screen's own pixels,
+                cut from the same photo (clip-path; SCREEN, its box in the photo), at full brightness,
+                then a soft blue light around it and a faint spill on the desk ("screen" blending, so it
+                adds light rather than haze). */}
+            {!mobile && (
+              <div aria-hidden="true" className={`${stageBox} screen-glow animate-settle`}>
+                <img src={ground} alt="" className="absolute inset-0 size-full select-none" style={{ clipPath: SCREEN }} />
+                <div
+                  className="absolute left-[81.05%] top-[56.8%] h-[10%] w-[6.5%] -translate-x-1/2 -translate-y-1/2 mix-blend-screen"
+                  style={{ background: 'radial-gradient(closest-side, rgb(80 140 255 / 0.5), rgb(60 120 255 / 0.2) 55%, rgb(60 120 255 / 0))' }}
+                />
+                <div
+                  className="absolute left-[80.4%] top-[62.4%] h-[3.5%] w-[8%] -translate-x-1/2 -translate-y-1/2 mix-blend-screen"
+                  style={{ background: 'radial-gradient(closest-side, rgb(90 150 255 / 0.3), rgb(90 150 255 / 0))' }}
+                />
+              </div>
+            )}
           </div>
 
           {/* Buttons stand in the grass below the computer's desk, at the ground's depth. Right-aligned
