@@ -10,7 +10,7 @@
 //   --cloud-grade / --ground-grade / --cloud-alpha   the photo layers' grades
 //   data-sky      the main phase (the loader, the stage colour, the browser bar, the Enderman's "next")
 //   data-daypart  the main phase on the visitor's clock
-//   data-theme    dark if the page opens at night, else light; decided once, so the white sections
+//   data-theme    dark if the page opens at night (DARK_AT of it), else light; decided once, so the white sections
 //                 never flip while someone is reading
 // Two phases' skies are mixed stop by stop in OKLCH, the hue going round the warm side of the wheel
 // (through violet, pink and orange, never green): cross-fading them averaged blue and amber to grey.
@@ -21,7 +21,9 @@
   var root = document.documentElement;
   var PHASES = ['morning', 'noon', 'evening', 'night'];
   // [hour, phase]: a phase holds between its two keys and blends into the next phase between keys.
-  var KEYS = [[5, 'night'], [6.5, 'morning'], [8.5, 'morning'], [10.5, 'noon'], [15, 'noon'], [16.5, 'evening'], [18.5, 'evening'], [20.5, 'night']];
+  // Set for Sri Lanka (sunrise about 6:00, sunset about 6:10, dark by 7): dawn 5:00–6:30, morning until
+  // 8:00, into noon by 9:30, noon until 14:30, golden by 16:00, then dusk all the way to night at 19:00.
+  var KEYS = [[5, 'night'], [6.5, 'morning'], [8, 'morning'], [9.5, 'noon'], [14.5, 'noon'], [16, 'evening'], [19, 'night']];
   // The skies, as [position %, colour] stops. SKY: the hero and About (noon is the original photo's);
   // SKY_M: phones, where the headline sits lower, so the warm band does too; FOOT: the footer, deep
   // most of the way down so its white text reads; HAZE: the colour under the footer's meadow.
@@ -47,6 +49,7 @@
   // the long way round (-175, not 185), through dusky purples rather than greens.
   var CLOUD = { morning: [1.02, 0.2, -12, 1.3], noon: [1, 0, 0, 1], evening: [1, 0.6, -8, 1.6], night: [0.5, 0.5, -175, 1.8] };
   var GROUND = { morning: [0.98, 0, 6, 0.86], noon: [1, 0, 0, 1], evening: [0.88, 0.3, -4, 1.2], night: [0.36, 0, -14, 0.7] };
+  var DARK_AT = 0.75; // how much night opens the page in the dark theme
   var FOG_NIGHT = 0.6; // the meadow's fog: full in the morning, this at night, none at noon or in the evening
   var BAR = { morning: '#4A80BF', noon: '#2F7CC4', evening: '#2E3D72', night: '#0C1321' };
 
@@ -302,7 +305,8 @@
   var current = fixed ? oneHot(fixed) : blend(now());
   root.dataset.daypart = main(blend(now()));
   boot(look(current));
-  root.dataset.theme = root.dataset.sky === 'night' ? 'dark' : 'light';
+  // Dark sections only once night is mostly in (about 18:15), not as soon as it leads the long dusk.
+  root.dataset.theme = fixed ? (fixed === 'night' ? 'dark' : 'light') : current.night >= DARK_AT ? 'dark' : 'light';
   var bar = document.querySelector('meta[name="theme-color"]');
   if (bar && !bar.hasAttribute('data-sky-bar')) bar.setAttribute('content', bar.getAttribute('data-' + root.dataset.theme));
   window.__sky = {
